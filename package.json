@@ -16,7 +16,7 @@
     "@remix-run/react": "^2.16.0",
     "compression": "^1.7.4",
     "cross-env": "^7.0.3",
-    "express": "^4.19.2",
+    "express": "^4.22.1",
     "howler": "^2.2.4",
     "isbot": "^4.1.0",
     "morgan": "^1.10.0",
