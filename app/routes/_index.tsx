@@ -10,14 +10,20 @@ type RoomTone = "cafe" | "rain";
 type SavedPreferences = {
   durationMinutes?: number;
   selectedSound?: RoomTone;
+  draftDurationMinutes?: number;
+  appliedDurationMinutes?: number;
+  draftSelectedSound?: RoomTone;
+  appliedSelectedSound?: RoomTone;
   tracks?: MixerTrack[];
   showBackdropDetails?: boolean;
   savePreferences?: boolean;
+  soundEnabled?: boolean;
 };
 
 const DEFAULT_DURATION_MINUTES = 25;
 const DEFAULT_SOUND: RoomTone = "cafe";
 const STORAGE_KEY = "virtual-cafe-home-prefs";
+const APPLY_FEEDBACK_DURATION_MS = 1600;
 const DEFAULT_TRACKS: MixerTrack[] = [
   { label: "Barista", value: 64 },
   { label: "Preparing Drinks", value: 42 },
@@ -29,15 +35,73 @@ const DEFAULT_TRACKS: MixerTrack[] = [
   { label: "Fireplace", value: 22 },
 ];
 
+const SOUND_URLS: Record<string, string> = {
+  "Barista": "https://imissmycafe.com/assets/sounds/barista-reagan.mp3",
+  "Preparing Drinks": "https://imissmycafe.com/assets/sounds/makingdrinks.mp3",
+  "Coffee Cups": "https://imissmycafe.com/assets/sounds/coffeecups.mp3",
+  "Other Customers": "https://imissmycafe.com/assets/sounds/interior.mp3",
+  "Machinery": "https://imissmycafe.com/assets/sounds/machinery.mp3",
+  "Rainy Day": "https://imissmycafe.com/assets/sounds/rain.mp3",
+  "Sunny Day": "https://imissmycafe.com/assets/sounds/exterior.mp3",
+  "Fireplace": "https://imissmycafe.com/assets/sounds/fireplace.mp3",
+};
+
+const TRACK_BASE_VOLUME: Record<string, number> = {
+  Barista: 0.18,
+  "Preparing Drinks": 0.16,
+  "Coffee Cups": 0.12,
+  "Other Customers": 0.16,
+  Machinery: 0.14,
+  "Rainy Day": 0.28,
+  "Sunny Day": 0.14,
+  Fireplace: 0.18,
+};
+
+const TONE_PROFILES: Record<RoomTone, Record<string, number>> = {
+  cafe: {
+    Barista: 1,
+    "Preparing Drinks": 1,
+    "Coffee Cups": 1,
+    "Other Customers": 1,
+    Machinery: 0.9,
+    "Rainy Day": 0.15,
+    "Sunny Day": 0.8,
+    Fireplace: 0.45,
+  },
+  rain: {
+    Barista: 0.45,
+    "Preparing Drinks": 0.35,
+    "Coffee Cups": 0.25,
+    "Other Customers": 0.3,
+    Machinery: 0.35,
+    "Rainy Day": 1,
+    "Sunny Day": 0.1,
+    Fireplace: 0.6,
+  },
+};
+
 export default function Index() {
   const [tracks, setTracks] = useState(DEFAULT_TRACKS);
   const [showBackdropDetails, setShowBackdropDetails] = useState(true);
   const [savePreferences, setSavePreferences] = useState(false);
-  const [durationMinutes, setDurationMinutes] = useState(DEFAULT_DURATION_MINUTES);
-  const [selectedSound, setSelectedSound] = useState<RoomTone>(DEFAULT_SOUND);
+  const [draftDurationMinutes, setDraftDurationMinutes] = useState(
+    DEFAULT_DURATION_MINUTES
+  );
+  const [appliedDurationMinutes, setAppliedDurationMinutes] = useState(
+    DEFAULT_DURATION_MINUTES
+  );
+  const [draftSelectedSound, setDraftSelectedSound] =
+    useState<RoomTone>(DEFAULT_SOUND);
+  const [appliedSelectedSound, setAppliedSelectedSound] =
+    useState<RoomTone>(DEFAULT_SOUND);
   const [timeLeft, setTimeLeft] = useState(DEFAULT_DURATION_MINUTES * 60);
   const [isRunning, setIsRunning] = useState(false);
+  const [applyFeedback, setApplyFeedback] = useState<"idle" | "applied">("idle");
+  const [soundEnabled, setSoundEnabled] = useState(false);
+  const [audioStatus, setAudioStatus] = useState("Sound is off");
   const intervalRef = useRef<number | null>(null);
+  const audioElementsRef = useRef<Map<string, HTMLAudioElement>>(new Map());
+  const initializedAudioRef = useRef(false);
 
   useEffect(() => {
     const savedValue = window.localStorage.getItem(STORAGE_KEY);
@@ -48,6 +112,18 @@ export default function Index() {
 
     try {
       const parsed = JSON.parse(savedValue) as SavedPreferences;
+      const savedDraftDuration =
+        parsed.draftDurationMinutes ??
+        parsed.durationMinutes ??
+        DEFAULT_DURATION_MINUTES;
+      const savedAppliedDuration =
+        parsed.appliedDurationMinutes ?? savedDraftDuration;
+      const savedDraftSound =
+        parsed.draftSelectedSound ??
+        parsed.selectedSound ??
+        DEFAULT_SOUND;
+      const savedAppliedSound =
+        parsed.appliedSelectedSound ?? savedDraftSound;
 
       if (Array.isArray(parsed.tracks)) {
         setTracks(
@@ -60,13 +136,15 @@ export default function Index() {
         );
       }
 
-      setDurationMinutes(parsed.durationMinutes ?? DEFAULT_DURATION_MINUTES);
-      setSelectedSound(parsed.selectedSound ?? DEFAULT_SOUND);
+      setDraftDurationMinutes(savedDraftDuration);
+      setAppliedDurationMinutes(savedAppliedDuration);
+      setDraftSelectedSound(savedDraftSound);
+      setAppliedSelectedSound(savedAppliedSound);
       setShowBackdropDetails(parsed.showBackdropDetails ?? true);
       setSavePreferences(parsed.savePreferences ?? false);
-      setTimeLeft(
-        (parsed.durationMinutes ?? DEFAULT_DURATION_MINUTES) * 60
-      );
+      setSoundEnabled(parsed.soundEnabled ?? false);
+      setTimeLeft(savedAppliedDuration * 60);
+      setAudioStatus(parsed.soundEnabled ? "Sound ready" : "Sound is off");
     } catch {
       window.localStorage.removeItem(STORAGE_KEY);
     }
@@ -81,20 +159,38 @@ export default function Index() {
     window.localStorage.setItem(
       STORAGE_KEY,
       JSON.stringify({
-        durationMinutes,
-        selectedSound,
+        draftDurationMinutes,
+        appliedDurationMinutes,
+        draftSelectedSound,
+        appliedSelectedSound,
         tracks,
         showBackdropDetails,
         savePreferences,
+        soundEnabled,
       } satisfies SavedPreferences)
     );
   }, [
-    durationMinutes,
-    selectedSound,
-    tracks,
-    showBackdropDetails,
+    appliedDurationMinutes,
+    appliedSelectedSound,
+    draftDurationMinutes,
+    draftSelectedSound,
     savePreferences,
+    showBackdropDetails,
+    soundEnabled,
+    tracks,
   ]);
+
+  useEffect(() => {
+    if (applyFeedback !== "applied") {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setApplyFeedback("idle");
+    }, APPLY_FEEDBACK_DURATION_MS);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [applyFeedback]);
 
   useEffect(() => {
     if (!isRunning) {
@@ -124,6 +220,46 @@ export default function Index() {
     };
   }, [isRunning]);
 
+  useEffect(() => {
+    if (!soundEnabled) {
+      return;
+    }
+
+    const toneProfile = TONE_PROFILES[appliedSelectedSound];
+
+    tracks.forEach((track) => {
+      const audioElement = audioElementsRef.current.get(track.label);
+
+      if (!audioElement) {
+        return;
+      }
+
+      const normalizedValue = Math.pow(track.value / 100, 1.35);
+      const targetVolume = Math.min(
+        1,
+        TRACK_BASE_VOLUME[track.label] *
+        toneProfile[track.label] *
+        normalizedValue
+      );
+
+      audioElement.volume = targetVolume;
+    });
+
+    setAudioStatus(`Ambient mix on: ${appliedSelectedSound}`);
+  }, [appliedSelectedSound, soundEnabled, tracks]);
+
+  useEffect(() => {
+    const audioElements = audioElementsRef.current;
+
+    return () => {
+      audioElements.forEach((audioElement) => {
+        audioElement.pause();
+        audioElement.src = "";
+      });
+      audioElements.clear();
+    };
+  }, []);
+
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
@@ -132,14 +268,83 @@ export default function Index() {
       .padStart(2, "0")}`;
   };
 
-  const handleApplySetup = () => {
-    setTimeLeft(durationMinutes * 60);
-    setIsRunning(false);
+  const initializeAudio = async () => {
+    if (audioElementsRef.current.size === 0) {
+      DEFAULT_TRACKS.forEach((track) => {
+        const audioElement = new Audio(SOUND_URLS[track.label]);
+        audioElement.crossOrigin = "anonymous";
+        audioElement.loop = true;
+        audioElement.preload = "auto";
+        audioElement.volume = 0;
+        audioElementsRef.current.set(track.label, audioElement);
+      });
+    }
+
+    try {
+      await Promise.all(
+        [...audioElementsRef.current.values()].map(async (audioElement) => {
+          const playPromise = audioElement.play();
+
+          if (playPromise) {
+            await playPromise;
+          }
+        })
+      );
+    } catch {
+      setAudioStatus("Browser blocked audio. Click enable sound again.");
+      return false;
+    }
+
+    initializedAudioRef.current = true;
+    setSoundEnabled(true);
+    setAudioStatus(`Streaming ambient mix: ${appliedSelectedSound}`);
+
+    return true;
   };
 
-  const handleToggleTimer = () => {
+  const handleToggleSound = async () => {
+    if (!initializedAudioRef.current) {
+      await initializeAudio();
+      return;
+    }
+
+    if (soundEnabled) {
+      audioElementsRef.current.forEach((audioElement) => {
+        audioElement.pause();
+      });
+      setSoundEnabled(false);
+      setAudioStatus("Sound is off");
+      return;
+    }
+
+    await Promise.all(
+      [...audioElementsRef.current.values()].map(async (audioElement) => {
+        const playPromise = audioElement.play();
+
+        if (playPromise) {
+          await playPromise;
+        }
+      })
+    );
+    setSoundEnabled(true);
+    setAudioStatus(`Streaming ambient mix: ${appliedSelectedSound}`);
+  };
+
+  const handleApplySetup = () => {
+    setAppliedDurationMinutes(draftDurationMinutes);
+    setAppliedSelectedSound(draftSelectedSound);
+    setTimeLeft(draftDurationMinutes * 60);
+    setIsRunning(false);
+    setApplyFeedback("applied");
+  };
+
+  const handleToggleTimer = async () => {
+    if (!soundEnabled) {
+      await initializeAudio();
+    }
+
     if (timeLeft === 0) {
-      setTimeLeft(durationMinutes * 60);
+      setTimeLeft(appliedDurationMinutes * 60);
       setIsRunning(true);
       return;
     }
@@ -148,7 +353,7 @@ export default function Index() {
   };
 
   const handleReset = () => {
-    setTimeLeft(durationMinutes * 60);
+    setTimeLeft(appliedDurationMinutes * 60);
     setIsRunning(false);
   };
 
@@ -158,10 +363,12 @@ export default function Index() {
   const sunlightLevel =
     tracks.find((track) => track.label === "Sunny Day")?.value ?? 0;
   const backdropGlow = 0.14 + sunlightLevel / 260;
+  const roomMood = sunlightLevel >= 50 ? "soft daylight" : "after dark";
+  const activeDurationSeconds = appliedDurationMinutes * 60;
 
   return (
     <main
-      className="relative min-h-screen overflow-hidden px-5 py-6 text-stone-950 md:px-8 lg:px-10"
+      className="relative min-h-screen overflow-hidden px-4 py-4 text-stone-950 md:px-7 md:py-6 lg:px-10"
       style={{
         backgroundImage: `url('/cafe-background.jpg')`,
         backgroundPosition: "center",
@@ -171,101 +378,117 @@ export default function Index() {
       <div
         className="absolute inset-0"
         style={{
-          background: `radial-gradient(circle at 18% 14%, rgba(255, 236, 202, ${backdropGlow}), transparent 28%), linear-gradient(180deg, rgba(25, 19, 14, 0.2), rgba(25, 19, 14, 0.58))`,
+          background: `radial-gradient(circle at 17% 16%, rgba(255, 236, 202, ${backdropGlow}), transparent 24%), linear-gradient(90deg, rgba(20, 15, 10, 0.56), rgba(20, 15, 10, 0.22) 36%, rgba(20, 15, 10, 0.35) 100%)`,
         }}
       />
-      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-3rem)] max-w-[90rem] flex-col gap-8 lg:grid lg:grid-cols-[0.92fr_1.35fr_0.96fr] lg:items-stretch">
-        <section className="flex flex-col justify-between gap-6 lg:py-4">
-          <div>
-            <p className="text-xs uppercase tracking-[0.45em] text-stone-500">
+      <div className="relative z-10 mx-auto flex min-h-[calc(100vh-2rem)] max-w-[92rem] flex-col gap-5 lg:grid lg:grid-cols-[0.84fr_1.4fr_0.9fr] lg:items-start lg:gap-6">
+        <section className="order-1 flex flex-col gap-4 lg:sticky lg:top-6">
+          <div className="rounded-[2rem] border border-white/12 bg-[linear-gradient(180deg,rgba(255,248,241,0.9),rgba(245,233,223,0.78))] p-5 shadow-[0_18px_40px_rgba(22,16,12,0.16)] backdrop-blur md:p-6">
+            <p className="text-[11px] uppercase tracking-[0.45em] text-stone-500">
               Virtual Cafe
             </p>
-            <h1 className="mt-6 font-serif text-6xl font-semibold leading-[0.92] tracking-[-0.05em] md:text-8xl">
-              One room.
-              <br />
-              One page.
-              <br />
-              Stay here.
+            <h1 className="mt-4 max-w-[4.5ch] font-serif text-5xl font-semibold leading-[0.9] tracking-[-0.05em] md:text-6xl">
+              Stay in the room.
             </h1>
-            <p className="mt-6 max-w-md text-lg leading-8 text-stone-700">
-              The backdrop, mixer, timer, and setup now live together on the
-              main screen instead of jumping through subpages.
+            <p className="mt-4 max-w-sm text-base leading-7 text-stone-700">
+              The cafe image is the environment now. Setup, timer, and mix stay
+              visible without turning the page into three heavy columns.
             </p>
+            <div className="mt-5 flex flex-wrap gap-2 text-[11px] uppercase tracking-[0.24em] text-stone-600">
+              <span className="rounded-full bg-white/55 px-3 py-2">
+                {roomMood}
+              </span>
+              <span className="rounded-full bg-white/55 px-3 py-2">
+                {strongestTrack.label}
+              </span>
+              <span className="rounded-full bg-white/55 px-3 py-2">
+                one-page flow
+              </span>
+            </div>
           </div>
 
-          <div className="space-y-5">
-            <div className="rounded-[1.9rem] border border-[var(--line)] bg-[var(--panel)] p-6 shadow-[0_20px_45px_rgba(55,41,29,0.08)]">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-stone-500">
-                    Focus Setup
-                  </p>
-                  <p className="mt-2 text-2xl font-semibold text-stone-900">
-                    {durationMinutes} min with {selectedSound}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={handleApplySetup}
-                  className="rounded-full bg-stone-950 px-5 py-3 text-sm font-semibold uppercase tracking-[0.22em] text-stone-100 transition hover:bg-stone-800"
-                >
-                  Apply
-                </button>
+          <div className="rounded-[2rem] border border-white/12 bg-[rgba(20,15,12,0.78)] p-5 text-stone-100 shadow-[0_22px_48px_rgba(18,14,10,0.22)] backdrop-blur md:p-6">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[11px] uppercase tracking-[0.34em] text-stone-400">
+                  Focus Setup
+                </p>
+                <p className="mt-2 text-2xl font-semibold">
+                  {draftDurationMinutes} min with {draftSelectedSound}
+                </p>
               </div>
-
-              <div className="mt-6 space-y-5">
-                <label className="block space-y-2">
-                  <span className="text-sm font-semibold uppercase tracking-[0.22em] text-stone-500">
-                    Duration
-                  </span>
-                  <input
-                    type="number"
-                    min="1"
-                    step="1"
-                    value={durationMinutes}
-                    onChange={(event) =>
-                      setDurationMinutes(
-                        Math.max(1, Number.parseInt(event.target.value || "1", 10))
-                      )
-                    }
-                    className="w-full rounded-[1.2rem] border border-[var(--line)] bg-white/70 px-4 py-3 text-lg text-stone-900 outline-none transition focus:border-stone-900"
-                  />
-                </label>
-
-                <label className="block space-y-2">
-                  <span className="text-sm font-semibold uppercase tracking-[0.22em] text-stone-500">
-                    Room Tone
-                  </span>
-                  <select
-                    value={selectedSound}
-                    onChange={(event) =>
-                      setSelectedSound(event.target.value as RoomTone)
-                    }
-                    className="w-full rounded-[1.2rem] border border-[var(--line)] bg-white/70 px-4 py-3 text-lg text-stone-900 outline-none transition focus:border-stone-900"
-                  >
-                    <option value="cafe">Cafe</option>
-                    <option value="rain">Rain</option>
-                  </select>
-                </label>
+              <div className="rounded-full border border-white/12 px-3 py-2 text-[11px] uppercase tracking-[0.24em] text-stone-300">
+                {applyFeedback === "applied" ? "applied" : "draft setup"}
               </div>
             </div>
 
-            <div className="rounded-[1.9rem] bg-stone-950 px-6 py-6 text-stone-100 shadow-[0_22px_45px_rgba(32,24,19,0.14)]">
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-stone-400">
-                    Session Timer
-                  </p>
-                  <div className="mt-3 font-mono text-5xl font-bold">
-                    {formatTime(timeLeft)}
-                  </div>
-                </div>
-                <div className="rounded-full border border-white/15 px-4 py-2 text-sm text-stone-300">
-                  {isRunning ? "running" : "paused"}
-                </div>
-              </div>
+            <div className="mt-5 grid gap-4">
+              <label className="block space-y-2">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-stone-400">
+                  Duration
+                </span>
+                <input
+                  type="number"
+                  min="1"
+                  step="1"
+                  value={draftDurationMinutes}
+                  onChange={(event) =>
+                    setDraftDurationMinutes(
+                      Math.max(1, Number.parseInt(event.target.value || "1", 10))
+                    )
+                  }
+                  className="w-full rounded-[1.1rem] border border-white/10 bg-white/90 px-4 py-3 text-lg text-stone-950 outline-none transition focus:border-[#8fa77b]"
+                />
+              </label>
 
-              <div className="mt-6 flex flex-wrap gap-3">
+              <label className="block space-y-2">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-stone-400">
+                  Room Tone
+                </span>
+                <select
+                  value={draftSelectedSound}
+                  onChange={(event) =>
+                    setDraftSelectedSound(event.target.value as RoomTone)
+                  }
+                  className="w-full rounded-[1.1rem] border border-white/10 bg-white/90 px-4 py-3 text-lg text-stone-950 outline-none transition focus:border-[#8fa77b]"
+                >
+                  <option value="cafe">Cafe</option>
+                  <option value="rain">Rain</option>
+                </select>
+              </label>
+
+              <div className="grid gap-3 sm:grid-cols-[1fr_auto]">
+                <button
+                  type="button"
+                  onClick={handleApplySetup}
+                  className="rounded-full bg-[#8fa77b] px-5 py-3 text-sm font-semibold uppercase tracking-[0.22em] text-stone-950 transition hover:bg-[#9db68a]"
+                >
+                  {applyFeedback === "applied" ? "Applied" : "Apply to timer"}
+                </button>
+                <p className="self-center text-sm leading-6 text-stone-400">
+                  Updates the active session and resets the timer to the applied
+                  setup.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section className="order-3 rounded-[2rem] border border-white/12 bg-[rgba(246,239,231,0.88)] p-5 shadow-[0_22px_45px_rgba(18,14,10,0.18)] backdrop-blur md:p-6 lg:order-2 lg:mt-14 lg:min-h-[36rem] lg:bg-transparent lg:p-0 lg:shadow-none lg:backdrop-blur-0">
+          <div className="grid gap-4 lg:hidden">
+            <div className="rounded-[1.6rem] bg-[rgba(20,15,12,0.76)] p-5 text-stone-100">
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-[11px] uppercase tracking-[0.34em] text-stone-400">
+                  Session Timer
+                </p>
+                <span className="rounded-full border border-white/12 px-3 py-2 text-[11px] uppercase tracking-[0.24em] text-stone-300">
+                  {isRunning ? "running" : "paused"}
+                </span>
+              </div>
+              <div className="mt-4 font-mono text-5xl font-bold">
+                {formatTime(timeLeft)}
+              </div>
+              <div className="mt-5 flex flex-wrap gap-3">
                 <button
                   type="button"
                   onClick={handleToggleTimer}
@@ -285,18 +508,23 @@ export default function Index() {
                   Reset
                 </button>
               </div>
+            </div>
 
-              <div className="mt-6 grid gap-3 sm:grid-cols-3">
+            <div className="rounded-[1.6rem] border border-[var(--line)] bg-white/70 p-5">
+              <p className="text-[11px] uppercase tracking-[0.3em] text-stone-500">
+                Current Session
+              </p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-3">
                 {[
                   { label: "Blend", value: strongestTrack.label },
-                  { label: "Backdrop", value: "Coffee shop" },
-                  { label: "Room tone", value: selectedSound },
+                  { label: "Mood", value: roomMood },
+                  { label: "Tone", value: appliedSelectedSound },
                 ].map((item) => (
-                  <div key={item.label} className="rounded-[1.2rem] bg-white/5 p-4">
-                    <p className="text-xs uppercase tracking-[0.22em] text-stone-500">
+                  <div key={item.label} className="rounded-[1.1rem] bg-white/80 p-4">
+                    <p className="text-[11px] uppercase tracking-[0.22em] text-stone-500">
                       {item.label}
                     </p>
-                    <p className="mt-2 text-lg font-semibold capitalize text-stone-100">
+                    <p className="mt-2 text-base font-semibold capitalize text-stone-900">
                       {item.value}
                     </p>
                   </div>
@@ -304,50 +532,110 @@ export default function Index() {
               </div>
             </div>
           </div>
-        </section>
 
-        <section className="relative min-h-[32rem] overflow-hidden rounded-[2.75rem] border border-white/25 bg-[rgba(248,240,233,0.12)] shadow-[0_28px_60px_rgba(18,14,10,0.18)] backdrop-blur-[10px]">
-          <div className="absolute inset-0 bg-gradient-to-br from-[rgba(255,255,255,0.22)] via-[rgba(255,255,255,0.04)] to-[rgba(18,14,10,0.18)]" />
-          <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-[rgba(255,250,246,0.18)] to-transparent" />
-          <div className="absolute inset-x-6 top-6 flex items-start justify-between gap-4">
-            <div className="rounded-full bg-black/35 px-4 py-2 text-xs uppercase tracking-[0.28em] text-stone-100 backdrop-blur">
+          <div className="relative hidden lg:block lg:min-h-[36rem]">
+            <div className="absolute left-0 top-2 rounded-full bg-[rgba(14,11,9,0.42)] px-4 py-2 text-[11px] uppercase tracking-[0.32em] text-stone-100 backdrop-blur">
               Full-page backdrop
             </div>
-            <div className="rounded-full bg-black/35 px-4 py-2 text-xs uppercase tracking-[0.28em] text-stone-100 backdrop-blur">
+            <div className="absolute right-0 top-2 rounded-full bg-[rgba(14,11,9,0.42)] px-4 py-2 text-[11px] uppercase tracking-[0.32em] text-stone-100 backdrop-blur">
               {strongestTrack.label}
             </div>
-          </div>
 
-          {showBackdropDetails ? (
-            <div className="absolute bottom-6 left-6 right-6 grid gap-4 md:grid-cols-[1.15fr_0.85fr]">
-              <div className="rounded-[1.8rem] bg-[rgba(20,16,12,0.58)] p-5 text-stone-100 backdrop-blur">
-                <p className="text-xs uppercase tracking-[0.3em] text-stone-300">
-                  Room Note
-                </p>
-                <p className="mt-3 max-w-md text-lg leading-8 text-stone-100/90">
-                  The image now lives behind the whole interface, so the room
-                  feels continuous while the controls float over it.
-                </p>
-              </div>
-              <div className="rounded-[1.8rem] bg-[rgba(247,239,229,0.84)] p-5 text-stone-900 backdrop-blur">
-                <p className="text-xs uppercase tracking-[0.3em] text-stone-500">
-                  Active Setup
-                </p>
-                <p className="mt-3 text-2xl font-semibold">
-                  {durationMinutes} min / {selectedSound}
-                </p>
-                <p className="mt-2 text-sm leading-6 text-stone-600">
-                  Apply new values from the left card whenever you want to reset
-                  the session with a different duration or room tone.
-                </p>
-              </div>
+            <div className="absolute left-0 top-20 max-w-[18rem] rounded-[1.5rem] bg-[rgba(22,17,13,0.72)] p-5 text-stone-100 shadow-[0_18px_45px_rgba(18,14,10,0.2)] backdrop-blur">
+              <p className="text-[11px] uppercase tracking-[0.32em] text-stone-400">
+                Room Note
+              </p>
+              <p className="mt-3 text-base leading-7 text-stone-100/90">
+                The backdrop carries the atmosphere. The UI should feel like a
+                few tools sitting inside the room, not a full dashboard laid on
+                top of it.
+              </p>
             </div>
-          ) : null}
+
+            <div className="absolute left-[12%] top-[42%] rounded-[1.7rem] bg-[rgba(249,242,235,0.9)] p-6 shadow-[0_20px_45px_rgba(18,14,10,0.16)] backdrop-blur">
+              <p className="text-[11px] uppercase tracking-[0.32em] text-stone-500">
+                Active Setup
+              </p>
+              <p className="mt-3 text-3xl font-semibold text-stone-900">
+                {appliedDurationMinutes} min
+              </p>
+              <p className="mt-1 text-base capitalize text-stone-700">
+                {appliedSelectedSound} tone, {roomMood}
+              </p>
+              <p className="mt-4 max-w-[15rem] text-sm leading-6 text-stone-600">
+                This card only changes when you click Apply, so it reflects the
+                real active session instead of draft form input.
+              </p>
+            </div>
+
+            <div className="absolute bottom-10 right-0 w-[18rem] rounded-[1.7rem] bg-[rgba(18,14,10,0.78)] p-6 text-stone-100 shadow-[0_22px_48px_rgba(18,14,10,0.22)] backdrop-blur">
+              <div className="flex items-center justify-between gap-4">
+                <p className="text-[11px] uppercase tracking-[0.32em] text-stone-400">
+                  Session Timer
+                </p>
+                <span className="rounded-full border border-white/12 px-3 py-2 text-[11px] uppercase tracking-[0.22em] text-stone-300">
+                  {isRunning ? "running" : "paused"}
+                </span>
+              </div>
+              <div className="mt-4 font-mono text-5xl font-bold">
+                {formatTime(timeLeft)}
+              </div>
+              <div className="mt-5 flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={handleToggleTimer}
+                  className={`rounded-full px-5 py-3 text-sm font-semibold uppercase tracking-[0.22em] transition ${
+                    isRunning
+                      ? "bg-[#cc8a53] text-stone-950 hover:bg-[#d49a68]"
+                      : "bg-[#8fa77b] text-stone-950 hover:bg-[#9db68a]"
+                  }`}
+                >
+                  {isRunning ? "Pause" : timeLeft === 0 ? "Restart" : "Start"}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleReset}
+                  className="rounded-full border border-white/15 px-5 py-3 text-sm font-semibold uppercase tracking-[0.22em] text-stone-100 transition hover:bg-white/5"
+                >
+                  Reset
+                </button>
+              </div>
+              <p className="mt-5 text-sm leading-6 text-stone-400">
+                Active duration: {Math.round(activeDurationSeconds / 60)} min
+              </p>
+            </div>
+          </div>
         </section>
 
-        <aside className="rounded-[2rem] border border-[var(--line)] bg-[var(--panel)] p-6 shadow-[0_20px_45px_rgba(55,41,29,0.08)] lg:py-8">
-          <div className="space-y-4">
-            <label className="flex items-center justify-between gap-3 text-sm text-stone-700">
+        <aside className="order-2 rounded-[2rem] border border-white/12 bg-[linear-gradient(180deg,rgba(255,249,243,0.9),rgba(244,236,228,0.78))] p-5 shadow-[0_22px_45px_rgba(18,14,10,0.16)] backdrop-blur md:p-6 lg:order-3">
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <p className="text-[11px] uppercase tracking-[0.34em] text-stone-500">
+                Room Mix
+              </p>
+              <p className="mt-2 text-2xl font-semibold text-stone-900">
+                Shape the atmosphere
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={handleToggleSound}
+              className={`rounded-full px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.22em] transition ${
+                soundEnabled
+                  ? "bg-stone-950 text-stone-100 hover:bg-stone-800"
+                  : "bg-white/70 text-stone-700 hover:bg-white"
+              }`}
+            >
+              {soundEnabled ? "Sound on" : "Enable sound"}
+            </button>
+          </div>
+
+          <div className="mt-3 rounded-[1rem] bg-white/55 px-4 py-3 text-sm leading-6 text-stone-600">
+            {audioStatus}
+          </div>
+
+          <div className="mt-5 grid gap-2 rounded-[1.3rem] bg-white/55 p-3 sm:grid-cols-2 lg:grid-cols-1">
+            <label className="flex items-center justify-between gap-3 rounded-[1rem] px-2 py-2 text-sm text-stone-700">
               <span>show backdrop details</span>
               <input
                 type="checkbox"
@@ -358,7 +646,7 @@ export default function Index() {
                 className="h-5 w-5 rounded border-stone-400 text-stone-900 focus:ring-stone-500"
               />
             </label>
-            <label className="flex items-center justify-between gap-3 text-sm text-stone-700">
+            <label className="flex items-center justify-between gap-3 rounded-[1rem] px-2 py-2 text-sm text-stone-700">
               <span>save preferences</span>
               <input
                 type="checkbox"
@@ -369,19 +657,19 @@ export default function Index() {
             </label>
           </div>
 
-          <div className="mt-8 space-y-7">
+          <div className="mt-5 space-y-5">
             {tracks.map((track) => (
               <div key={track.label} className="space-y-2">
                 <div className="flex items-center justify-between gap-4">
-                  <p className="text-lg font-medium text-stone-900">
+                  <p className="text-base font-medium text-stone-900">
                     {track.label}
                   </p>
-                  <span className="text-xs uppercase tracking-[0.2em] text-stone-500">
+                  <span className="text-[11px] uppercase tracking-[0.2em] text-stone-500">
                     {track.value}%
                   </span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-xs text-stone-500">◔</span>
+                  <span className="text-[11px] text-stone-500">◔</span>
                   <input
                     type="range"
                     min="0"
