@@ -1,12 +1,29 @@
+@layer base {
+  :root {
+    --paper: #f3dfcf;
+    --ink: #18130d;
+    --muted-ink: #5d5248;
+    --line: rgba(74, 63, 53, 0.4);
+    --panel: rgba(255, 249, 243, 0.52);
+  }
+
+  html {
+    background: var(--paper);
+  }
+
+  body {
+    @apply font-sans antialiased;
+    background:
+      radial-gradient(circle at top, rgba(255, 246, 239, 0.9), transparent 30%),
+      linear-gradient(180deg, #f5e3d4 0%, #efddcf 100%);
+    color: var(--ink);
+  }
+
+  ::selection {
+    background: rgba(91, 71, 47, 0.18);
+  }
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-html,
-body {
-  @apply bg-white dark:bg-gray-950;
-
-  @media (prefers-color-scheme: dark) {
-    color-scheme: dark;
-  }
-}

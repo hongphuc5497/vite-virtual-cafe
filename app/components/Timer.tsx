@@ -1,18 +1,22 @@
-import { useState, useEffect } from 'react';
-import { FiPlay, FiPause, FiRefreshCw } from 'react-icons/fi';
+import { useEffect, useState } from "react";
+import { FiPause, FiPlay, FiRefreshCw } from "react-icons/fi";
 
-export default function Timer({ initialMinutes = 25 }) {
+type TimerProps = {
+  initialMinutes?: number;
+};
+
+export default function Timer({ initialMinutes = 25 }: TimerProps) {
   const [minutes, setMinutes] = useState(initialMinutes);
   const [seconds, setSeconds] = useState(0);
   const [isActive, setIsActive] = useState(false);
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: number | undefined;
     if (isActive) {
-      interval = setInterval(() => {
-        setSeconds(prev => {
+      interval = window.setInterval(() => {
+        setSeconds((prev) => {
           if (prev === 0) {
-            setMinutes(prevMin => {
+            setMinutes((prevMin) => {
               if (prevMin === 0) {
                 setIsActive(false);
                 return 0;
@@ -25,23 +29,31 @@ export default function Timer({ initialMinutes = 25 }) {
         });
       }, 1000);
     }
-    return () => clearInterval(interval);
+
+    return () => {
+      if (interval !== undefined) {
+        window.clearInterval(interval);
+      }
+    };
   }, [isActive]);
 
   return (
     <div className="timer-panel">
       <div className="time-display">
-        {String(minutes).padStart(2, '0')}:{String(seconds).padStart(2, '0')}
+        {String(minutes).padStart(2, "0")}:{String(seconds).padStart(2, "0")}
       </div>
       <div className="timer-controls">
-        <button onClick={() => setIsActive(!isActive)}>
+        <button type="button" onClick={() => setIsActive(!isActive)}>
           {isActive ? <FiPause /> : <FiPlay />}
         </button>
-        <button onClick={() => {
-          setMinutes(initialMinutes);
-          setSeconds(0);
-          setIsActive(false);
-        }}>
+        <button
+          type="button"
+          onClick={() => {
+            setMinutes(initialMinutes);
+            setSeconds(0);
+            setIsActive(false);
+          }}
+        >
           <FiRefreshCw />
         </button>
       </div>
