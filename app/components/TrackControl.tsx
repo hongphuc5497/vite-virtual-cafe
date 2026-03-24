@@ -1,3 +1,14 @@
+const TRACK_ICONS: Record<string, string> = {
+  Barista: "coffee",
+  "Preparing Drinks": "local_cafe",
+  "Coffee Cups": "coffee_maker",
+  "Other Customers": "people",
+  Machinery: "settings",
+  "Rainy Day": "rainy",
+  "Sunny Day": "wb_sunny",
+  Fireplace: "local_fire_department",
+};
+
 export interface TrackControlProps {
   label: string;
   value: number;
@@ -13,51 +24,57 @@ export function TrackControl({
   onVolumeChange,
   onTogglePause,
 }: TrackControlProps) {
+  const icon = TRACK_ICONS[label] ?? "music_note";
+
   return (
     <div
-      className={`space-y-2 rounded-[1.1rem] px-2 py-2 transition ${
-        isPaused ? "opacity-60" : ""
+      className={`rounded-lg px-3 py-3 transition-colors ${
+        isPaused ? "opacity-50" : "hover:bg-surface-container"
       }`}
     >
-      <div className="flex items-center justify-between gap-4">
-        <div>
-          <p className="text-base font-medium text-stone-900">
-            {label}
-          </p>
-          <span className="text-[11px] uppercase tracking-[0.2em] text-stone-500">
-            {isPaused ? "paused" : "live"} · {value}%
-          </span>
+      <div className="flex items-center gap-3">
+        <span
+          className="material-symbols-outlined flex-shrink-0 text-[20px]"
+          style={{ color: "#8f4a00" }}
+        >
+          {icon}
+        </span>
+
+        <div className="min-w-0 flex-1">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm font-medium text-on-surface">{label}</p>
+            <span className="flex-shrink-0 text-xs font-semibold tabular-nums text-on-surface-variant">
+              {value}%
+            </span>
+          </div>
+          <input
+            type="range"
+            min="0"
+            max="100"
+            value={value}
+            onChange={(event) =>
+              onVolumeChange(Number.parseInt(event.target.value, 10))
+            }
+            aria-label={`${label} volume: ${value}%`}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-valuenow={value}
+            className="mt-2 w-full cursor-pointer"
+          />
         </div>
+
         <button
           type="button"
           onClick={onTogglePause}
           aria-label={`${isPaused ? "Play" : "Pause"} ${label}`}
           aria-pressed={!isPaused}
-          className={`btn-primary text-xs ${
-            isPaused
-              ? "bg-stone-950 text-stone-100"
-              : "bg-white/75 text-stone-700"
-          }`}
+          className="flex-shrink-0 rounded-lg p-1.5 transition-colors hover:bg-surface-container-high"
+          title={isPaused ? "Play" : "Pause"}
         >
-          {isPaused ? "Play" : "Pause"}
+          <span className="material-symbols-outlined text-[18px] text-on-surface-variant">
+            {isPaused ? "play_arrow" : "pause"}
+          </span>
         </button>
-      </div>
-      <div className="flex items-center gap-3">
-        <span className="text-[11px] text-stone-500">◔</span>
-        <input
-          type="range"
-          min="0"
-          max="100"
-          value={value}
-          onChange={(event) =>
-            onVolumeChange(Number.parseInt(event.target.value, 10))
-          }
-          aria-label={`${label} volume: ${value}%`}
-          aria-valuemin={0}
-          aria-valuemax={100}
-          aria-valuenow={value}
-          className="h-2 w-full cursor-pointer appearance-none rounded-full bg-stone-300 accent-stone-900"
-        />
       </div>
     </div>
   );

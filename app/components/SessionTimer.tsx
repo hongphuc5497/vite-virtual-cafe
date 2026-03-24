@@ -17,23 +17,44 @@ export function SessionTimer({
   onDurationChange,
   formatTime,
 }: SessionTimerProps) {
+  const statusLabel = isRunning
+    ? "Deep Focus"
+    : timeLeft === 0
+      ? "Session Complete"
+      : "Ready";
+
   return (
-    <div className="mt-5 rounded-[1.6rem] bg-[rgba(20,15,12,0.76)] p-5 text-stone-100">
-      <div className="flex items-center justify-between gap-4">
-        <p className="text-[11px] uppercase tracking-[0.34em] text-stone-400">
+    <div>
+      <div className="flex items-center justify-between gap-3">
+        <p className="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">
           Session Timer
         </p>
-        <span className="rounded-full border border-white/12 px-3 py-2 text-[11px] uppercase tracking-[0.24em] text-stone-300">
-          {isRunning ? "running" : "paused"}
+        <span
+          className="rounded-full px-3 py-1 text-xs font-medium"
+          style={{
+            background: isRunning ? "#ffdcc4" : "#f2efd5",
+            color: isRunning ? "#8f4a00" : "#544438",
+          }}
+        >
+          {statusLabel}
         </span>
       </div>
-      <div className="mt-4 font-mono text-5xl font-bold">
+
+      <div
+        className="mt-3 font-headline text-6xl font-light tracking-tight"
+        style={{ color: "#1d1c0d", letterSpacing: "-0.02em" }}
+      >
         {formatTime(timeLeft)}
       </div>
-      <div className="mt-5 grid gap-4">
-        <label className="block space-y-2">
-          <span className="text-[11px] font-semibold uppercase tracking-[0.28em] text-stone-400">
-            Session Length
+
+      <p className="mt-1 font-headline text-sm italic text-on-surface-variant">
+        {isRunning ? "Stay in the room." : `${draftDurationMinutes} min session`}
+      </p>
+
+      <div className="mt-5">
+        <label className="block space-y-1.5">
+          <span className="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">
+            Session Length (min)
           </span>
           <input
             type="number"
@@ -45,36 +66,37 @@ export function SessionTimer({
                 Math.max(1, Number.parseInt(event.target.value || "1", 10))
               )
             }
-            className="w-full rounded-[1.1rem] border border-white/10 bg-white/90 px-4 py-3 text-lg text-stone-950 outline-none transition focus:border-[#8fa77b]"
+            className="w-full rounded-lg px-4 py-2.5 text-base text-on-surface outline-none"
+            style={{
+              background: "#f2efd5",
+              color: "#1d1c0d",
+            }}
           />
         </label>
       </div>
-      <div className="mt-5 flex flex-wrap gap-3">
+
+      <div className="mt-4 flex flex-wrap gap-2.5">
         <button
           type="button"
           onClick={onStart}
           aria-label={isRunning ? "Pause session" : "Start session"}
           aria-pressed={isRunning}
-          className={`btn-primary ${
-            isRunning
-              ? "bg-[#cc8a53] text-stone-950"
-              : "bg-[#8fa77b] text-stone-950"
-          }`}
+          className="btn-primary"
         >
+          <span className="material-symbols-outlined text-[16px]">
+            {isRunning ? "pause" : timeLeft === 0 ? "replay" : "play_arrow"}
+          </span>
           {isRunning ? "Pause" : timeLeft === 0 ? "Restart" : "Start"}
         </button>
         <button
           type="button"
           onClick={onReset}
           aria-label="Reset timer"
-          className="btn-secondary border border-white/15 px-5 py-3 text-stone-100 hover:bg-white/5"
+          className="btn-ghost"
         >
           Reset
         </button>
       </div>
-      <p className="mt-4 text-sm leading-6 text-stone-400">
-        Start applies the current number and begins the session.
-      </p>
     </div>
   );
 }
