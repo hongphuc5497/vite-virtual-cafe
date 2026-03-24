@@ -22,6 +22,88 @@
   ::selection {
     background: rgba(91, 71, 47, 0.18);
   }
+
+  /* Focus indicators for accessibility */
+  button:focus-visible,
+  input:focus-visible,
+  [role="button"]:focus-visible {
+    @apply outline-2 outline-offset-2 outline-stone-900;
+  }
+
+  /* Smooth transitions for interactive elements */
+  button,
+  input[type="range"],
+  [role="button"] {
+    @apply transition-all duration-200 ease-out;
+  }
+
+  /* Range slider custom styling */
+  input[type="range"]::-webkit-slider-thumb {
+    @apply appearance-none w-5 h-5 rounded-full bg-stone-900 cursor-pointer transition-transform hover:scale-110 active:scale-95;
+    box-shadow: 0 2px 4px rgba(24, 19, 13, 0.2);
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    @apply w-5 h-5 rounded-full bg-stone-900 cursor-pointer transition-transform hover:scale-110 active:scale-95 border-0;
+    box-shadow: 0 2px 4px rgba(24, 19, 13, 0.2);
+  }
+
+  /* Input field improvements */
+  input[type="number"],
+  input[type="text"] {
+    @apply transition-all duration-200;
+  }
+
+  input[type="number"]:hover,
+  input[type="text"]:hover {
+    @apply shadow-md;
+  }
+
+  /* Checkbox improvements */
+  input[type="checkbox"]:focus-visible {
+    @apply outline-2 outline-offset-1 outline-stone-900;
+  }
+
+  input[type="checkbox"]:disabled {
+    @apply opacity-40 cursor-not-allowed;
+  }
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@layer components {
+  .sound-indicator {
+    @apply inline-block w-2 h-2 rounded-full bg-green-500 animate-pulse;
+  }
+
+  .sound-indicator.disabled {
+    @apply bg-stone-400 animate-none;
+  }
+
+  .btn-primary {
+    @apply px-5 py-3 text-sm font-semibold uppercase tracking-[0.22em] rounded-full transition-all duration-200;
+    @apply active:scale-95 active:shadow-sm;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    @apply scale-105 shadow-md;
+  }
+
+  .btn-secondary {
+    @apply px-5 py-3 text-sm font-semibold uppercase tracking-[0.22em] rounded-full border transition-all duration-200;
+    @apply active:scale-95 active:shadow-sm;
+  }
+
+  .btn-secondary:hover:not(:disabled) {
+    @apply scale-105 shadow-md;
+  }
 }
 
 @tailwind base;
