@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { DEFAULT_SCENE, STORAGE_KEY } from "~/constants/audioConfig";
+import type { SavedPreferences, SceneId } from "~/types/audio";
 
 const BACKDROP_SCENES = [
   {
@@ -35,7 +37,26 @@ const SCENE_GRADIENTS: Record<string, string> = {
 };
 
 export default function Settings() {
-  const [activeScene, setActiveScene] = useState("misty-cabin");
+  const [activeScene, setActiveScene] = useState<SceneId>(DEFAULT_SCENE);
+
+  useEffect(() => {
+    const saved = window.localStorage.getItem(STORAGE_KEY);
+    if (!saved) return;
+    try {
+      const parsed = JSON.parse(saved) as SavedPreferences;
+      if (parsed.selectedScene) setActiveScene(parsed.selectedScene);
+    } catch { /* ignore */ }
+  }, []);
+
+  const handleSceneChange = (sceneId: SceneId) => {
+    setActiveScene(sceneId);
+    const saved = window.localStorage.getItem(STORAGE_KEY);
+    const existing: SavedPreferences = saved ? JSON.parse(saved) : {};
+    window.localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({ ...existing, selectedScene: sceneId } satisfies SavedPreferences)
+    );
+  };
   const [focusTimerSounds, setFocusTimerSounds] = useState(true);
   const [fadeTransitions, setFadeTransitions] = useState(true);
   const [notifications, setNotifications] = useState(false);
@@ -128,7 +149,7 @@ export default function Settings() {
                 <button
                   key={scene.id}
                   type="button"
-                  onClick={() => setActiveScene(scene.id)}
+                  onClick={() => handleSceneChange(scene.id as SceneId)}
                   className="group rounded-xl text-left transition-all duration-200 hover:scale-[1.02] active:scale-95 overflow-hidden"
                   style={{
                     outline: isSelected ? "2px solid #8f4a00" : "none",

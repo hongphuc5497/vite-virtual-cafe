@@ -40,12 +40,25 @@ export function RoomMixControls({
           aria-pressed={soundEnabled}
           className={soundEnabled ? "btn-primary" : "btn-secondary"}
         >
+          {!soundEnabled && (
+            <span
+              className="inline-block h-2 w-2 rounded-full animate-pulse flex-shrink-0"
+              style={{ background: "#8f4a00" }}
+              aria-hidden="true"
+            />
+          )}
           <span className="material-symbols-outlined text-[16px]">
             {soundEnabled ? "volume_up" : "volume_off"}
           </span>
           {soundEnabled ? "Live" : "Enable"}
         </button>
       </div>
+
+      {!soundEnabled && (
+        <p className="mt-2 text-xs text-on-surface-variant">
+          Tap <strong>Enable</strong> to fill the room with sound.
+        </p>
+      )}
 
       <div className="mt-4 -mx-3">
         {tracks.map((track) => (

@@ -1,3 +1,6 @@
+import type React from "react";
+
+
 const TRACK_ICONS: Record<string, string> = {
   Barista: "coffee",
   "Preparing Drinks": "local_cafe",
@@ -60,6 +63,7 @@ export function TrackControl({
             aria-valuemax={100}
             aria-valuenow={value}
             className="mt-2 w-full cursor-pointer"
+            style={{ "--track-fill": `${value}%` } as React.CSSProperties}
           />
         </div>
 

@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
+import { Link } from "@remix-run/react";
 import { useAudioManager } from "~/hooks/useAudioManager";
 import { RoomMixControls } from "~/components/RoomMixControls";
 import { BackdropOverlay } from "~/components/BackdropOverlay";
 import { VibeSelector } from "~/components/VibeSelector";
-import { DEFAULT_TRACKS, STORAGE_KEY } from "~/constants/audioConfig";
-import type { MixerTrack, SavedPreferences } from "~/types/audio";
+import { DEFAULT_SCENE, DEFAULT_TRACKS, STORAGE_KEY } from "~/constants/audioConfig";
+import type { MixerTrack, SavedPreferences, SceneId } from "~/types/audio";
 
 export default function Relax() {
   const [tracks, setTracks] = useState(DEFAULT_TRACKS);
+  const [selectedScene, setSelectedScene] = useState<SceneId>(DEFAULT_SCENE);
 
   useEffect(() => {
     const saved = window.localStorage.getItem(STORAGE_KEY);
@@ -22,6 +24,7 @@ export default function Relax() {
           })
         );
       }
+      if (parsed.selectedScene) setSelectedScene(parsed.selectedScene);
     } catch {
       /* ignore */
     }
@@ -60,7 +63,7 @@ export default function Relax() {
         backgroundSize: "cover",
       }}
     >
-      <BackdropOverlay backdropGlow={backdropGlow} />
+      <BackdropOverlay backdropGlow={backdropGlow} scene={selectedScene} />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 py-8 md:px-6">
         <div className="mb-8">
@@ -89,43 +92,18 @@ export default function Relax() {
           >
             <VibeSelector tracks={tracks} onApplyVibe={handleApplyVibe} />
 
-            <div className="mt-6">
-              <p className="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">
-                Quick Toggles
+            <div className="mt-6 flex items-center justify-between">
+              <p className="text-xs text-on-surface-variant">
+                Adjust auto-start, fade transitions & more in
               </p>
-              <div className="mt-3 space-y-3">
-                <label className="flex cursor-pointer items-center justify-between gap-4 rounded-lg p-3 transition-colors hover:bg-surface-container">
-                  <div>
-                    <p className="text-sm font-medium text-on-surface">
-                      Auto-start on open
-                    </p>
-                    <p className="text-xs text-on-surface-variant">
-                      Begin playing when you arrive
-                    </p>
-                  </div>
-                  <input
-                    type="checkbox"
-                    className="h-4 w-4 accent-primary"
-                    onChange={() => {}}
-                  />
-                </label>
-                <label className="flex cursor-pointer items-center justify-between gap-4 rounded-lg p-3 transition-colors hover:bg-surface-container">
-                  <div>
-                    <p className="text-sm font-medium text-on-surface">
-                      Fade transitions
-                    </p>
-                    <p className="text-xs text-on-surface-variant">
-                      Smooth vibe crossfades
-                    </p>
-                  </div>
-                  <input
-                    type="checkbox"
-                    defaultChecked
-                    className="h-4 w-4 accent-primary"
-                    onChange={() => {}}
-                  />
-                </label>
-              </div>
+              <Link
+                to="/settings"
+                className="inline-flex items-center gap-1 text-xs font-semibold transition-colors"
+                style={{ color: "#8f4a00" }}
+              >
+                Settings
+                <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
+              </Link>
             </div>
           </div>
 

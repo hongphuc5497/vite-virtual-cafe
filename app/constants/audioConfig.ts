@@ -2,6 +2,7 @@ import type { MixerTrack } from "~/types/audio";
 
 export const DEFAULT_DURATION_MINUTES = 25;
 export const STORAGE_KEY = "virtual-cafe-home-prefs";
+export const DEFAULT_SCENE = "misty-cabin" as const;
 
 export const DEFAULT_TRACKS: MixerTrack[] = [
   { label: "Barista", value: 64 },

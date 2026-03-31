@@ -37,7 +37,7 @@ function AppNav() {
   return (
     <header
       className="sticky top-0 z-50 px-4 py-3 md:px-6"
-      style={{ background: "#f8f4db" }}
+      style={{ background: "#f8f4db", borderBottom: "1px solid #d9c2b3" }}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between">
         <span

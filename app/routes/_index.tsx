@@ -8,10 +8,11 @@ import { BackdropOverlay } from "~/components/BackdropOverlay";
 import { VibeSelector } from "~/components/VibeSelector";
 import {
   DEFAULT_DURATION_MINUTES,
+  DEFAULT_SCENE,
   DEFAULT_TRACKS,
   STORAGE_KEY,
 } from "~/constants/audioConfig";
-import type { MixerTrack, SavedPreferences } from "~/types/audio";
+import type { MixerTrack, SavedPreferences, SceneId } from "~/types/audio";
 
 export default function Index() {
   const [tracks, setTracks] = useState(DEFAULT_TRACKS);
@@ -21,6 +22,7 @@ export default function Index() {
   const [appliedDurationMinutes, setAppliedDurationMinutes] = useState(
     DEFAULT_DURATION_MINUTES
   );
+  const [selectedScene, setSelectedScene] = useState<SceneId>(DEFAULT_SCENE);
 
   useEffect(() => {
     const saved = window.localStorage.getItem(STORAGE_KEY);
@@ -44,6 +46,7 @@ export default function Index() {
 
       setDraftDurationMinutes(savedDraft);
       setAppliedDurationMinutes(savedApplied);
+      if (parsed.selectedScene) setSelectedScene(parsed.selectedScene);
     } catch {
       window.localStorage.removeItem(STORAGE_KEY);
     }
@@ -60,9 +63,10 @@ export default function Index() {
         appliedDurationMinutes,
         tracks,
         pausedTracks: audio.pausedTracks,
+        selectedScene,
       } satisfies SavedPreferences)
     );
-  }, [draftDurationMinutes, appliedDurationMinutes, tracks, audio.pausedTracks]);
+  }, [draftDurationMinutes, appliedDurationMinutes, tracks, audio.pausedTracks, selectedScene]);
 
   useKeyboardShortcuts({
     onTogglePlay: () => (timer.isRunning ? timer.pause() : timer.start()),
@@ -122,7 +126,7 @@ export default function Index() {
         backgroundSize: "cover",
       }}
     >
-      <BackdropOverlay backdropGlow={backdropGlow} />
+      <BackdropOverlay backdropGlow={backdropGlow} scene={selectedScene} />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 py-8 md:px-6">
         {/* Hero text */}
@@ -152,6 +156,7 @@ export default function Index() {
             >
               <SessionTimer
                 timeLeft={timer.timeLeft}
+                totalSeconds={appliedDurationMinutes * 60}
                 isRunning={timer.isRunning}
                 draftDurationMinutes={draftDurationMinutes}
                 onStart={handleToggleTimer}
