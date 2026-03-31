@@ -1,3 +1,41 @@
+# vite-remix-virtual-cafe
+
+## Commands
+- `npm run dev` — start dev server (Express + Vite HMR) at **http://localhost:3000**
+- `npm run build` — production build via `remix vite:build`
+- `npm run typecheck` — type-check only (`tsc --noEmit`); Vite handles emit, not tsc
+- `npm run lint` — ESLint with TypeScript + import plugins
+- `npm start` — production Express server (requires `npm run build` first)
+
+## Architecture
+- Remix v2 on a **custom Express server** (`server.js`) — not the default Remix CLI server
+- Vite future flags active: `v3_singleFetch`, `v3_lazyRouteDiscovery`, `v3_fetcherPersist`, `v3_relativeSplatPath`, `v3_throwAbortReason`
+- Path alias: `~/*` → `./app/*` — always use `~/components/Foo`, never relative paths
+- Tailwind CSS **v3** — config in `tailwind.config.ts` + `postcss.config.js`
+- Audio via **Howler.js** — browser-only; never import in loaders, actions, or server-side code
+
+## Code Style
+- TypeScript strict mode — no `any`, no non-null assertions without an explanatory comment
+- ES modules throughout (`import`/`export`), no `require()`
+- Directory layout: `app/components/`, `app/routes/`, `app/hooks/`, `app/types/`, `app/constants/`
+- `MixerTrack` and `SavedPreferences` are the core audio state types (`app/types/audio.ts`)
+
+## Gotchas
+- **No test runner configured** — do not assume Jest, Vitest, or any other test framework exists
+- `useAudioManager` and `useSessionTimer` are client-only hooks; they must not run during SSR
+- All `localStorage` access must be inside `useEffect` — never in render or loaders
+- `DEFAULT_TRACKS` in `app/constants/audioConfig.ts` is the single source of truth for track configuration; update there first, then check downstream consumers
+- Node.js ≥ 20 required (`engines` field in `package.json`)
+
+## Token Efficiency
+- Never re-read files you just wrote or edited. You know the contents.
+- Never re-run commands to "verify" unless the outcome was uncertain.
+- Don't echo back large blocks of code or file contents unless asked.
+- Batch related edits into single operations. Don't make 5 edits when 1 handles it.
+- Skip confirmations like "I'll continue..." Just do it.
+- If a task needs 1 tool call, don't use 3. Plan before acting.
+- Do not summarize what you just did unless the result is ambiguous or you need additional input.
+
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 

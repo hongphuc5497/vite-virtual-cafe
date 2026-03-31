@@ -1,3 +1,18 @@
+# vite-remix-virtual-cafe — Agent Config
+
+No custom subagents are defined for this project yet.
+The GitNexus code-intelligence block below is auto-injected by the GitNexus tool.
+Add agent definitions here when isolated, tool-restricted tasks are needed.
+
+## Token Efficiency
+- Never re-read files you just wrote or edited. You know the contents.
+- Never re-run commands to "verify" unless the outcome was uncertain.
+- Don't echo back large blocks of code or file contents unless asked.
+- Batch related edits into single operations. Don't make 5 edits when 1 handles it.
+- Skip confirmations like "I'll continue..." Just do it.
+- If a task needs 1 tool call, don't use 3. Plan before acting.
+- Do not summarize what you just did unless the result is ambiguous or you need additional input.
+
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
