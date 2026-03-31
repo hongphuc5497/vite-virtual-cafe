@@ -1,9 +1,14 @@
-node_modules
+# Dependencies
+node_modules/
 
-/.cache
-/build
+# Build artifacts
+.cache/
+build/
+
+# Environment
 .env
 
-.claude
-.gitnexus
-.superpowers
+# AI runtime (local only)
+.claude/
+.gitnexus/
+.superpowers/
