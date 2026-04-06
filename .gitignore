@@ -11,4 +11,5 @@ build/
 # AI runtime (local only)
 .claude/
 .gitnexus/
+.omx/
 .superpowers/
