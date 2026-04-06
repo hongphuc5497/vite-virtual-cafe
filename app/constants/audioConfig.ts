@@ -15,10 +15,6 @@ export const DEFAULT_TRACKS: MixerTrack[] = [
   { label: "Fireplace", value: 22 },
 ];
 
-export const DEFAULT_PAUSED_TRACKS = Object.fromEntries(
-  DEFAULT_TRACKS.map((track) => [track.label, false])
-) as Record<string, boolean>;
-
 export const SOUND_URLS: Record<string, string> = {
   Barista: "https://imissmycafe.com/assets/sounds/barista-reagan.mp3",
   "Preparing Drinks": "https://imissmycafe.com/assets/sounds/makingdrinks.mp3",

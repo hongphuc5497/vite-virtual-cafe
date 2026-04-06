@@ -183,7 +183,7 @@ export default function Journal() {
                   className="font-headline text-lg font-light italic leading-relaxed"
                   style={{ color: "#1d1c0d" }}
                 >
-                  "{entry.note}"
+                  &ldquo;{entry.note}&rdquo;
                 </p>
 
                 <div className="mt-5 flex flex-wrap items-center gap-3">

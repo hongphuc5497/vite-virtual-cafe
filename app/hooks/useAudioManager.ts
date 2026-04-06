@@ -157,16 +157,11 @@ export function useAudioManager(tracks: MixerTrack[]) {
     }
   };
 
-  const updateTrackVolume = (label: string, value: number) => {
-    // This is handled by parent component updating tracks
-  };
-
   return {
     soundEnabled,
     pausedTracks,
     initializeAudio,
     toggleSound,
     toggleTrackPause,
-    updateTrackVolume,
   };
 }

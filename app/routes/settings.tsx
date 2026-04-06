@@ -222,25 +222,33 @@ export default function Settings() {
                 value: notifications,
                 onChange: setNotifications,
               },
-            ].map(({ label, description, value, onChange }) => (
-              <label
+            ].map(({ label, description, value, onChange }) => {
+              const inputId = label.toLowerCase().replace(/\s+/g, "-");
+              return (
+              <div
                 key={label}
-                className="flex cursor-pointer items-center justify-between gap-4 px-6 py-4 transition-colors hover:bg-surface-container-low"
+                className="flex items-center justify-between gap-4 px-6 py-4 transition-colors hover:bg-surface-container-low"
               >
                 <div>
-                  <p className="text-sm font-medium text-on-surface">{label}</p>
+                  <label
+                    htmlFor={inputId}
+                    className="cursor-pointer text-sm font-medium text-on-surface"
+                  >
+                    {label}
+                  </label>
                   <p className="mt-0.5 text-xs text-on-surface-variant">
                     {description}
                   </p>
                 </div>
                 <input
+                  id={inputId}
                   type="checkbox"
                   checked={value}
                   onChange={(e) => onChange(e.target.checked)}
                   className="h-4 w-4 accent-primary"
                 />
-              </label>
-            ))}
+              </div>
+            )})}
           </div>
         </section>
 
