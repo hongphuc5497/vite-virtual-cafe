@@ -1,7 +1,8 @@
 ---
 phase: 1
 slug: complete-session-loop
-status: draft
+status: approved
+reviewed_at: 2026-04-29
 shadcn_initialized: true
 preset: base-nova
 created: 2026-04-29
