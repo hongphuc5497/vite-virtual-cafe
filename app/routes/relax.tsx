@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { Link } from "@remix-run/react";
+import { useEffect, useRef, useState } from "react";
 import { useAudioManager } from "~/hooks/useAudioManager";
 import { RoomMixControls } from "~/components/RoomMixControls";
 import { BackdropOverlay } from "~/components/BackdropOverlay";
@@ -8,8 +7,22 @@ import { DEFAULT_SCENE, DEFAULT_TRACKS, STORAGE_KEY } from "~/constants/audioCon
 import type { MixerTrack, SavedPreferences, SceneId } from "~/types/audio";
 
 export default function Relax() {
+  let initialPausedTracks: Record<string, boolean> | undefined;
+  if (typeof window !== "undefined") {
+    try {
+      const saved = window.localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        const parsed = JSON.parse(saved) as SavedPreferences;
+        if (parsed.pausedTracks) {
+          initialPausedTracks = parsed.pausedTracks;
+        }
+      }
+    } catch { /* ignore */ }
+  }
+
   const [tracks, setTracks] = useState(DEFAULT_TRACKS);
   const [selectedScene, setSelectedScene] = useState<SceneId>(DEFAULT_SCENE);
+  const loadedRef = useRef(false);
 
   useEffect(() => {
     const saved = window.localStorage.getItem(STORAGE_KEY);
@@ -28,11 +41,13 @@ export default function Relax() {
     } catch {
       /* ignore */
     }
+    loadedRef.current = true;
   }, []);
 
-  const audio = useAudioManager(tracks);
+  const audio = useAudioManager(tracks, initialPausedTracks);
 
   useEffect(() => {
+    if (!loadedRef.current) return;
     const saved = window.localStorage.getItem(STORAGE_KEY);
     const existing = saved ? JSON.parse(saved) : {};
     window.localStorage.setItem(
@@ -91,20 +106,6 @@ export default function Relax() {
             }}
           >
             <VibeSelector tracks={tracks} onApplyVibe={handleApplyVibe} />
-
-            <div className="mt-6 flex items-center justify-between">
-              <p className="text-xs text-on-surface-variant">
-                Adjust auto-start, fade transitions & more in
-              </p>
-              <Link
-                to="/settings"
-                className="inline-flex items-center gap-1 text-xs font-semibold transition-colors"
-                style={{ color: "#8f4a00" }}
-              >
-                Settings
-                <span className="material-symbols-outlined text-[14px]">arrow_forward</span>
-              </Link>
-            </div>
           </div>
 
           {/* Mixer */}
@@ -119,6 +120,7 @@ export default function Relax() {
               soundEnabled={audio.soundEnabled}
               tracks={tracks}
               pausedTracks={audio.pausedTracks}
+              trackErrors={audio.trackErrors}
               onToggleSound={audio.toggleSound}
               onTrackVolumeChange={(label, value) =>
                 setTracks((current) =>
@@ -128,6 +130,7 @@ export default function Relax() {
                 )
               }
               onTrackPauseToggle={(label) => audio.toggleTrackPause(label)}
+              onTrackRetry={(label: string) => audio.retryTrack(label)}
             />
           </div>
         </div>

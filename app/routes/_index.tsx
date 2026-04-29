@@ -226,6 +226,7 @@ export default function Index() {
               soundEnabled={audio.soundEnabled}
               tracks={tracks}
               pausedTracks={audio.pausedTracks}
+              trackErrors={audio.trackErrors}
               onToggleSound={audio.toggleSound}
               onTrackVolumeChange={(label, value) =>
                 setTracks((current) =>
@@ -235,6 +236,7 @@ export default function Index() {
                 )
               }
               onTrackPauseToggle={(label) => audio.toggleTrackPause(label)}
+              onTrackRetry={(label: string) => audio.retryTrack(label)}
             />
           </div>
         </div>
