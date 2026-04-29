@@ -12,6 +12,18 @@ A focus timer that feels rewarding to complete — pleasant ambient sounds while
 
 **Shipped v1.0** — 2,007 LOC TypeScript, 5 requirements satisfied, 3 plans executed.
 
+### v1.1 Current Milestone: JS Migration + Playwright Tests
+
+**Goal:** Strip TypeScript, keep all logic, add E2E test coverage across all flows.
+
+**Target features:**
+- Full TS → JS conversion (all .ts/.tsx → .js/.jsx)
+- Remove TypeScript dependencies and build step
+- Playwright E2E test suite covering all user flows
+- CI-ready test configuration
+
+## Existing Features (v1.0)
+
 - Timer completion triggers celebration overlay with fade-in animation and session logging to localStorage
 - Session entries capture date, duration, vibe, and auto-detected mood (5-mood heuristic)
 - Per-track audio error surfacing with badge indicators and retry buttons in mixer UI
@@ -47,7 +59,11 @@ A focus timer that feels rewarding to complete — pleasant ambient sounds while
 
 ### Active
 
-*(None — define requirements for next milestone via `/gsd-new-milestone`)*
+- [ ] Full TS → JS migration (all .ts/.tsx → .js/.jsx, strip types, keep logic)
+- [ ] Remove TypeScript dependencies (typescript, @types/*, tsconfig)
+- [ ] Playwright E2E test suite for all user flows
+- [ ] CI-ready test configuration
+- [ ] Zero logic changes — migration must be behavior-preserving
 
 ### Out of Scope
 
@@ -57,11 +73,11 @@ A focus timer that feels rewarding to complete — pleasant ambient sounds while
 - Sound notification on session end — out of scope for now
 - Cross-fade transitions — out of scope
 - Server-side persistence — everything is localStorage
-- Tests, CI, error boundaries — not yet
+- Tests, CI, error boundaries — v1.1 addresses tests + CI
 
 ## Context
 
-- Remix v2 on Express, Vite 6, Tailwind v3, TypeScript strict
+- Remix v2 on Express, Vite 6, Tailwind v3, JavaScript (TS → JS migration in progress)
 - Audio from remote `imissmycafe.com` MP3s via HTMLAudioElement (no Howler.js)
 - All state is client-side localStorage, no backend database
 - shadcn/ui v4 partially configured (button component exists, full design system not applied)
