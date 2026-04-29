@@ -7,8 +7,8 @@
 
 ### Timer
 
-- [ ] **TIMER-01**: When countdown reaches 0:00, show a completion celebration (visual feedback) and write session entry to localStorage
-- [ ] **TIMER-02**: Session entry includes: date, duration, vibe, mood (auto-detected from active vibe)
+- [x] **TIMER-01**: When countdown reaches 0:00, show a completion celebration (visual feedback) and write session entry to localStorage
+- [x] **TIMER-02**: Session entry includes: date, duration, vibe, mood (auto-detected from active vibe)
 
 ### Audio
 
@@ -35,8 +35,8 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| TIMER-01 | Phase 1 | Pending |
-| TIMER-02 | Phase 1 | Pending |
+| TIMER-01 | Phase 1 | Complete |
+| TIMER-02 | Phase 1 | Complete |
 | AUDIO-01 | Phase 1 | Pending |
 | AUDIO-02 | Phase 1 | Pending |
 | ROUTE-01 | Phase 1 | Complete |
