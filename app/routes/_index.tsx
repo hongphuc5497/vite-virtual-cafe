@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import { useSessionTimer } from "~/hooks/useSessionTimer";
 import { useAudioManager } from "~/hooks/useAudioManager";
 import { useKeyboardShortcuts } from "~/hooks/useKeyboardShortcuts";
+import { detectVibeName, detectMood, writeSessionEntry } from "~/lib/session";
+import type { SessionEntry } from "~/lib/session";
+import { CelebrationOverlay } from "~/components/CelebrationOverlay";
 import { SessionTimer } from "~/components/SessionTimer";
 import { RoomMixControls } from "~/components/RoomMixControls";
 import { BackdropOverlay } from "~/components/BackdropOverlay";
@@ -23,6 +26,8 @@ export default function Index() {
     DEFAULT_DURATION_MINUTES
   );
   const [selectedScene, setSelectedScene] = useState<SceneId>(DEFAULT_SCENE);
+  const [showCelebration, setShowCelebration] = useState(false);
+  const [lastSession, setLastSession] = useState<SessionEntry | null>(null);
 
   useEffect(() => {
     const saved = window.localStorage.getItem(STORAGE_KEY);
@@ -54,6 +59,31 @@ export default function Index() {
 
   const timer = useSessionTimer(appliedDurationMinutes);
   const audio = useAudioManager(tracks);
+
+  // Timer completion detection: when timer hits 0, build session entry,
+  // write to localStorage (save-on-show per D-03), and show celebration overlay
+  useEffect(() => {
+    if (timer.timeLeft !== 0 || timer.isRunning || showCelebration) {
+      return;
+    }
+
+    const vibeName = detectVibeName(tracks);
+    const moodLabel = detectMood(tracks, vibeName);
+
+    const entry: SessionEntry = {
+      date: new Date().toISOString(),
+      durationMinutes: appliedDurationMinutes,
+      vibe: vibeName,
+      mood: moodLabel,
+      tracksSnapshot: Object.fromEntries(
+        tracks.map((t) => [t.label, t.value])
+      ),
+    };
+
+    writeSessionEntry(entry);
+    setLastSession(entry);
+    setShowCelebration(true);
+  }, [timer.timeLeft, timer.isRunning, showCelebration, appliedDurationMinutes, tracks]);
 
   useEffect(() => {
     window.localStorage.setItem(
@@ -90,6 +120,10 @@ export default function Index() {
   const backdropGlow = 0.14 + sunlightLevel / 260;
 
   const handleToggleTimer = async () => {
+    // Reset celebration state when starting a new session from a completed timer
+    if (!timer.isRunning && timer.timeLeft === 0) {
+      setShowCelebration(false);
+    }
     if (timer.isRunning) {
       timer.pause();
       return;
@@ -105,6 +139,10 @@ export default function Index() {
       await audio.initializeAudio();
     }
     timer.start();
+  };
+
+  const handleDismissCelebration = () => {
+    setShowCelebration(false);
   };
 
   const handleApplyVibe = (preset: Record<string, number>) => {
@@ -161,6 +199,7 @@ export default function Index() {
                 draftDurationMinutes={draftDurationMinutes}
                 onStart={handleToggleTimer}
                 onReset={() => {
+                  setShowCelebration(false);
                   timer.setTimeLeft(appliedDurationMinutes * 60);
                   timer.stop();
                 }}
@@ -200,6 +239,14 @@ export default function Index() {
           </div>
         </div>
       </div>
+
+      {lastSession && (
+        <CelebrationOverlay
+          session={lastSession}
+          show={showCelebration}
+          onDismiss={handleDismissCelebration}
+        />
+      )}
     </main>
   );
 }

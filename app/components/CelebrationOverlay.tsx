@@ -12,23 +12,26 @@ export function CelebrationOverlay({
   onDismiss,
 }: CelebrationOverlayProps) {
   return (
-    <div
-      className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-500 ease-out ${
-        show ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
-      }`}
-      style={{ background: "rgba(29,28,13,0.2)" }}
-      onClick={onDismiss}
-      role="dialog"
-      aria-modal="true"
-    >
-      <div
-        className="mx-4 max-w-sm cursor-pointer rounded-2xl px-6 py-8 shadow-[0_24px_40px_rgba(29,28,13,0.08)]"
-        style={{
-          background: "rgba(255,255,255,0.88)",
-          backdropFilter: "blur(12px)",
-        }}
-        onClick={(e) => e.stopPropagation()}
+    <>
+      {/* s: backdrop */}
+      <button
+        type="button"
+        aria-label="Dismiss celebration overlay"
+        className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-500 ease-out ${
+          show ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        }`}
+        style={{ background: "rgba(29,28,13,0.2)" }}
+        onClick={onDismiss}
       >
+        <div
+          className="mx-4 max-w-sm cursor-default rounded-2xl px-6 py-8 shadow-[0_24px_40px_rgba(29,28,13,0.08)]"
+          style={{
+            background: "rgba(255,255,255,0.88)",
+            backdropFilter: "blur(12px)",
+          }}
+          onClick={(e) => e.stopPropagation()}
+          role="none"
+        >
         <h2
           className="font-headline text-3xl font-light italic"
           style={{ color: "#8f4a00" }}
@@ -69,6 +72,8 @@ export function CelebrationOverlay({
           Tap anywhere to dismiss
         </p>
       </div>
-    </div>
+      {/* e: backdrop */}
+    </button>
+    </>
   );
 }
