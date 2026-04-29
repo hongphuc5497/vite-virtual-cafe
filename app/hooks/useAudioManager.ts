@@ -2,11 +2,12 @@ import { useEffect, useRef, useState } from "react";
 import { DEFAULT_TRACKS, SOUND_URLS, TRACK_BASE_VOLUME } from "~/constants/audioConfig";
 import type { MixerTrack } from "~/types/audio";
 
-export function useAudioManager(tracks: MixerTrack[]) {
+export function useAudioManager(tracks: MixerTrack[], initialPausedTracks?: Record<string, boolean>) {
   const [soundEnabled, setSoundEnabled] = useState(false);
   const [pausedTracks, setPausedTracks] = useState<Record<string, boolean>>(
-    Object.fromEntries(tracks.map((t) => [t.label, false]))
+    initialPausedTracks ?? Object.fromEntries(tracks.map((t) => [t.label, false]))
   );
+  const [trackErrors, setTrackErrors] = useState<Record<string, boolean>>({});
   const audioElementsRef = useRef<Map<string, HTMLAudioElement>>(new Map());
   const initializedAudioRef = useRef(false);
 
@@ -33,7 +34,7 @@ export function useAudioManager(tracks: MixerTrack[]) {
       audioElement.volume = targetVolume;
       if (audioElement.paused) {
         void audioElement.play().catch(() => {
-          // Audio playback blocked by browser
+          setTrackErrors((prev) => ({ ...prev, [track.label]: true }));
         });
       }
     });
@@ -60,31 +61,32 @@ export function useAudioManager(tracks: MixerTrack[]) {
         audioElement.loop = true;
         audioElement.preload = "auto";
         audioElement.volume = 0;
+        audioElement.onerror = () => {
+          setTrackErrors((prev) => ({ ...prev, [track.label]: true }));
+        };
         audioElementsRef.current.set(track.label, audioElement);
       });
     }
 
-    try {
-      await Promise.all(
-        DEFAULT_TRACKS.filter((track) => !pausedTracks[track.label]).map(
-          async (track) => {
-            const audioElement = audioElementsRef.current.get(track.label);
+    await Promise.all(
+      DEFAULT_TRACKS.filter((track) => !pausedTracks[track.label]).map(
+        async (track) => {
+          const el = audioElementsRef.current.get(track.label);
 
-            if (!audioElement) {
-              return;
-            }
-
-            const playPromise = audioElement.play();
-
-            if (playPromise) {
-              await playPromise;
-            }
+          if (!el) {
+            return;
           }
-        )
-      );
-    } catch {
-      return false;
-    }
+
+          try {
+            const p = el.play();
+            if (p) await p;
+            setTrackErrors((prev) => ({ ...prev, [track.label]: false }));
+          } catch {
+            setTrackErrors((prev) => ({ ...prev, [track.label]: true }));
+          }
+        }
+      )
+    );
 
     initializedAudioRef.current = true;
     setSoundEnabled(true);
@@ -143,6 +145,8 @@ export function useAudioManager(tracks: MixerTrack[]) {
       return;
     }
 
+    setTrackErrors((prev) => ({ ...prev, [label]: false }));
+
     if (!soundEnabled) {
       return;
     }
@@ -157,11 +161,31 @@ export function useAudioManager(tracks: MixerTrack[]) {
     }
   };
 
+  const retryTrack = async (label: string) => {
+    const el = audioElementsRef.current.get(label);
+    if (!el) return;
+    try {
+      el.load();
+      const p = el.play();
+      if (p) await p;
+      setTrackErrors((prev) => ({ ...prev, [label]: false }));
+    } catch {
+      /* error remains */
+    }
+  };
+
+  const setAllPausedTracks = (paused: Record<string, boolean>) => {
+    setPausedTracks(paused);
+  };
+
   return {
     soundEnabled,
     pausedTracks,
+    trackErrors,
     initializeAudio,
     toggleSound,
     toggleTrackPause,
+    retryTrack,
+    setAllPausedTracks,
   };
 }
