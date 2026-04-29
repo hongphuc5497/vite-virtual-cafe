@@ -33,7 +33,7 @@
 | # | Plan | Covers | Wave | Depends On | Status |
 |---|------|--------|------|------------|--------|
 | 1 | Session completion + celebration | TIMER-01, TIMER-02 | 1 | -- | **Complete** |
-| 2 | Audio error handling + relax page fix | AUDIO-01, AUDIO-02 | 2 | Plan 01 | Pending |
+| 2 | Audio error handling + relax page fix | AUDIO-01, AUDIO-02 | 2 | Plan 01 | **Complete** |
 | 3 | Remove dead /session route | ROUTE-01 | 1 | -- | **Complete** |
 
 ### Plan Details
