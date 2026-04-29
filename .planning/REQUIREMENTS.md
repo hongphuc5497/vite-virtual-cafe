@@ -17,7 +17,7 @@
 
 ### Routes
 
-- [ ] **ROUTE-01**: Remove the dead `/session` route that only redirects to `/`
+- [x] **ROUTE-01**: Remove the dead `/session` route that only redirects to `/`
 
 ## Out of Scope
 
@@ -39,7 +39,7 @@
 | TIMER-02 | Phase 1 | Pending |
 | AUDIO-01 | Phase 1 | Pending |
 | AUDIO-02 | Phase 1 | Pending |
-| ROUTE-01 | Phase 1 | Pending |
+| ROUTE-01 | Phase 1 | Complete |
 
 **Coverage:**
 - v1 requirements: 5 total

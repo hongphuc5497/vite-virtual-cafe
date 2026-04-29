@@ -19,15 +19,30 @@
 4. Paused tracks are restored correctly when navigating to /relax
 5. `/session` route no longer exists
 
-**UI hint:** yes
+**Plans:** 3 plans (2 waves)
+
+### Wave Structure
+
+| Wave | Plans | Description |
+|------|-------|-------------|
+| 1 | Plan 01, Plan 03 | Celebration + session log (no deps); delete dead route (no deps) |
+| 2 | Plan 02 | Audio error handling + relax fix (depends on Plan 01's _index.tsx) |
 
 ### Plans
 
-| # | Plan | Covers |
-|---|------|--------|
-| 1 | Session completion + celebration | TIMER-01, TIMER-02 |
-| 2 | Audio error handling + relax page fix | AUDIO-01, AUDIO-02 |
-| 3 | Remove dead /session route | ROUTE-01 |
+| # | Plan | Covers | Wave | Depends On | Status |
+|---|------|--------|------|------------|--------|
+| 1 | Session completion + celebration | TIMER-01, TIMER-02 | 1 | -- | Pending |
+| 2 | Audio error handling + relax page fix | AUDIO-01, AUDIO-02 | 2 | Plan 01 | Pending |
+| 3 | Remove dead /session route | ROUTE-01 | 1 | -- | **Complete** |
+
+### Plan Details
+
+| Plan | Files | Type |
+|------|-------|------|
+| 01-01-PLAN.md | VibeSelector.tsx (export), session.ts (new), CelebrationOverlay.tsx (new), _index.tsx | execute |
+| 01-02-PLAN.md | useAudioManager.ts, TrackControl.tsx, RoomMixControls.tsx, _index.tsx, relax.tsx | execute |
+| 01-03-PLAN.md | session.tsx (delete) | execute |
 
 ---
 
@@ -35,4 +50,4 @@
 
 | # | Phase | Goal | Reqs | Plans |
 |---|-------|------|------|-------|
-| 1 | Complete the Session Loop | Timer end → celebration + logging, audio fixes, dead route removal | 5 | 3 |
+| 1 | Complete the Session Loop | Timer end -> celebration + logging, audio fixes, dead route removal | 5 | 3 |
