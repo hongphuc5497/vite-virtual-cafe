@@ -1,6 +1,6 @@
 import type { MixerTrack } from "~/types/audio";
 
-const VIBES = [
+export const VIBES = [
   {
     label: "Lo-fi Beats",
     icon: "music_note",
