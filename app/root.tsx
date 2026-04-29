@@ -30,7 +30,6 @@ export const links: LinksFunction = () => [
 const NAV_ITEMS = [
   { to: "/", label: "Focus", icon: "timer" },
   { to: "/relax", label: "Relax", icon: "self_improvement" },
-  { to: "/journal", label: "Journal", icon: "auto_stories" },
 ] as const;
 
 function AppNav() {
@@ -69,21 +68,6 @@ function AppNav() {
           ))}
         </nav>
 
-        <NavLink
-          to="/settings"
-          className={({ isActive }) =>
-            `rounded-lg p-2 transition-colors ${
-              isActive
-                ? "bg-primary-fixed text-primary"
-                : "text-on-surface-variant hover:bg-surface-container"
-            }`
-          }
-          aria-label="Settings"
-        >
-          <span className="material-symbols-outlined text-[20px]">
-            settings
-          </span>
-        </NavLink>
       </div>
     </header>
   );
