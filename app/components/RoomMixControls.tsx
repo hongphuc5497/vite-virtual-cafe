@@ -5,18 +5,22 @@ export interface RoomMixControlsProps {
   soundEnabled: boolean;
   tracks: MixerTrack[];
   pausedTracks: Record<string, boolean>;
+  trackErrors: Record<string, boolean>;
   onToggleSound: () => void;
   onTrackVolumeChange: (label: string, value: number) => void;
   onTrackPauseToggle: (label: string) => void;
+  onTrackRetry: (label: string) => void;
 }
 
 export function RoomMixControls({
   soundEnabled,
   tracks,
   pausedTracks,
+  trackErrors,
   onToggleSound,
   onTrackVolumeChange,
   onTrackPauseToggle,
+  onTrackRetry,
 }: RoomMixControlsProps) {
   return (
     <div>
@@ -67,8 +71,10 @@ export function RoomMixControls({
             label={track.label}
             value={track.value}
             isPaused={pausedTracks[track.label] || false}
+            hasError={trackErrors[track.label] || false}
             onVolumeChange={(value) => onTrackVolumeChange(track.label, value)}
             onTogglePause={() => onTrackPauseToggle(track.label)}
+            onRetry={() => onTrackRetry(track.label)}
           />
         ))}
       </div>
