@@ -1,0 +1,74 @@
+import type { SessionEntry } from "~/lib/session";
+
+export interface CelebrationOverlayProps {
+  session: SessionEntry;
+  show: boolean;
+  onDismiss: () => void;
+}
+
+export function CelebrationOverlay({
+  session,
+  show,
+  onDismiss,
+}: CelebrationOverlayProps) {
+  return (
+    <div
+      className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-500 ease-out ${
+        show ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+      }`}
+      style={{ background: "rgba(29,28,13,0.2)" }}
+      onClick={onDismiss}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        className="mx-4 max-w-sm cursor-pointer rounded-2xl px-6 py-8 shadow-[0_24px_40px_rgba(29,28,13,0.08)]"
+        style={{
+          background: "rgba(255,255,255,0.88)",
+          backdropFilter: "blur(12px)",
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <h2
+          className="font-headline text-3xl font-light italic"
+          style={{ color: "#8f4a00" }}
+        >
+          Great work!
+        </h2>
+
+        <div className="mt-6 space-y-4">
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">
+              Duration
+            </span>
+            <p className="mt-1 text-base font-medium text-on-surface">
+              {session.durationMinutes} min
+            </p>
+          </div>
+
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">
+              Vibe
+            </span>
+            <p className="mt-1 text-base font-medium text-on-surface">
+              {session.vibe}
+            </p>
+          </div>
+
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">
+              Mood
+            </span>
+            <p className="mt-1 text-base font-medium text-on-surface">
+              {session.mood}
+            </p>
+          </div>
+        </div>
+
+        <p className="mt-8 text-center text-xs text-on-surface-variant">
+          Tap anywhere to dismiss
+        </p>
+      </div>
+    </div>
+  );
+}
