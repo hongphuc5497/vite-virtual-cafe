@@ -10,15 +10,15 @@ A focus timer that feels rewarding to complete — pleasant ambient sounds while
 
 ## Current State
 
-**Shipped v1.0** — 2,007 LOC TypeScript, 5 requirements satisfied, 3 plans executed.
+**Shipped v1.0** — 2,007 LOC TypeScript → JavaScript (Phase 2), 8 requirements satisfied, 5 plans executed.
 
 ### v1.1 Current Milestone: JS Migration + Playwright Tests
 
 **Goal:** Strip TypeScript, keep all logic, add E2E test coverage across all flows.
 
 **Target features:**
-- Full TS → JS conversion (all .ts/.tsx → .js/.jsx)
-- Remove TypeScript dependencies and build step
+- ✅ Full TS → JS conversion (all .ts/.tsx → .js/.jsx) — Phase 2 complete
+- ✅ Remove TypeScript dependencies and build step — Phase 2 complete
 - Playwright E2E test suite covering all user flows
 - CI-ready test configuration
 
@@ -38,7 +38,7 @@ A focus timer that feels rewarding to complete — pleasant ambient sounds while
 - localStorage persistence for volumes, timer, scene
 - Responsive two-column layout
 
-**Build:** `npm run build`, `typecheck`, `lint` — all clean.
+**Build:** `npm run build`, `lint` — all clean. (typecheck removed in Phase 2)
 
 ## Requirements
 
@@ -56,6 +56,9 @@ A focus timer that feels rewarding to complete — pleasant ambient sounds while
 - ✓ Audio error handling — surface playback failures per-track with retry — v1.0
 - ✓ Restore pausedTracks state on relax page load — v1.0
 - ✓ Remove dead `/session` route — v1.0
+- ✓ JS Migration — all .ts/.tsx converted to .js/.jsx, zero behavior changes — v1.1 (Phase 2)
+- ✓ TS infrastructure removed — packages, tsconfig.json, typecheck script deleted — v1.1 (Phase 2)
+- ✓ ESLint reconfigured for JS-only operation — v1.1 (Phase 2)
 
 ### Active
 
@@ -105,4 +108,4 @@ A focus timer that feels rewarding to complete — pleasant ambient sounds while
 | loadedRef guard for save-effect protection | Prevents localStorage overwrite of restored pausedTracks | ✓ Good |
 
 ---
-*Last updated: 2026-04-29 after v1.0 milestone*
+*Last updated: 2026-05-06 after Phase 2 (JS Migration)*
