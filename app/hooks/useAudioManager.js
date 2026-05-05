@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { DEFAULT_TRACKS, SOUND_URLS, TRACK_BASE_VOLUME } from "~/constants/audioConfig";
-import type { MixerTrack } from "~/types/audio";
 
-export function useAudioManager(tracks: MixerTrack[], initialPausedTracks?: Record<string, boolean>) {
+export function useAudioManager(tracks, initialPausedTracks) {
   const [soundEnabled, setSoundEnabled] = useState(false);
-  const [pausedTracks, setPausedTracks] = useState<Record<string, boolean>>(
+  const [pausedTracks, setPausedTracks] = useState(
     initialPausedTracks ?? Object.fromEntries(tracks.map((t) => [t.label, false]))
   );
-  const [trackErrors, setTrackErrors] = useState<Record<string, boolean>>({});
-  const audioElementsRef = useRef<Map<string, HTMLAudioElement>>(new Map());
+  const [trackErrors, setTrackErrors] = useState({});
+  const audioElementsRef = useRef(new Map());
   const initializedAudioRef = useRef(false);
 
   // Sync audio volumes when tracks change
@@ -128,7 +127,7 @@ export function useAudioManager(tracks: MixerTrack[], initialPausedTracks?: Reco
     setSoundEnabled(true);
   };
 
-  const toggleTrackPause = async (label: string) => {
+  const toggleTrackPause = async (label) => {
     const nextPaused = !pausedTracks[label];
     setPausedTracks((currentTracks) => ({
       ...currentTracks,
@@ -161,7 +160,7 @@ export function useAudioManager(tracks: MixerTrack[], initialPausedTracks?: Reco
     }
   };
 
-  const retryTrack = async (label: string) => {
+  const retryTrack = async (label) => {
     const el = audioElementsRef.current.get(label);
     if (!el) return;
     try {
@@ -174,7 +173,7 @@ export function useAudioManager(tracks: MixerTrack[], initialPausedTracks?: Reco
     }
   };
 
-  const setAllPausedTracks = (paused: Record<string, boolean>) => {
+  const setAllPausedTracks = (paused) => {
     setPausedTracks(paused);
   };
 
