@@ -1,7 +1,4 @@
-import type React from "react";
-
-
-const TRACK_ICONS: Record<string, string> = {
+const TRACK_ICONS = {
   Barista: "coffee",
   "Preparing Drinks": "local_cafe",
   "Coffee Cups": "coffee_maker",
@@ -12,16 +9,6 @@ const TRACK_ICONS: Record<string, string> = {
   Fireplace: "local_fire_department",
 };
 
-export interface TrackControlProps {
-  label: string;
-  value: number;
-  isPaused: boolean;
-  hasError: boolean;
-  onVolumeChange: (value: number) => void;
-  onTogglePause: () => void;
-  onRetry: () => void;
-}
-
 export function TrackControl({
   label,
   value,
@@ -30,7 +17,7 @@ export function TrackControl({
   onVolumeChange,
   onTogglePause,
   onRetry,
-}: TrackControlProps) {
+}) {
   const icon = TRACK_ICONS[label] ?? "music_note";
 
   return (
@@ -72,7 +59,7 @@ export function TrackControl({
             aria-valuemax={100}
             aria-valuenow={value}
             className="mt-2 w-full cursor-pointer"
-            style={{ "--track-fill": `${value}%` } as React.CSSProperties}
+            style={{ "--track-fill": `${value}%` }}
           />
         </div>
 
