@@ -15,7 +15,7 @@
 
 ## Phases
 
-- [ ] **Phase 2: JS Migration** — Strip TypeScript, remove TS infrastructure, keep all logic identical
+- [x] **Phase 2: JS Migration** — Strip TypeScript, remove TS infrastructure, keep all logic identical ✅ 2026-05-06
 - [ ] **Phase 3: Playwright E2E Test Suite** — E2E tests covering every user flow (timer, audio, relax, navigation)
 - [ ] **Phase 4: CI Pipeline** — GitHub Actions workflow with multi-browser Playwright matrix
 
