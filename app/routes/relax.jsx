@@ -4,15 +4,14 @@ import { RoomMixControls } from "~/components/RoomMixControls";
 import { BackdropOverlay } from "~/components/BackdropOverlay";
 import { VibeSelector } from "~/components/VibeSelector";
 import { DEFAULT_SCENE, DEFAULT_TRACKS, STORAGE_KEY } from "~/constants/audioConfig";
-import type { MixerTrack, SavedPreferences, SceneId } from "~/types/audio";
 
 export default function Relax() {
-  let initialPausedTracks: Record<string, boolean> | undefined;
+  let initialPausedTracks;
   if (typeof window !== "undefined") {
     try {
       const saved = window.localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        const parsed = JSON.parse(saved) as SavedPreferences;
+        const parsed = JSON.parse(saved);
         if (parsed.pausedTracks) {
           initialPausedTracks = parsed.pausedTracks;
         }
@@ -21,14 +20,14 @@ export default function Relax() {
   }
 
   const [tracks, setTracks] = useState(DEFAULT_TRACKS);
-  const [selectedScene, setSelectedScene] = useState<SceneId>(DEFAULT_SCENE);
+  const [selectedScene, setSelectedScene] = useState(DEFAULT_SCENE);
   const loadedRef = useRef(false);
 
   useEffect(() => {
     const saved = window.localStorage.getItem(STORAGE_KEY);
     if (!saved) return;
     try {
-      const parsed = JSON.parse(saved) as SavedPreferences;
+      const parsed = JSON.parse(saved);
       if (Array.isArray(parsed.tracks)) {
         setTracks(
           DEFAULT_TRACKS.map((track) => {
@@ -59,8 +58,8 @@ export default function Relax() {
   const sunlightLevel = tracks.find((t) => t.label === "Sunny Day")?.value ?? 0;
   const backdropGlow = 0.14 + sunlightLevel / 260;
 
-  const handleApplyVibe = (preset: Record<string, number>) => {
-    setTracks((current: MixerTrack[]) =>
+  const handleApplyVibe = (preset) => {
+    setTracks((current) =>
       current.map((track) =>
         preset[track.label] !== undefined
           ? { ...track, value: preset[track.label] }
@@ -130,7 +129,7 @@ export default function Relax() {
                 )
               }
               onTrackPauseToggle={(label) => audio.toggleTrackPause(label)}
-              onTrackRetry={(label: string) => audio.retryTrack(label)}
+              onTrackRetry={(label) => audio.retryTrack(label)}
             />
           </div>
         </div>
