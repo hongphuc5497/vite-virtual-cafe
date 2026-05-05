@@ -1,14 +1,16 @@
 import { vitePlugin as remix } from "@remix-run/dev";
 import { defineConfig } from "vite";
-import tsconfigPaths from "vite-tsconfig-paths";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 
-declare module "@remix-run/node" {
-  interface Future {
-    v3_singleFetch: true;
-  }
-}
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      "~": path.resolve(__dirname, "app"),
+    },
+  },
   plugins: [
     remix({
       future: {
@@ -19,6 +21,5 @@ export default defineConfig({
         v3_lazyRouteDiscovery: true,
       },
     }),
-    tsconfigPaths(),
   ],
 });

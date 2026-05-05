@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 
-export function useSessionTimer(initialDurationMinutes: number) {
+export function useSessionTimer(initialDurationMinutes) {
   const [timeLeft, setTimeLeft] = useState(initialDurationMinutes * 60);
   const [isRunning, setIsRunning] = useState(false);
-  const intervalRef = useRef<number | null>(null);
+  const intervalRef = useRef(null);
 
   useEffect(() => {
     if (!isRunning) {
@@ -32,7 +32,7 @@ export function useSessionTimer(initialDurationMinutes: number) {
     };
   }, [isRunning]);
 
-  const formatTime = (seconds: number) => {
+  const formatTime = (seconds) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
     return `${minutes.toString().padStart(2, "0")}:${remainingSeconds
@@ -46,7 +46,7 @@ export function useSessionTimer(initialDurationMinutes: number) {
     setIsRunning(false);
     setTimeLeft(initialDurationMinutes * 60);
   };
-  const reset = (durationMinutes: number) => {
+  const reset = (durationMinutes) => {
     setIsRunning(false);
     setTimeLeft(durationMinutes * 60);
   };

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 
-export function usePersistentState<T>(
-  key: string,
-  initialState: T,
-  serialize?: (state: T) => string,
-  deserialize?: (json: string) => T
+export function usePersistentState(
+  key,
+  initialState,
+  serialize,
+  deserialize
 ) {
-  const [state, setState] = useState<T>(initialState);
+  const [state, setState] = useState(initialState);
 
   // Load from localStorage on mount
   useEffect(() => {

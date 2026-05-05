@@ -1,16 +1,4 @@
 import { TrackControl } from "./TrackControl";
-import type { MixerTrack } from "~/types/audio";
-
-export interface RoomMixControlsProps {
-  soundEnabled: boolean;
-  tracks: MixerTrack[];
-  pausedTracks: Record<string, boolean>;
-  trackErrors: Record<string, boolean>;
-  onToggleSound: () => void;
-  onTrackVolumeChange: (label: string, value: number) => void;
-  onTrackPauseToggle: (label: string) => void;
-  onTrackRetry: (label: string) => void;
-}
 
 export function RoomMixControls({
   soundEnabled,
@@ -21,7 +9,7 @@ export function RoomMixControls({
   onTrackVolumeChange,
   onTrackPauseToggle,
   onTrackRetry,
-}: RoomMixControlsProps) {
+}) {
   return (
     <div>
       <div className="flex items-center justify-between gap-4">

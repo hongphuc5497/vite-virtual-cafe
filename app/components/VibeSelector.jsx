@@ -1,5 +1,3 @@
-import type { MixerTrack } from "~/types/audio";
-
 export const VIBES = [
   {
     label: "Lo-fi Beats",
@@ -61,14 +59,9 @@ export const VIBES = [
       Fireplace: 0,
     },
   },
-] as const;
+];
 
-export interface VibeSelectorProps {
-  tracks: MixerTrack[];
-  onApplyVibe: (preset: Record<string, number>) => void;
-}
-
-export function VibeSelector({ tracks, onApplyVibe }: VibeSelectorProps) {
+export function VibeSelector({ tracks, onApplyVibe }) {
   const activeVibe = VIBES.find((vibe) =>
     Object.entries(vibe.preset).every(
       ([label, val]) =>

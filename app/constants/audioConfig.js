@@ -1,10 +1,8 @@
-import type { MixerTrack } from "~/types/audio";
-
 export const DEFAULT_DURATION_MINUTES = 25;
 export const STORAGE_KEY = "virtual-cafe-home-prefs";
-export const DEFAULT_SCENE = "misty-cabin" as const;
+export const DEFAULT_SCENE = "misty-cabin";
 
-export const DEFAULT_TRACKS: MixerTrack[] = [
+export const DEFAULT_TRACKS = [
   { label: "Barista", value: 64 },
   { label: "Preparing Drinks", value: 42 },
   { label: "Coffee Cups", value: 56 },
@@ -15,7 +13,7 @@ export const DEFAULT_TRACKS: MixerTrack[] = [
   { label: "Fireplace", value: 22 },
 ];
 
-export const SOUND_URLS: Record<string, string> = {
+export const SOUND_URLS = {
   Barista: "https://imissmycafe.com/assets/sounds/barista-reagan.mp3",
   "Preparing Drinks": "https://imissmycafe.com/assets/sounds/makingdrinks.mp3",
   "Coffee Cups": "https://imissmycafe.com/assets/sounds/coffeecups.mp3",
@@ -26,7 +24,7 @@ export const SOUND_URLS: Record<string, string> = {
   Fireplace: "https://imissmycafe.com/assets/sounds/fireplace.mp3",
 };
 
-export const TRACK_BASE_VOLUME: Record<string, number> = {
+export const TRACK_BASE_VOLUME = {
   Barista: 0.18,
   "Preparing Drinks": 0.16,
   "Coffee Cups": 0.12,

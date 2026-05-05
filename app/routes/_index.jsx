@@ -3,7 +3,6 @@ import { useSessionTimer } from "~/hooks/useSessionTimer";
 import { useAudioManager } from "~/hooks/useAudioManager";
 import { useKeyboardShortcuts } from "~/hooks/useKeyboardShortcuts";
 import { detectVibeName, detectMood, writeSessionEntry } from "~/lib/session";
-import type { SessionEntry } from "~/lib/session";
 import { CelebrationOverlay } from "~/components/CelebrationOverlay";
 import { SessionTimer } from "~/components/SessionTimer";
 import { RoomMixControls } from "~/components/RoomMixControls";
@@ -15,7 +14,6 @@ import {
   DEFAULT_TRACKS,
   STORAGE_KEY,
 } from "~/constants/audioConfig";
-import type { MixerTrack, SavedPreferences, SceneId } from "~/types/audio";
 
 export default function Index() {
   const [tracks, setTracks] = useState(DEFAULT_TRACKS);
@@ -25,15 +23,15 @@ export default function Index() {
   const [appliedDurationMinutes, setAppliedDurationMinutes] = useState(
     DEFAULT_DURATION_MINUTES
   );
-  const [selectedScene, setSelectedScene] = useState<SceneId>(DEFAULT_SCENE);
+  const [selectedScene, setSelectedScene] = useState(DEFAULT_SCENE);
   const [showCelebration, setShowCelebration] = useState(false);
-  const [lastSession, setLastSession] = useState<SessionEntry | null>(null);
+  const [lastSession, setLastSession] = useState(null);
 
   useEffect(() => {
     const saved = window.localStorage.getItem(STORAGE_KEY);
     if (!saved) return;
     try {
-      const parsed = JSON.parse(saved) as SavedPreferences;
+      const parsed = JSON.parse(saved);
       const savedDraft =
         parsed.draftDurationMinutes ??
         parsed.durationMinutes ??
@@ -70,7 +68,7 @@ export default function Index() {
     const vibeName = detectVibeName(tracks);
     const moodLabel = detectMood(tracks, vibeName);
 
-    const entry: SessionEntry = {
+    const entry = {
       date: new Date().toISOString(),
       durationMinutes: appliedDurationMinutes,
       vibe: vibeName,
@@ -94,7 +92,7 @@ export default function Index() {
         tracks,
         pausedTracks: audio.pausedTracks,
         selectedScene,
-      } satisfies SavedPreferences)
+      })
     );
   }, [draftDurationMinutes, appliedDurationMinutes, tracks, audio.pausedTracks, selectedScene]);
 
@@ -145,8 +143,8 @@ export default function Index() {
     setShowCelebration(false);
   };
 
-  const handleApplyVibe = (preset: Record<string, number>) => {
-    setTracks((current: MixerTrack[]) =>
+  const handleApplyVibe = (preset) => {
+    setTracks((current) =>
       current.map((track) =>
         preset[track.label] !== undefined
           ? { ...track, value: preset[track.label] }
@@ -236,7 +234,7 @@ export default function Index() {
                 )
               }
               onTrackPauseToggle={(label) => audio.toggleTrackPause(label)}
-              onTrackRetry={(label: string) => audio.retryTrack(label)}
+              onTrackRetry={(label) => audio.retryTrack(label)}
             />
           </div>
         </div>

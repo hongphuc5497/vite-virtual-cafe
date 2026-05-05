@@ -1,12 +1,8 @@
 import { useEffect } from "react";
 
-export function useKeyboardShortcuts(callbacks: {
-  onTogglePlay?: () => void;
-  onVolumeIncrease?: () => void;
-  onVolumeDecrease?: () => void;
-}) {
+export function useKeyboardShortcuts(callbacks) {
   useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
+    const handleKeyDown = (event) => {
       // Space to toggle play/pause
       if (event.code === "Space") {
         event.preventDefault();

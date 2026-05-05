@@ -6,11 +6,10 @@ import {
   Scripts,
   ScrollRestoration,
 } from "@remix-run/react";
-import type { LinksFunction } from "@remix-run/node";
 
 import "./tailwind.css";
 
-export const links: LinksFunction = () => [
+export const links = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
   {
     rel: "preconnect",
@@ -30,7 +29,7 @@ export const links: LinksFunction = () => [
 const NAV_ITEMS = [
   { to: "/", label: "Focus", icon: "timer" },
   { to: "/relax", label: "Relax", icon: "self_improvement" },
-] as const;
+];
 
 function AppNav() {
   return (
@@ -73,7 +72,7 @@ function AppNav() {
   );
 }
 
-export function Layout({ children }: { children: React.ReactNode }) {
+export function Layout({ children }) {
   return (
     <html lang="en">
       <head>

@@ -1,16 +1,8 @@
-import type { SessionEntry } from "~/lib/session";
-
-export interface CelebrationOverlayProps {
-  session: SessionEntry;
-  show: boolean;
-  onDismiss: () => void;
-}
-
 export function CelebrationOverlay({
   session,
   show,
   onDismiss,
-}: CelebrationOverlayProps) {
+}) {
   return (
     <>
       {/* s: backdrop */}

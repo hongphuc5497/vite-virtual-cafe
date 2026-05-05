@@ -1,18 +1,7 @@
-const DURATION_PRESETS = [25, 45, 60, 90] as const;
+const DURATION_PRESETS = [25, 45, 60, 90];
 
 const RADIUS = 52;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
-
-export interface SessionTimerProps {
-  timeLeft: number;
-  totalSeconds: number;
-  isRunning: boolean;
-  draftDurationMinutes: number;
-  onStart: () => void;
-  onReset: () => void;
-  onDurationChange: (minutes: number) => void;
-  formatTime: (seconds: number) => string;
-}
 
 export function SessionTimer({
   timeLeft,
@@ -23,7 +12,7 @@ export function SessionTimer({
   onReset,
   onDurationChange,
   formatTime,
-}: SessionTimerProps) {
+}) {
   const statusLabel = isRunning
     ? "Deep Focus"
     : timeLeft === 0
