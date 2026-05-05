@@ -559,17 +559,15 @@ Changes from TS version: removed 3 `import type` lines, all type annotations on 
 
 No `[ASSUMED]` claims -- all findings in this research were verified against the actual codebase, official documentation, or Context7 sources.
 
-## Open Questions
+## Open Questions (RESOLVED)
 
-1. **Shadcn `components.json` update scope**
+1. **Shadcn `components.json` update scope** -- RESOLVED: Include update in plan 02-02 Task 3
    - What we know: `"tsx": true` and `"tailwind.config": "tailwind.config.ts"` are stale after migration
-   - What's unclear: Whether this affects any automated workflow (linting, CLI)
    - Recommendation: Include update in plan for tidiness; low risk if skipped
 
-2. **ESLint `no-unused-vars` conflict with entry.server.tsx**
+2. **ESLint `no-unused-vars` conflict with entry.server.tsx** -- RESOLVED: Rename to `_loadContext` in plan 02-01 Task 3
    - What we know: `loadContext` parameter is unused; currently suppressed by `@typescript-eslint/no-unused-vars` disable comment
-   - What's unclear: Whether `eslint:recommended`'s `no-unused-vars` will trigger on this parameter
-   - Recommendation: Rename to `_loadContext` to match JS convention that `no-unused-vars` ignores underscore-prefixed params. Or change the disable comment to `no-unused-vars`.
+   - Recommendation: Rename to `_loadContext` to match JS convention that `no-unused-vars` ignores underscore-prefixed params.
 
 ## Environment Availability
 
