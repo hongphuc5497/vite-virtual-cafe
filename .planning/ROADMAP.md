@@ -34,7 +34,7 @@
 
 Plans:
 - [x] 02-01: Convert all 22 `.ts`/`.tsx` files to `.js`/`.jsx` — strip type annotations, delete types/audio.ts, configure vite.config.js resolve.alias (MIGR-01)
-- [ ] 02-02: Remove 10 TS packages from devDependencies, delete tsconfig.json, drop typecheck script, reconfigure ESLint for JS-only, verify full build pipeline (MIGR-02, MIGR-03, MIGR-04)
+- [x] 02-02: Remove 10 TS packages from devDependencies, delete tsconfig.json, drop typecheck script, reconfigure ESLint for JS-only, verify full build pipeline (MIGR-02, MIGR-03, MIGR-04)
 
 ### Phase 3: Playwright E2E Test Suite
 **Goal**: All user flows are validated by automated Playwright E2E tests against the migrated JS codebase
@@ -83,6 +83,6 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1. Complete the Session Loop | v1.0 | 3/3 | Complete | 2026-04-29 |
-| 2. JS Migration | v1.1 | 1/2 | In progress | - |
+| 2. JS Migration | v1.1 | 2/2 | Complete | 2026-05-06 |
 | 3. Playwright E2E Test Suite | v1.1 | 0/4 | Not started | - |
 | 4. CI Pipeline | v1.1 | 0/1 | Not started | - |
