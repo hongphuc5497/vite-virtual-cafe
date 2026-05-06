@@ -9,6 +9,10 @@ const TRACK_ICONS = {
   Fireplace: "local_fire_department",
 };
 
+function slugify(text) {
+  return text.toLowerCase().replace(/\s+/g, "-");
+}
+
 export function TrackControl({
   label,
   value,
@@ -19,6 +23,7 @@ export function TrackControl({
   onRetry,
 }) {
   const icon = TRACK_ICONS[label] ?? "music_note";
+  const trackId = slugify(label);
 
   return (
     <div
@@ -35,7 +40,7 @@ export function TrackControl({
             {icon}
           </span>
           {hasError && (
-            <span className="absolute -right-1 -top-1 material-symbols-outlined text-[14px]" style={{ color: "#ba1a1a" }} title="Track failed to load. Tap to retry.">error</span>
+            <span className="absolute -right-1 -top-1 material-symbols-outlined text-[14px]" style={{ color: "#ba1a1a" }} title="Track failed to load. Tap to retry." data-testid={`track-error-${trackId}`}>error</span>
           )}
         </div>
 
@@ -54,6 +59,7 @@ export function TrackControl({
             onChange={(event) =>
               onVolumeChange(Number.parseInt(event.target.value, 10))
             }
+            data-testid={`track-volume-${trackId}`}
             aria-label={`${label} volume: ${value}%`}
             aria-valuemin={0}
             aria-valuemax={100}
@@ -65,7 +71,7 @@ export function TrackControl({
 
         <div className="flex items-center gap-1">
           {hasError && (
-            <button type="button" onClick={onRetry} aria-label={`Retry ${label}`} className="flex-shrink-0 rounded-lg p-1.5 transition-colors hover:bg-surface-container-high" title="Track failed to load. Tap to retry.">
+            <button type="button" onClick={onRetry} aria-label={`Retry ${label}`} data-testid={`track-retry-${trackId}`} className="flex-shrink-0 rounded-lg p-1.5 transition-colors hover:bg-surface-container-high" title="Track failed to load. Tap to retry.">
               <span className="material-symbols-outlined text-[18px] text-outline transition-colors hover:text-primary">refresh</span>
             </button>
           )}
@@ -74,6 +80,7 @@ export function TrackControl({
             onClick={onTogglePause}
             aria-label={`${isPaused ? "Play" : "Pause"} ${label}`}
             aria-pressed={!isPaused}
+            data-testid={isPaused ? `track-play-${trackId}` : `track-pause-${trackId}`}
             className="flex-shrink-0 rounded-lg p-1.5 transition-colors hover:bg-surface-container-high"
             title={isPaused ? "Play" : "Pause"}
           >

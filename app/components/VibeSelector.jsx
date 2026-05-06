@@ -9,7 +9,7 @@ export function VibeSelector({ tracks, onApplyVibe }) {
   );
 
   return (
-    <div>
+    <div data-testid="vibe-selector">
       <p className="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">
         Vibe
       </p>
@@ -21,6 +21,7 @@ export function VibeSelector({ tracks, onApplyVibe }) {
               key={vibe.label}
               type="button"
               onClick={() => onApplyVibe({ ...vibe.preset })}
+              data-testid={`vibe-${vibe.label.toLowerCase().replace(/\s+/g, "-")}`}
               className="rounded-xl p-3 text-left transition-all duration-200 hover:scale-[1.02] active:scale-95"
               style={{
                 background: isActive ? "#ffdcc4" : "#f2efd5",

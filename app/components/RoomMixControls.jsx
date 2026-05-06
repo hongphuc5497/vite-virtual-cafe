@@ -5,13 +5,14 @@ export function RoomMixControls({
   tracks,
   pausedTracks,
   trackErrors,
+  allTracksFailed,
   onToggleSound,
   onTrackVolumeChange,
   onTrackPauseToggle,
   onTrackRetry,
 }) {
   return (
-    <div>
+    <div data-testid="mixer-panel">
       <div className="flex items-center justify-between gap-4">
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">
@@ -49,6 +50,12 @@ export function RoomMixControls({
       {!soundEnabled && (
         <p className="mt-2 text-xs text-on-surface-variant">
           Tap <strong>Enable</strong> to fill the room with sound.
+        </p>
+      )}
+
+      {soundEnabled && allTracksFailed && (
+        <p className="mt-2 rounded-lg px-3 py-2 text-xs font-medium" style={{ background: "#ffdad6", color: "#93000a" }}>
+          All audio sources are currently unreachable. Please check your connection and try again.
         </p>
       )}
 

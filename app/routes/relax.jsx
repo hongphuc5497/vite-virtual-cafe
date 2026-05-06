@@ -6,22 +6,11 @@ import { VibeSelector } from "~/components/VibeSelector";
 import { DEFAULT_SCENE, DEFAULT_TRACKS, STORAGE_KEY } from "~/constants/audioConfig";
 
 export default function Relax() {
-  let initialPausedTracks;
-  if (typeof window !== "undefined") {
-    try {
-      const saved = window.localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (parsed.pausedTracks) {
-          initialPausedTracks = parsed.pausedTracks;
-        }
-      }
-    } catch { /* ignore */ }
-  }
-
   const [tracks, setTracks] = useState(DEFAULT_TRACKS);
   const [selectedScene, setSelectedScene] = useState(DEFAULT_SCENE);
   const loadedRef = useRef(false);
+
+  const audio = useAudioManager(tracks);
 
   useEffect(() => {
     const saved = window.localStorage.getItem(STORAGE_KEY);
@@ -37,13 +26,15 @@ export default function Relax() {
         );
       }
       if (parsed.selectedScene) setSelectedScene(parsed.selectedScene);
+      if (parsed.pausedTracks) {
+        audio.setAllPausedTracks(parsed.pausedTracks);
+      }
     } catch {
       /* ignore */
     }
     loadedRef.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const audio = useAudioManager(tracks, initialPausedTracks);
 
   useEffect(() => {
     if (!loadedRef.current) return;
@@ -51,9 +42,9 @@ export default function Relax() {
     const existing = saved ? JSON.parse(saved) : {};
     window.localStorage.setItem(
       STORAGE_KEY,
-      JSON.stringify({ ...existing, tracks, pausedTracks: audio.pausedTracks })
+      JSON.stringify({ ...existing, tracks, pausedTracks: audio.pausedTracks, selectedScene })
     );
-  }, [tracks, audio.pausedTracks]);
+  }, [tracks, audio.pausedTracks, selectedScene]);
 
   const sunlightLevel = tracks.find((t) => t.label === "Sunny Day")?.value ?? 0;
   const backdropGlow = 0.14 + sunlightLevel / 260;
@@ -95,7 +86,7 @@ export default function Relax() {
           </p>
         </div>
 
-        <div className="grid gap-5 lg:grid-cols-[1fr_1fr]">
+        <div className="grid gap-5 lg:grid-cols-[1fr_1fr]" data-testid="relax-ambient-player">
           {/* Vibe Selector */}
           <div
             className="rounded-2xl p-6 shadow-[0_24px_40px_rgba(29,28,13,0.08)]"
@@ -120,6 +111,7 @@ export default function Relax() {
               tracks={tracks}
               pausedTracks={audio.pausedTracks}
               trackErrors={audio.trackErrors}
+              allTracksFailed={audio.allTracksFailed}
               onToggleSound={audio.toggleSound}
               onTrackVolumeChange={(label, value) =>
                 setTracks((current) =>
