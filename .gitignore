@@ -13,3 +13,7 @@ build/
 .gitnexus/
 .omx/
 .superpowers/
+
+# Playwright
+test-results/
+playwright-report/
