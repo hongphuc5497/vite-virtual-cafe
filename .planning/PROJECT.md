@@ -10,17 +10,19 @@ A focus timer that feels rewarding to complete — pleasant ambient sounds while
 
 ## Current State
 
-**Shipped v1.0** — 2,007 LOC TypeScript → JavaScript (Phase 2), 8 requirements satisfied, 5 plans executed.
+**Shipped v1.1** — 1,931 LOC JavaScript, 9 requirements satisfied, 12 plans executed across 5 phases.
 
-### v1.1 Current Milestone: JS Migration + Playwright Tests
+### Shipped: v1.1 JS Migration + Playwright Tests (2026-05-07)
 
-**Goal:** Strip TypeScript, keep all logic, add E2E test coverage across all flows.
+- ✅ Full TS → JS conversion (all .ts/.tsx → .js/.jsx)
+- ✅ TypeScript dependencies and build step removed
+- ✅ Playwright E2E test suite — 13 tests, 3 consecutive green runs
+- ✅ GitHub Actions CI pipeline — Chromium, Firefox, WebKit matrix
+- ✅ Immersive Focus Mode — floating timer pill, panel animations, Escape/bottom-edge reveal
 
-**Target features:**
-- ✅ Full TS → JS conversion (all .ts/.tsx → .js/.jsx) — Phase 2 complete
-- ✅ Remove TypeScript dependencies and build step — Phase 2 complete
-- Playwright E2E test suite covering all user flows
-- CI-ready test configuration
+### Next Milestone: v1.2
+
+Planning phase — see ROADMAP.md for upcoming phases.
 
 ## Existing Features (v1.0)
 
