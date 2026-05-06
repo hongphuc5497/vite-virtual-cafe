@@ -40,7 +40,8 @@ module.exports = {
           { name: "NavLink", linkAttribute: "to" },
         ],
         "import/resolver": {
-          node: {
+          alias: {
+            map: [["~", "./app"]],
             extensions: [".js", ".jsx"],
           },
         },
