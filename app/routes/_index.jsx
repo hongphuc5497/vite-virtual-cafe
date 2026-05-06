@@ -61,7 +61,7 @@ export default function Index() {
   // Timer completion detection: when timer hits 0, build session entry,
   // write to localStorage (save-on-show per D-03), and show celebration overlay
   useEffect(() => {
-    if (timer.timeLeft !== 0 || timer.isRunning || showCelebration) {
+    if (timer.timeLeft !== 0 || timer.isRunning || showCelebration || lastSession) {
       return;
     }
 
