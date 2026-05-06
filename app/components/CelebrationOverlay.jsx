@@ -8,6 +8,7 @@ export function CelebrationOverlay({
       {/* s: backdrop */}
       <button
         type="button"
+        data-testid="celebration-overlay"
         aria-label="Dismiss celebration overlay"
         className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-500 ease-out ${
           show ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
@@ -22,9 +23,13 @@ export function CelebrationOverlay({
             backdropFilter: "blur(12px)",
           }}
           onClick={(e) => e.stopPropagation()}
-          role="none"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="celebration-title"
         >
         <h2
+          id="celebration-title"
+          data-testid="celebration-heading"
           className="font-headline text-3xl font-light italic"
           style={{ color: "#8f4a00" }}
         >

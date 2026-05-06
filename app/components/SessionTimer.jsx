@@ -72,6 +72,7 @@ export function SessionTimer({
           <div
             className="relative z-10 text-center font-headline text-4xl font-light tracking-tight"
             style={{ color: "#1d1c0d", letterSpacing: "-0.02em" }}
+            data-testid="timer-display"
           >
             {formatTime(timeLeft)}
           </div>
@@ -95,6 +96,7 @@ export function SessionTimer({
                 key={preset}
                 type="button"
                 onClick={() => onDurationChange(preset)}
+                data-testid={`preset-${preset}`}
                 className="flex-1 rounded-lg py-1.5 text-sm font-semibold transition-all duration-200"
                 style={{
                   background: isActive ? "#ffdcc4" : "#f2efd5",
@@ -129,6 +131,7 @@ export function SessionTimer({
         <button
           type="button"
           onClick={onStart}
+          data-testid="timer-start"
           aria-label={isRunning ? "Pause session" : "Start session"}
           aria-pressed={isRunning}
           className="btn-primary"

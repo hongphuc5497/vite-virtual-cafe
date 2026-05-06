@@ -15,6 +15,13 @@ import {
   STORAGE_KEY,
 } from "~/constants/audioConfig";
 
+const SCENES = [
+  { id: "misty-cabin", label: "Misty Cabin" },
+  { id: "sunday-morning", label: "Sunday Morning" },
+  { id: "midnight-archive", label: "Midnight Archive" },
+  { id: "rainy-metro", label: "Rainy Metro" },
+];
+
 export default function Index() {
   const [tracks, setTracks] = useState(DEFAULT_TRACKS);
   const [draftDurationMinutes, setDraftDurationMinutes] = useState(
@@ -59,7 +66,10 @@ export default function Index() {
   const audio = useAudioManager(tracks);
 
   // Timer completion detection: when timer hits 0, build session entry,
-  // write to localStorage (save-on-show per D-03), and show celebration overlay
+  // write to localStorage (save-on-show per D-03), and show celebration overlay.
+  // lastSession guards against duplicate entries when showCelebration is dismissed
+  // (effect re-fires because showCelebration goes false→true transition).
+  // Intentionally omitted from deps: adding lastSession would re-trigger endlessly.
   useEffect(() => {
     if (timer.timeLeft !== 0 || timer.isRunning || showCelebration || lastSession) {
       return;
@@ -81,6 +91,7 @@ export default function Index() {
     writeSessionEntry(entry);
     setLastSession(entry);
     setShowCelebration(true);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timer.timeLeft, timer.isRunning, showCelebration, appliedDurationMinutes, tracks]);
 
   useEffect(() => {
@@ -213,6 +224,39 @@ export default function Index() {
             >
               <VibeSelector tracks={tracks} onApplyVibe={handleApplyVibe} />
             </div>
+
+            {/* Scene Selector card */}
+            <div
+              className="rounded-2xl p-6 shadow-[0_24px_40px_rgba(29,28,13,0.08)]"
+              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(12px)" }}
+              data-testid="scene-selector"
+            >
+              <p className="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">
+                Scene
+              </p>
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                {SCENES.map((scene) => {
+                  const isActive = selectedScene === scene.id;
+                  return (
+                    <button
+                      key={scene.id}
+                      type="button"
+                      onClick={() => setSelectedScene(scene.id)}
+                      data-testid={`scene-${scene.id}`}
+                      className="rounded-xl px-3 py-2.5 text-left text-sm font-semibold transition-all duration-200"
+                      style={{
+                        background: isActive ? "#ffdcc4" : "#f2efd5",
+                        color: isActive ? "#8f4a00" : "#544438",
+                        outline: isActive ? "2px solid #ffb781" : "none",
+                        outlineOffset: "1px",
+                      }}
+                    >
+                      {scene.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
           {/* Right column: Mixer */}
@@ -225,6 +269,7 @@ export default function Index() {
               tracks={tracks}
               pausedTracks={audio.pausedTracks}
               trackErrors={audio.trackErrors}
+              allTracksFailed={audio.allTracksFailed}
               onToggleSound={audio.toggleSound}
               onTrackVolumeChange={(label, value) =>
                 setTracks((current) =>

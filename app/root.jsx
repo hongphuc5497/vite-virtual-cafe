@@ -7,6 +7,7 @@ import {
   ScrollRestoration,
 } from "@remix-run/react";
 
+import { ErrorBoundary } from "~/components/ErrorBoundary";
 import "./tailwind.css";
 
 export const links = () => [
@@ -51,6 +52,7 @@ function AppNav() {
               key={to}
               to={to}
               end
+              data-testid={to === "/" ? "nav-home" : "nav-relax"}
               className={({ isActive }) =>
                 `flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                   isActive
@@ -94,7 +96,9 @@ export default function App() {
   return (
     <div className="min-h-screen" style={{ background: "#fefae0" }}>
       <AppNav />
-      <Outlet />
+      <ErrorBoundary>
+        <Outlet />
+      </ErrorBoundary>
     </div>
   );
 }
