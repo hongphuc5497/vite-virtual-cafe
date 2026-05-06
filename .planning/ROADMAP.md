@@ -16,8 +16,8 @@
 **Plans:** 2 plans
 
 Plans:
-- [ ] 05-01: Create `useImmersiveMode` hook and `ImmersiveTransition` wrapper component — manages show/hide state, Escape key listener, edge-hover detection, and animation coordination
-- [ ] 05-02: Integrate immersive mode into `_index.jsx` — wrap control panels, wire session start/stop lifecycle, ensure celebration overlay and relax page are unaffected
+- [x] 05-01: Create `useImmersiveMode` hook and `ImmersiveTransition` wrapper component — manages show/hide state, Escape key listener, edge-hover detection, and animation coordination
+- [x] 05-02: Integrate immersive mode into `_index.jsx` — wrap control panels, wire session start/stop lifecycle, ensure celebration overlay and relax page are unaffected
 
 ---
 
@@ -91,4 +91,4 @@ Plans:
 | 2. JS Migration | v1.1 | 2/2 | Complete | 2026-05-06 |
 | 3. Playwright E2E Test Suite | v1.1 | 4/4 | Complete | 2026-05-07 |
 | 4. CI Pipeline | v1.1 | 1/1 | Complete | 2026-05-07 |
-| 5. Immersive Focus Mode | v1.2 | 0/2 | Not started | - |
+| 5. Immersive Focus Mode | v1.2 | 2/2 | Complete | 2026-05-07 |
