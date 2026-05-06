@@ -12,6 +12,9 @@ export function useAudioManager(tracks, initialPausedTracks) {
 
   // Sync audio volumes when tracks change
   useEffect(() => {
+    // Skip if no audio elements have been created yet
+    if (audioElementsRef.current.size === 0) return;
+
     tracks.forEach((track) => {
       const audioElement = audioElementsRef.current.get(track.label);
 
@@ -177,10 +180,15 @@ export function useAudioManager(tracks, initialPausedTracks) {
     setPausedTracks(paused);
   };
 
+  const allTracksFailed =
+    Object.keys(trackErrors).length > 0 &&
+    DEFAULT_TRACKS.every((t) => trackErrors[t.label]);
+
   return {
     soundEnabled,
     pausedTracks,
     trackErrors,
+    allTracksFailed,
     initializeAudio,
     toggleSound,
     toggleTrackPause,

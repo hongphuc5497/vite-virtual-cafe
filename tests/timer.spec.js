@@ -15,7 +15,7 @@ test.describe('Focus Timer', () => {
     await page.route('**/*.wav', (route) =>
       route.fulfill({ body: silentAudio, contentType: 'audio/wav' })
     );
-    await page.evaluate(() => localStorage.clear());
+    await page.addInitScript(() => localStorage.clear());
   });
 
   test('timer countdown updates in real time', async ({ page }) => {
@@ -37,6 +37,7 @@ test.describe('Focus Timer', () => {
   });
 
   test('timer reaches zero and celebration appears', async ({ page }) => {
+    test.setTimeout(120000);
     const main = new MainPage(page);
     await main.goto();
 
@@ -47,8 +48,9 @@ test.describe('Focus Timer', () => {
     // Start the timer
     await page.click(SELECTORS.TIMER_START);
 
-    // Wait for celebration overlay (1min timer + buffer)
-    const overlay = await main.waitForCelebration();
+    // Wait for celebration overlay (1min timer + animation buffer)
+    const overlay = page.locator(SELECTORS.CELEBRATION_OVERLAY);
+    await overlay.waitFor({ state: 'visible', timeout: 90000 });
     await expect(overlay).toBeVisible();
 
     const heading = await main.getCelebrationHeading();
@@ -56,6 +58,7 @@ test.describe('Focus Timer', () => {
   });
 
   test('session entry written to localStorage on completion', async ({ page }) => {
+    test.setTimeout(120000);
     const main = new MainPage(page);
     await main.goto();
 
@@ -66,8 +69,8 @@ test.describe('Focus Timer', () => {
     // Start the timer
     await page.click(SELECTORS.TIMER_START);
 
-    // Wait for celebration
-    await main.waitForCelebration();
+    // Wait for celebration (1min timer + buffer)
+    await page.locator(SELECTORS.CELEBRATION_OVERLAY).waitFor({ state: 'visible', timeout: 90000 });
 
     // Check localStorage for session entry
     const sessionsRaw = await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEYS.SESSIONS);

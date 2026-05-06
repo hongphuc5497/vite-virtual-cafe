@@ -15,7 +15,7 @@ test.describe('Audio Mixer', () => {
     await page.route('**/*.wav', (route) =>
       route.fulfill({ body: silentAudio, contentType: 'audio/wav' })
     );
-    await page.evaluate(() => localStorage.clear());
+    await page.addInitScript(() => localStorage.clear());
   });
 
   test('tracks can be played and paused individually', async ({ page }) => {
@@ -29,18 +29,22 @@ test.describe('Audio Mixer', () => {
       await page.waitForTimeout(500);
     }
 
-    // Find a track's play button (paused state = play button visible)
-    const playBtn = page.locator('[data-testid=track-play-barista]');
-    await expect(playBtn).toBeVisible();
-    await playBtn.click();
-
-    // After clicking play, pause button should appear
+    // Tracks start unpaused (isPaused=false), so button shows "pause" state
     const pauseBtn = page.locator('[data-testid=track-pause-barista]');
     await expect(pauseBtn).toBeVisible();
 
-    // Click pause — play button should return
+    // Click to pause the track
     await pauseBtn.click();
-    await expect(page.locator('[data-testid=track-play-barista]')).toBeVisible();
+
+    // After pausing, button should show "play" state
+    const playBtn = page.locator('[data-testid=track-play-barista]');
+    await expect(playBtn).toBeVisible();
+
+    // Click play to unpause
+    await playBtn.click();
+
+    // Button returns to pause state
+    await expect(page.locator('[data-testid=track-pause-barista]')).toBeVisible();
   });
 
   test('volume sliders adjust output', async ({ page }) => {
@@ -69,36 +73,31 @@ test.describe('Audio Mixer', () => {
     await page.reload();
     await page.waitForLoadState('networkidle');
 
-    const sessionsRaw = await page.evaluate(
+    const prefsRaw = await page.evaluate(
       (key) => localStorage.getItem(key),
       STORAGE_KEYS.PREFS
     );
-    expect(sessionsRaw).not.toBeNull();
+    expect(prefsRaw).not.toBeNull();
   });
 
   test('playback failure shows error badge with retry', async ({ page }) => {
     // Abort a specific track's audio to simulate failure
+    // This overrides the general MP3 stub registered in beforeEach
     await page.route('**/rain.mp3', (route) => route.abort());
 
     const main = new MainPage(page);
     await main.goto();
 
-    // Enable sound
+    // Enable sound — Rainy Day track will try to play and fail
     const enableBtn = page.locator('button[aria-label="Enable sound"]');
-    if (await enableBtn.isVisible()) {
-      await enableBtn.click();
-      await page.waitForTimeout(500);
-    }
+    await expect(enableBtn).toBeVisible({ timeout: TIMEOUTS.PAGE_LOAD });
+    await enableBtn.click();
 
-    // Try to play the "Rainy Day" track
-    const rainyPlayBtn = page.locator('[data-testid=track-play-rainy-day]');
-    await rainyPlayBtn.click();
-
-    // Wait for error badge
+    // Wait for error badge to appear (play() fails on aborted route)
     const errorBadge = page.locator('[data-testid=track-error-rainy-day]');
     await expect(errorBadge).toBeVisible({ timeout: TIMEOUTS.AUDIO_PLAY });
 
-    // Click retry
+    // Retry button should be visible alongside error
     const retryBtn = page.locator('[data-testid=track-retry-rainy-day]');
     await expect(retryBtn).toBeVisible();
     await retryBtn.click();
@@ -113,8 +112,8 @@ test.describe('Audio Mixer', () => {
     await expect(vibeBtn).toBeVisible();
     await vibeBtn.click();
 
-    // Verify the button appears active (has the active background style)
+    // Verify the button appears active — browser converts hex #ffdcc4 to rgb()
     const style = await vibeBtn.getAttribute('style');
-    expect(style).toContain('#ffdcc4');
+    expect(style).toContain('rgb(255, 220, 196)');
   });
 });

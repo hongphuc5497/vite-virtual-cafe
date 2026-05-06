@@ -1,63 +1,63 @@
 # vite-remix-virtual-cafe
 
 ## Commands
-- `npm run dev` — start dev server (Express + Vite HMR) at **http://localhost:3000**
-- `npm run build` — production build via `remix vite:build`
-- `npm run typecheck` — type-check only (`tsc --noEmit`); Vite handles emit, not tsc
-- `npm run lint` — ESLint with TypeScript + import plugins
-- `npm start` — production Express server (requires `npm run build` first)
+- `npm run dev` — start dev (Express+Vite HMR) **http://localhost:3000**
+- `npm run build` — prod build via `remix vite:build`
+- `npm run typecheck` — `tsc --noEmit`; Vite handles emit
+- `npm run lint` — ESLint w/ TS+import plugins
+- `npm start` — prod Express (needs `npm run build` first)
 
 ## Architecture
-- Remix v2 on a **custom Express server** (`server.js`) — not the default Remix CLI server
-- Vite future flags active: `v3_singleFetch`, `v3_lazyRouteDiscovery`, `v3_fetcherPersist`, `v3_relativeSplatPath`, `v3_throwAbortReason`
-- Path alias: `~/*` → `./app/*` — always use `~/components/Foo`, never relative paths
-- Tailwind CSS **v3** — config in `tailwind.config.ts` + `postcss.config.js`
-- Audio via native **HTMLAudioElement** — browser-only; never import audio code in loaders, actions, or server-side code
-- shadcn/ui **v4** partially configured (`components.json`, `app/components/ui/`, `app/lib/utils.ts`) — Tailwind v3 so some v4 directives unavailable
+- Remix v2 on **custom Express** (`server.js`) — not Remix CLI server
+- Vite future flags: `v3_singleFetch`, `v3_lazyRouteDiscovery`, `v3_fetcherPersist`, `v3_relativeSplatPath`, `v3_throwAbortReason`
+- Path alias: `~/*` → `./app/*` — always `~/components/Foo`, never relative
+- Tailwind CSS **v3** — `tailwind.config.ts` + `postcss.config.js`
+- Audio: native **HTMLAudioElement** — browser-only; never import audio code in loaders/actions/server
+- shadcn/ui **v4** partial (`components.json`, `app/components/ui/`, `app/lib/utils.ts`) — Tailwind v3 so some v4 directives unavailable
 
 ## Code Style
-- TypeScript strict mode — no `any`, no non-null assertions without an explanatory comment
-- ES modules throughout (`import`/`export`), no `require()`
-- Directory layout: `app/components/`, `app/routes/`, `app/hooks/`, `app/types/`, `app/constants/`
-- `MixerTrack` and `SavedPreferences` are the core audio state types (`app/types/audio.ts`)
+- TS strict — no `any`, no non-null assertions w/o comment
+- ES modules (`import`/`export`), no `require()`
+- Dir layout: `app/components/`, `app/routes/`, `app/hooks/`, `app/types/`, `app/constants/`
+- `MixerTrack` + `SavedPreferences` = core audio state types (`app/types/audio.ts`)
 
 ## Gotchas
-- **No test runner configured** — do not assume Jest, Vitest, or any other test framework exists
-- `useAudioManager` and `useSessionTimer` are client-only hooks; they must not run during SSR
-- All `localStorage` access must be inside `useEffect` — never in render or loaders
-- `DEFAULT_TRACKS` in `app/constants/audioConfig.ts` is the single source of truth for track configuration; update there first, then check downstream consumers
-- Node.js ≥ 20 required (`engines` field in `package.json`)
+- **No test runner** — don't assume Jest/Vitest/etc
+- `useAudioManager` + `useSessionTimer` client-only; never run during SSR
+- All `localStorage` inside `useEffect` — never in render/loaders
+- `DEFAULT_TRACKS` in `app/constants/audioConfig.ts` = single truth source for tracks; update there, check downstream
+- Node.js ≥ 20 (`engines` in `package.json`)
 
 ## Token Efficiency
-- Never re-read files you just wrote or edited. You know the contents.
-- Never re-run commands to "verify" unless the outcome was uncertain.
-- Don't echo back large blocks of code or file contents unless asked.
-- Batch related edits into single operations. Don't make 5 edits when 1 handles it.
-- Skip confirmations like "I'll continue..." Just do it.
-- If a task needs 1 tool call, don't use 3. Plan before acting.
-- Do not summarize what you just did unless the result is ambiguous or you need additional input.
+- Never re-read files just wrote/edited
+- Never re-run commands to "verify" unless outcome uncertain
+- Don't echo large code/file blocks unless asked
+- Batch edits: 1 op over 5
+- Skip "I'll continue..." confirmations
+- 1 tool call > 3. Plan first.
+- Don't summarize what just did unless ambiguous/need input
 
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **vite-virtual-cafe** (242 symbols, 307 relationships, 2 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+This project indexed as **vite-virtual-cafe** (229 symbols, 294 relationships, 2 execution flows). Use GitNexus MCP tools to understand code, assess impact, navigate safely.
 
-> If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
+> If GitNexus tool warns stale index, run `npx gitnexus analyze` first.
 
 ## Always Do
 
-- **MUST run impact analysis before editing any symbol.** Before modifying a function, class, or method, run `gitnexus_impact({target: "symbolName", direction: "upstream"})` and report the blast radius (direct callers, affected processes, risk level) to the user.
-- **MUST run `gitnexus_detect_changes()` before committing** to verify your changes only affect expected symbols and execution flows.
-- **MUST warn the user** if impact analysis returns HIGH or CRITICAL risk before proceeding with edits.
-- When exploring unfamiliar code, use `gitnexus_query({query: "concept"})` to find execution flows instead of grepping. It returns process-grouped results ranked by relevance.
-- When you need full context on a specific symbol — callers, callees, which execution flows it participates in — use `gitnexus_context({name: "symbolName"})`.
+- **MUST run impact analysis before editing any symbol.** Before modifying function/class/method, run `gitnexus_impact({target: "symbolName", direction: "upstream"})` + report blast radius (direct callers, affected processes, risk level).
+- **MUST run `gitnexus_detect_changes()` before committing** to verify changes only affect expected symbols/flows.
+- **MUST warn** if impact analysis returns HIGH/CRITICAL risk before edits.
+- When exploring unfamiliar code, use `gitnexus_query({query: "concept"})` to find execution flows instead of grepping. Returns process-grouped results ranked by relevance.
+- When need full context on symbol — callers, callees, execution flows — use `gitnexus_context({name: "symbolName"})`.
 
 ## Never Do
 
-- NEVER edit a function, class, or method without first running `gitnexus_impact` on it.
-- NEVER ignore HIGH or CRITICAL risk warnings from impact analysis.
-- NEVER rename symbols with find-and-replace — use `gitnexus_rename` which understands the call graph.
-- NEVER commit changes without running `gitnexus_detect_changes()` to check affected scope.
+- NEVER edit function/class/method without first running `gitnexus_impact`.
+- NEVER ignore HIGH/CRITICAL risk warnings from impact analysis.
+- NEVER rename symbols with find-and-replace — use `gitnexus_rename` (understands call graph).
+- NEVER commit without running `gitnexus_detect_changes()` to check affected scope.
 
 ## Resources
 

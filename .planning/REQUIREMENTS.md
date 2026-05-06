@@ -40,20 +40,20 @@
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| MIGR-01 | — | Pending |
-| MIGR-02 | — | Pending |
-| MIGR-03 | — | Pending |
-| MIGR-04 | — | Pending |
-| TEST-01 | — | Pending |
-| TEST-02 | — | Pending |
-| TEST-03 | — | Pending |
-| TEST-04 | — | Pending |
-| CI-01 | — | Pending |
+| MIGR-01 | Phase 2 | Pending |
+| MIGR-02 | Phase 2 | Pending |
+| MIGR-03 | Phase 2 | Pending |
+| MIGR-04 | Phase 2 | Pending |
+| TEST-01 | Phase 3 | Pending |
+| TEST-02 | Phase 3 | Pending |
+| TEST-03 | Phase 3 | Pending |
+| TEST-04 | Phase 3 | Pending |
+| CI-01 | Phase 4 | Pending |
 
 **Coverage:**
 - v1.1 requirements: 9 total
-- Mapped to phases: 0
-- Unmapped: 9
+- Mapped to phases: 9
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-04-29*

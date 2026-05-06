@@ -1,116 +1,197 @@
-# Directory Structure & Organization
+# Codebase Structure
 
-## Project Root Layout
+**Analysis Date:** 2026-04-29
+
+## Directory Layout
+
 ```
 vite-virtual-cafe/
-├── app/                          # Remix app directory (all source code)
-├── public/                       # Static assets (if present)
-├── build/                        # Output directory (gitignored)
-├── node_modules/                 # Dependencies (gitignored)
-├── .planning/                    # GSD project planning (newly created)
-├── package.json                  # Dependencies and scripts
-├── tsconfig.json                 # TypeScript configuration
-├── vite.config.ts               # Vite configuration (inferred)
-├── tailwind.config.js           # Tailwind configuration (inferred)
-├── postcss.config.js            # PostCSS configuration (inferred)
-├── server.js                    # Express server entry point
-├── README.md                    # Project documentation
-└── .gitignore                   # Git ignore rules
+├── app/                              # All application source code
+│   ├── components/                   # Presentational React components
+│   │   ├── ui/                       # shadcn/ui component primitives
+│   │   │   └── button.tsx            # Base button (shadcn scaffolded, 3.1K)
+│   │   ├── BackdropOverlay.tsx       # Scene-tinted gradient overlay
+│   │   ├── CelebrationOverlay.tsx    # Post-session achievement modal
+│   │   ├── RoomMixControls.tsx       # Master mixer (renders TrackControl list)
+│   │   ├── SessionTimer.tsx          # Circular SVG countdown + duration controls
+│   │   ├── TrackControl.tsx          # Single track volume slider + pause/retry
+│   │   └── VibeSelector.tsx          # 4 vibe preset buttons (also holds VIBES data)
+│   ├── constants/                    # Configuration constants
+│   │   └── audioConfig.ts            # DEFAULT_TRACKS, SOUND_URLS, base volumes, defaults
+│   ├── hooks/                        # Custom React hooks (stateful logic)
+│   │   ├── useAudioManager.ts        # HTMLAudioElement lifecycle, volume, errors
+│   │   ├── useKeyboardShortcuts.ts   # Space/ArrowUp/ArrowDown key bindings
+│   │   ├── usePersistentState.ts     # Generic localStorage-backed useState
+│   │   └── useSessionTimer.ts        # setInterval-based countdown timer
+│   ├── lib/                          # Utility and domain logic (no React deps)
+│   │   ├── session.ts                # SessionEntry type, vibe/mood detection, localStorage writes
+│   │   └── utils.ts                  # cn() class-merging (clsx + tailwind-merge)
+│   ├── routes/                       # Remix file-convention route pages
+│   │   ├── _index.tsx                # Focus timer page (/) -- 254 lines
+│   │   └── relax.tsx                 # Ambient page (/relax) -- 140 lines
+│   ├── types/                        # TypeScript type definitions
+│   │   └── audio.ts                  # MixerTrack, SceneId, SavedPreferences
+│   ├── entry.client.tsx              # Client hydration (hydrateRoot + StrictMode)
+│   ├── entry.server.tsx              # SSR streaming entry (bot/browser split)
+│   ├── root.tsx                      # Root layout: AppNav, Links, Meta, Outlet
+│   └── tailwind.css                  # Global CSS: Tailwind directives, shadcn tokens, custom classes
+├── .claude/                          # AI runtime config (gitignored)
+│   └── skills/gitnexus/              # GitNexus code intelligence skills (6 skill dirs)
+├── .planning/                        # Planning and analysis documents (gitignored by convention)
+│   └── codebase/                     # Codebase mapping output (this directory)
+├── public/                           # Static assets (served at web root)
+│   ├── cafe-background.jpg           # Hero background image for all pages
+│   └── favicon.*                     # Browser favicon
+├── .gitignore                        # Git ignore rules
+├── .nvmrc                            # Node version manager config
+├── CLAUDE.md                         # Project instructions for AI coding assistant
+├── components.json                   # shadcn/ui v4 configuration (style: base-nova)
+├── package.json                      # Dependencies and scripts
+├── package-lock.json                 # Lockfile
+├── postcss.config.js                 # PostCSS (Tailwind + Autoprefixer)
+├── server.js                         # Express server entry point (52 lines)
+├── tailwind.config.ts                # Tailwind theme (custom M3-like palette, fonts, radii)
+├── tsconfig.json                     # TypeScript strict config (ES2022, Bundler)
+└── vite.config.ts                    # Vite + Remix plugin + tsconfig paths
 ```
 
-## App Directory Structure
-```
-app/
-├── entry.server.tsx             # Server-side rendering entry
-├── entry.client.tsx             # Client-side hydration entry
-├── root.tsx                     # Root component / layout wrapper
-│
-├── routes/                      # File-based routes (Remix convention)
-│   ├── _index.tsx              # Home page (/)
-│   ├── journal.tsx             # Journal route (/journal)
-│   └── relax.tsx               # Relax route (/relax)
-│
-├── components/                  # Reusable React components
-│   ├── BackdropOverlay.tsx      # Overlay visual effects
-│   ├── RoomMixControls.tsx      # Audio room/ambience mixing
-│   ├── SessionTimer.tsx         # Session timing display component
-│   ├── SoundBoard.tsx           # Main audio playback interface
-│   ├── Timer.tsx                # Timer UI component
-│   ├── TrackControl.tsx         # Individual track control UI
-│   ├── VibeSelector.tsx         # Vibe/atmosphere selection
-│   └── VisualScene.tsx          # Visual background/scene
-│
-├── hooks/                       # Custom React hooks
-│   ├── useSessionTimer.ts       # Session timing logic hook
-│   └── usePersistentState.ts    # localStorage persistence hook
-│
-├── constants/                   # Application constants
-│   └── audioConfig.ts           # Audio configuration, tracks, moods
-│
-└── types/                       # TypeScript type definitions
-    └── audio.ts                 # Audio-related types
-```
+## Directory Purposes
 
-## Key Locations by Feature
+**`app/components/`:**
+- Purpose: All presentational React components. No state management logic (except local UI states). Props-driven only.
+- Contains: 6 components, one per file
+- Key files: `SessionTimer.tsx`, `RoomMixControls.tsx`, `TrackControl.tsx`, `VibeSelector.tsx`, `CelebrationOverlay.tsx`, `BackdropOverlay.tsx`
 
-### Audio System
-- **Config**: `app/constants/audioConfig.ts`
-- **Types**: `app/types/audio.ts`
-- **UI Components**:
-  - `app/components/SoundBoard.tsx` (main interface)
-  - `app/components/RoomMixControls.tsx` (mixing)
-  - `app/components/TrackControl.tsx` (individual tracks)
+**`app/components/ui/`:**
+- Purpose: shadcn/ui primitives scaffolded via `shadcn add` CLI. Single-file components with full variants.
+- Contains: `button.tsx` (the only one currently)
+- Generated: Yes (via CLI)
+- Committed: Yes
 
-### Session Management
-- **Logic**: `app/hooks/useSessionTimer.ts`
-- **Persistence**: `app/hooks/usePersistentState.ts`
-- **Display**: `app/components/SessionTimer.tsx` + `app/components/Timer.tsx`
+**`app/hooks/`:**
+- Purpose: Custom React hooks encapsulating browser-only stateful logic. One concern per hook.
+- Contains: 4 hooks
+- Key files: `useAudioManager.ts` (most complex, ~191 lines), `useSessionTimer.ts`, `usePersistentState.ts`, `useKeyboardShortcuts.ts`
 
-### Routes / Pages
-- **Home**: `app/routes/_index.tsx`
-- **Journal**: `app/routes/journal.tsx`
-- **Relax**: `app/routes/relax.tsx`
+**`app/constants/`:**
+- Purpose: Single source of truth for configuration values that never change at runtime.
+- Contains: `audioConfig.ts` with `DEFAULT_TRACKS`, `SOUND_URLS`, `TRACK_BASE_VOLUME`, `STORAGE_KEY`, `DEFAULT_DURATION_MINUTES`, `DEFAULT_SCENE`
 
-### Visual & UI
-- **Backdrop**: `app/components/BackdropOverlay.tsx`
-- **Scene**: `app/components/VisualScene.tsx`
-- **Vibe Selection**: `app/components/VibeSelector.tsx`
+**`app/lib/`:**
+- Purpose: Pure utility functions with no React dependency. Can be tested without a DOM.
+- Contains: `session.ts` (session persistence + detection), `utils.ts` (`cn()`)
+
+**`app/routes/`:**
+- Purpose: Remix file-convention route pages. Each file exports a default React component.
+- Contains: 2 routes (`/` -> `_index.tsx`, `/relax` -> `relax.tsx`)
+- Removed: `journal.tsx`, `settings.tsx` (deleted in recent commits)
+
+**`app/types/`:**
+- Purpose: Shared TypeScript type definitions.
+- Contains: `audio.ts` with `MixerTrack`, `SceneId`, `SavedPreferences`
+
+**`public/`:**
+- Purpose: Unprocessed static assets served by Express at the web root.
+- Contains: `cafe-background.jpg`, favicon files
+
+## Key File Locations
+
+**Entry Points:**
+- `server.js`: Express server startup and middleware
+- `app/entry.client.tsx`: Client-side React hydration
+- `app/entry.server.tsx`: Server-side React SSR streaming
+
+**Configuration:**
+- `package.json`: Dependencies, scripts, engines
+- `tsconfig.json`: TypeScript strict mode, `~/*` path alias
+- `vite.config.ts`: Vite config with Remix plugin + 5 future flags
+- `tailwind.config.ts`: M3-like color palette, newsreader/plus-jakarta fonts, border radii
+- `postcss.config.js`: Tailwind + Autoprefixer
+- `components.json`: shadcn/ui registry and style config
+
+**Core Logic:**
+- `app/hooks/useAudioManager.ts`: Audio engine (HTMLAudioElement lifecycle, volume curve, error recovery)
+- `app/hooks/useSessionTimer.ts`: Timer engine (setInterval countdown)
+- `app/lib/session.ts`: Session detection and persistence (vibe/mood algorithms)
+- `app/constants/audioConfig.ts`: Track definitions, remote URLs, base volumes
+
+**Root Layout:**
+- `app/root.tsx`: App shell with AppNav, font preconnects, Outlet
 
 ## Naming Conventions
 
-### Files & Directories
-- **Components**: PascalCase (e.g., `SoundBoard.tsx`, `SessionTimer.tsx`)
-- **Hooks**: camelCase with `use` prefix (e.g., `usePersistentState.ts`)
-- **Routes**:
-  - Index route: `_index.tsx` (Remix convention for folder root)
-  - Named routes: kebab-case-inspired (e.g., `journal.tsx`, `relax.tsx`)
-- **Types**: camelCase (e.g., `audio.ts`)
-- **Constants**: camelCase (e.g., `audioConfig.ts`)
+**Files:**
+- PascalCase for React components: `SessionTimer.tsx`, `RoomMixControls.tsx`, `CelebrationOverlay.tsx`
+- camelCase for hooks: `useAudioManager.ts`, `useSessionTimer.ts`, `usePersistentState.ts`, `useKeyboardShortcuts.ts`
+- camelCase for utilities/config: `audioConfig.ts`, `session.ts`, `utils.ts`
+- snake_case for Remix index route file: `_index.tsx` (Remix convention for index routes)
 
-### Imports
-- Path alias: `~/` maps to `app/` (from tsconfig.json)
-- Example: `import { SoundBoard } from "~/components/SoundBoard"`
+**Directories:**
+- All lowercase, singular: `components/`, `hooks/`, `routes/`, `types/`, `lib/`, `constants/`
+- `ui/` subdirectory for shadcn primitives
 
-## Build Output
-```
-build/
-├── server/                      # Server bundle (Node.js)
-│   └── index.js
-└── client/                      # Client bundle (browser)
-    ├── index.[hash].js
-    ├── assets/
-    └── ...
-```
+## Where to Add New Code
 
-## Asset Organization
-- **Audio files**: Referenced in `audioConfig.ts` (location not visible, likely `public/` or bundled)
-- **Images**: Likely in `public/` (if present)
-- **Fonts**: Via Tailwind + default system fonts (if no custom fonts detected)
+**New Route Page:**
+- Route file: `app/routes/{name}.tsx`
+- Page-level state and effects go here (not in components)
+- Import path: `~/routes/{name}`
 
-## Scalability Notes
-- ✓ Components well-organized by type (components, hooks, types, constants)
-- ✓ Routes separate (easier to add new pages)
-- ✓ Type definitions co-located with features
-- ⚠️ No `utils/` or `services/` directory yet (may be needed if business logic grows)
-- ⚠️ No test directory detected (could add `__tests__/` or `.test.ts` alongside source)
-- ⚠️ No configuration management (env files, feature flags)
+**New Presentational Component:**
+- File: `app/components/{ComponentName}.tsx`
+- Import path: `~/components/{ComponentName}` (not relative paths)
+- Props: Define an exported interface `{ComponentName}Props`
+
+**New shadcn Primitive:**
+- Use: `npx shadcn add {component-name}` - places in `app/components/ui/`
+- Import path: `~/components/ui/{component-name}`
+
+**New Custom Hook:**
+- File: `app/hooks/use{FeatureName}.ts`
+- Import path: `~/hooks/useFeatureName`
+- Rule: Keep browser-only API access inside `useEffect` or `useRef` for SSR safety
+
+**New Utility Function:**
+- File: `app/lib/{name}.ts`
+- Import path: `~/lib/{name}`
+- Rule: No React or DOM dependencies (enables future testing)
+
+**New Constant/Config:**
+- Audio-related: Add to `app/constants/audioConfig.ts`
+- Generic: New file `app/constants/{name}.ts`
+- Import path: `~/constants/{name}`
+
+**New Type:**
+- Audio-related: Add to `app/types/audio.ts`
+- Domain-specific: New file `app/types/{domain}.ts`
+- Import path: `~/types/{domain}`
+
+**New Static Asset:**
+- File: `public/{asset-name}`
+- Referenced at root path: `/{asset-name}`
+
+## Special Directories
+
+**`build/`:**
+- Purpose: Production build output (server bundle + client assets)
+- Generated: Yes (by `npm run build`)
+- Committed: No (gitignored)
+
+**`node_modules/`:**
+- Purpose: npm dependencies
+- Generated: Yes (by `npm install`)
+- Committed: No (gitignored)
+
+**`.claude/` and `.gitnexus/`:**
+- Purpose: AI runtime configuration and code intelligence index
+- Generated: Yes (`.gitnexus/` by `npx gitnexus analyze`)
+- Committed: No (gitignored)
+
+**`public/`:**
+- Purpose: Static assets served at web root
+- Generated: No
+- Committed: Yes
+
+---
+
+*Structure analysis: 2026-04-29*

@@ -1,32 +1,32 @@
 # vite-remix-virtual-cafe — Agent Config
 
-No custom subagents are defined for this project yet.
-The GitNexus code-intelligence block below is auto-injected by the GitNexus tool.
-Add agent definitions here when isolated, tool-restricted tasks are needed.
+No custom subagents defined yet.
+GitNexus block below auto-injected by GitNexus tool.
+Add agent defs here when isolated, tool-restricted tasks needed.
 
-Token efficiency rules are in CLAUDE.md (single source of truth).
+Token efficiency rules in CLAUDE.md (single source of truth).
 
 <!-- gitnexus:start -->
 # GitNexus — Code Intelligence
 
-This project is indexed by GitNexus as **vite-virtual-cafe** (242 symbols, 307 relationships, 2 execution flows). Use the GitNexus MCP tools to understand code, assess impact, and navigate safely.
+Project indexed by GitNexus as **vite-virtual-cafe** (229 symbols, 294 relationships, 2 execution flows). Use GitNexus MCP tools to understand code, assess impact, navigate safely.
 
-> If any GitNexus tool warns the index is stale, run `npx gitnexus analyze` in terminal first.
+> If any GitNexus tool warns index is stale, run `npx gitnexus analyze` in terminal first.
 
 ## Always Do
 
-- **MUST run impact analysis before editing any symbol.** Before modifying a function, class, or method, run `gitnexus_impact({target: "symbolName", direction: "upstream"})` and report the blast radius (direct callers, affected processes, risk level) to the user.
-- **MUST run `gitnexus_detect_changes()` before committing** to verify your changes only affect expected symbols and execution flows.
-- **MUST warn the user** if impact analysis returns HIGH or CRITICAL risk before proceeding with edits.
-- When exploring unfamiliar code, use `gitnexus_query({query: "concept"})` to find execution flows instead of grepping. It returns process-grouped results ranked by relevance.
-- When you need full context on a specific symbol — callers, callees, which execution flows it participates in — use `gitnexus_context({name: "symbolName"})`.
+- **MUST run impact analysis before editing any symbol.** Run `gitnexus_impact({target: "symbolName", direction: "upstream"})` and report blast radius (direct callers, affected processes, risk level) to user.
+- **MUST run `gitnexus_detect_changes()` before committing** to verify changes only affect expected symbols and execution flows.
+- **MUST warn user** if impact analysis returns HIGH or CRITICAL risk before proceeding with edits.
+- When exploring unfamiliar code, use `gitnexus_query({query: "concept"})` to find execution flows instead of grepping. Returns process-grouped results ranked by relevance.
+- Need full context on a symbol — callers, callees, execution flows — use `gitnexus_context({name: "symbolName"})`.
 
 ## Never Do
 
 - NEVER edit a function, class, or method without first running `gitnexus_impact` on it.
 - NEVER ignore HIGH or CRITICAL risk warnings from impact analysis.
-- NEVER rename symbols with find-and-replace — use `gitnexus_rename` which understands the call graph.
-- NEVER commit changes without running `gitnexus_detect_changes()` to check affected scope.
+- NEVER rename symbols with find-and-replace — use `gitnexus_rename`.
+- NEVER commit without running `gitnexus_detect_changes()` to check affected scope.
 
 ## Resources
 

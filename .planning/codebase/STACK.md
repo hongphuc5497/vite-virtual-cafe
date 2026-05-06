@@ -1,62 +1,95 @@
 # Technology Stack
 
-## Runtime & Build Tools
-- **Node.js**: ≥20.0.0 (from package.json engines)
-- **Package Manager**: npm
-- **Build Tool**: Vite 6.4.1
-- **Framework**: Remix 2.17.4 (React meta-framework with file-based routing)
-- **Server**: Express 4.22.1 (Node.js web server)
+**Analysis Date:** 2026-04-29
 
-## Frontend Technologies
-- **UI Library**: React 18.3.1
-- **DOM Library**: react-dom 18.3.1
-- **Styling**: Tailwind CSS 3.4.19 (utility-first CSS framework)
-- **CSS Processing**: PostCSS 8.5.8 with autoprefixer 10.4.27
-- **Icon Library**: react-icons 5.6.0
+## Languages
 
-## Audio & Media
-- **Audio Library**: howler.js 2.2.4 (Web Audio API wrapper)
-- **TypeScript Audio Types**: @types/howler 2.2.12
+**Primary:**
+- TypeScript 5.9.3 (strict mode) - All application code in `app/` and `server.js`
+- CSS (Tailwind CSS v3.4 + custom layer components) - Styling in `app/tailwind.css`
 
-## Backend & Server
-- **Framework**: @remix-run/express 2.17.4
-- **Server Runtime**: @remix-run/node 2.17.4
-- **Compression**: compression 1.8.1
-- **Logging**: morgan 1.10.1 (HTTP request logger)
-- **Bot Detection**: isbot 5.1.36
+**Secondary:**
+- JavaScript (ESM) - `server.js` server entry point, `postcss.config.js`
 
-## Development Tools
-- **Language**: TypeScript 5.9.3 (strict mode enabled)
-- **Type Checking**: tsc (via `npm run typecheck`)
-- **Linting**: ESLint 8.38.0 with:
-  - @typescript-eslint/eslint-plugin 6.7.4
-  - @typescript-eslint/parser 6.7.4
-  - eslint-plugin-import 2.32.0
-  - eslint-plugin-jsx-a11y 6.7.1
-  - eslint-plugin-react 7.37.5
-  - eslint-plugin-react-hooks 4.6.0
-  - eslint-import-resolver-typescript 3.6.1
+## Runtime
 
-## Configuration Files
-- **TypeScript Config**: `tsconfig.json` (strict, no emit, path aliases at `~/*`)
-- **Vite Config**: Managed by Remix (Vite wrapper)
-- **Tailwind Config**: Standard tailwind.config.js (inferred from dependencies)
-- **PostCSS Config**: postcss.config.js (autoprefixer enabled)
+**Environment:**
+- Node.js >=20.0.0 (enforced via `package.json` `engines` field)
+- Runs on Express server, not the default Remix CLI server
 
-## Environment & Module System
-- **Module Type**: ES modules (`"type": "module"` in package.json)
-- **Side Effects**: Explicitly marked as false (`"sideEffects": false`)
-- **Target Environments**:
-  - Browser: ES2022
-  - Node.js: ES2022
-  - DOM APIs: DOM and DOM.Iterable
+**Package Manager:**
+- npm (lockfile: `package-lock.json` present)
 
-## File Structure & Conventions
-- **Main Entry (Server)**: `app/entry.server.tsx`
-- **Main Entry (Client)**: `app/entry.client.tsx`
-- **Root Component**: `app/root.tsx`
-- **Routes**: File-based routing (Remix convention, files in `app/routes/`)
-- **Components**: `app/components/` directory
-- **Hooks**: `app/hooks/` directory
-- **Types**: `app/types/` directory
-- **Constants**: `app/constants/` directory
+## Frameworks
+
+**Core:**
+- React 18.3.1 - UI library
+- Remix v2 (via `@remix-run/react`, `@remix-run/express`, `@remix-run/node` 2.17.4) - Full-stack web framework
+- Vite 6.4.1 - Build tool and dev server HMR
+
+**UI & Styling:**
+- Tailwind CSS 3.4.19 - Utility-first CSS framework
+- shadcn/ui v4 (partially configured via `components.json`, style: `base-nova`)
+- `tw-animate-css` 1.4.0 - Animation CSS utilities
+- `@base-ui/react` 1.4.1 - Headless UI primitives (shadcn dependency)
+- `@fontsource-variable/geist` - Geist variable font (imported in `tailwind.css`)
+- Google Fonts (Newsreader, Plus Jakarta Sans) - Loaded via `<link>` in `app/root.tsx`
+- Material Symbols Outlined - Icon system (loaded via Google Fonts `<link>`)
+- Lucide React 1.12.0 - Icon library available for shadcn/ui (not yet used in components)
+- `class-variance-authority` 0.7.1 + `clsx` 2.1.1 + `tailwind-merge` 3.5.0 - Utility chain for class merging (`app/lib/utils.ts` `cn()` helper)
+
+**Testing:**
+- **None detected** - No test runner, no test framework, no test files in the project. `package.json` has no test script.
+
+**Build/Dev:**
+- `@remix-run/dev` 2.17.4 - Remix Vite plugin
+- `vite-tsconfig-paths` 4.2.1 - Path alias resolution (`~/*` -> `./app/*`)
+- ESLint 8.38.0 - Linting with TypeScript, import, JSX a11y, React, React Hooks plugins
+- PostCSS 8.5.8 + Autoprefixer 10.4.27 - CSS processing pipeline
+- `cross-env` 10.1.0 - Environment variable cross-platform support
+
+## Key Dependencies
+
+**Critical:**
+- `@remix-run/express` 2.17.4 - Bridges Remix request handling to Express
+- `express` 4.22.1 - HTTP server framework
+- `compression` 1.8.1 - Gzip compression middleware for production responses
+- `morgan` 1.10.1 - HTTP request logging middleware
+- `isbot` 5.1.36 - Bot detection for SSR streaming strategy split
+
+**Audio:**
+- Native `HTMLAudioElement` (no Howler.js or external audio library)
+- Audio tracks are remote MP3s from `https://imissmycafe.com/`
+
+**Infrastructure:**
+- `shadcn` 4.6.0 - CLI tool for component scaffolding
+
+## Configuration
+
+**Environment:**
+- `NODE_ENV` (production/development) - Controls Vite dev server vs static build serving (`server.js`)
+- `PORT` (default 3000) - Server listen port
+- No `.env` file present in working tree; `.env` is gitignored
+
+**Build:**
+- `vite.config.ts` - Vite + Remix plugin with 5 future flags: `v3_singleFetch`, `v3_lazyRouteDiscovery`, `v3_fetcherPersist`, `v3_relativeSplatPath`, `v3_throwAbortReason`
+- `tsconfig.json` - TypeScript strict mode, `ES2022` target, `Bundler` module resolution, `~/*` path alias
+- `tailwind.config.ts` - Custom M3-like color palette (warm browns), custom font families, border radii
+- `postcss.config.js` - Tailwind CSS + Autoprefixer pipeline
+
+## Platform Requirements
+
+**Development:**
+- Node.js >=20
+- npm (no specific version pinned)
+- Run via `npm run dev` (starts Express with Vite HMR middleware at localhost:3000)
+
+**Production:**
+- Node.js >=20
+- Build via `npm run build`, serve via `npm start`
+- Static assets served from `build/client/` with fingerprint-based caching
+- Compressed responses via `compression` middleware
+
+---
+
+*Stack analysis: 2026-04-29*

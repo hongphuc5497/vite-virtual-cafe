@@ -16,7 +16,7 @@ test.describe('Navigation', () => {
     await page.route('**/*.wav', (route) =>
       route.fulfill({ body: silentAudio, contentType: 'audio/wav' })
     );
-    await page.evaluate(() => localStorage.clear());
+    await page.addInitScript(() => localStorage.clear());
   });
 
   test('route switching between / and /relax', async ({ page }) => {
@@ -70,7 +70,7 @@ test.describe('Keyboard Shortcuts', () => {
     await page.route('**/*.wav', (route) =>
       route.fulfill({ body: silentAudio, contentType: 'audio/wav' })
     );
-    await page.evaluate(() => localStorage.clear());
+    await page.addInitScript(() => localStorage.clear());
   });
 
   test('Space toggles play/pause and ArrowUp adjusts volume', async ({ page }) => {

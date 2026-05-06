@@ -7,7 +7,9 @@ export function useKeyboardShortcuts({ onTogglePlay, onVolumeIncrease, onVolumeD
       if (
         target.tagName === "INPUT" ||
         target.tagName === "TEXTAREA" ||
-        target.tagName === "SELECT"
+        target.tagName === "SELECT" ||
+        target.isContentEditable ||
+        target.getAttribute("role") === "textbox"
       ) {
         return;
       }

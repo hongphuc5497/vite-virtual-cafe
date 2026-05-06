@@ -15,7 +15,13 @@ const viteDevServer =
 const remixHandler = createRequestHandler({
   build: viteDevServer
     ? () => viteDevServer.ssrLoadModule("virtual:remix/server-build")
-    : await import("./build/server/index.js"),
+    : await import("./build/server/index.js").catch((err) => {
+        console.error(
+          "Failed to load production build. Did you run `npm run build`?",
+          err.message
+        );
+        process.exit(1);
+      }),
 });
 
 const app = express();
@@ -24,6 +30,13 @@ app.use(compression());
 
 // http://expressjs.com/en/advanced/best-practice-security.html#at-a-minimum-disable-x-powered-by-header
 app.disable("x-powered-by");
+
+app.use((_req, res, next) => {
+  res.set("X-Content-Type-Options", "nosniff");
+  res.set("X-Frame-Options", "DENY");
+  res.set("Referrer-Policy", "strict-origin-when-cross-origin");
+  next();
+});
 
 // handle asset requests
 if (viteDevServer) {
