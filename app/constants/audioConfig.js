@@ -1,3 +1,66 @@
+export const VIBES = [
+  {
+    label: "Lo-fi Beats",
+    icon: "music_note",
+    description: "Warm café ambiance",
+    preset: {
+      Barista: 65,
+      "Preparing Drinks": 45,
+      "Coffee Cups": 50,
+      "Other Customers": 30,
+      Machinery: 20,
+      "Rainy Day": 5,
+      "Sunny Day": 40,
+      Fireplace: 0,
+    },
+  },
+  {
+    label: "Rainy Day",
+    icon: "rainy",
+    description: "Cozy & introspective",
+    preset: {
+      Barista: 25,
+      "Preparing Drinks": 15,
+      "Coffee Cups": 20,
+      "Other Customers": 15,
+      Machinery: 10,
+      "Rainy Day": 75,
+      "Sunny Day": 0,
+      Fireplace: 30,
+    },
+  },
+  {
+    label: "Jazz Night",
+    icon: "piano",
+    description: "Evening sophistication",
+    preset: {
+      Barista: 40,
+      "Preparing Drinks": 30,
+      "Coffee Cups": 55,
+      "Other Customers": 45,
+      Machinery: 15,
+      "Rainy Day": 0,
+      "Sunny Day": 0,
+      Fireplace: 70,
+    },
+  },
+  {
+    label: "Nature",
+    icon: "eco",
+    description: "Open & expansive",
+    preset: {
+      Barista: 20,
+      "Preparing Drinks": 10,
+      "Coffee Cups": 15,
+      "Other Customers": 10,
+      Machinery: 0,
+      "Rainy Day": 45,
+      "Sunny Day": 80,
+      Fireplace: 0,
+    },
+  },
+];
+
 export const DEFAULT_DURATION_MINUTES = 25;
 export const STORAGE_KEY = "virtual-cafe-home-prefs";
 export const DEFAULT_SCENE = "misty-cabin";

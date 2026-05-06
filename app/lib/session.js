@@ -1,4 +1,4 @@
-import { VIBES } from "~/components/VibeSelector";
+import { VIBES } from "~/constants/audioConfig";
 
 // --- Constants ---
 
