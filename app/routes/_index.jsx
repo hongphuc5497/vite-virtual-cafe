@@ -8,6 +8,8 @@ import { SessionTimer } from "~/components/SessionTimer";
 import { RoomMixControls } from "~/components/RoomMixControls";
 import { BackdropOverlay } from "~/components/BackdropOverlay";
 import { VibeSelector } from "~/components/VibeSelector";
+import { ImmersiveTransition } from "~/components/ImmersiveTransition";
+import { useImmersiveMode } from "~/hooks/useImmersiveMode";
 import {
   DEFAULT_DURATION_MINUTES,
   DEFAULT_SCENE,
@@ -125,6 +127,11 @@ export default function Index() {
       ),
   });
 
+  const immersive = useImmersiveMode(timer.isRunning);
+
+  // Panels are visible when: not in immersive mode, OR user revealed them, OR celebration is showing
+  const panelsVisible = immersive.showPanels || showCelebration;
+
   const sunlightLevel = tracks.find((t) => t.label === "Sunny Day")?.value ?? 0;
   const backdropGlow = 0.14 + sunlightLevel / 260;
 
@@ -176,8 +183,16 @@ export default function Index() {
       <BackdropOverlay backdropGlow={backdropGlow} scene={selectedScene} />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 py-8 md:px-6">
-        {/* Hero text */}
-        <div className="mb-8">
+        {/* Hero text — slides up and fades during immersive mode */}
+        <div
+          className="mb-8"
+          style={{
+            opacity: panelsVisible ? 1 : 0,
+            transform: panelsVisible ? "translateY(0)" : "translateY(-20px)",
+            transition: "opacity 400ms ease-out, transform 400ms ease-out",
+            pointerEvents: panelsVisible ? "auto" : "none",
+          }}
+        >
           <h1
             className="font-headline text-5xl font-light italic"
             style={{ color: "rgba(255,250,224,0.95)", letterSpacing: "-0.02em" }}
@@ -194,8 +209,16 @@ export default function Index() {
         </div>
 
         <div className="grid gap-5 lg:grid-cols-[1fr_1fr]">
-          {/* Left column: Timer + Vibe */}
-          <div className="flex flex-col gap-5">
+          {/* Left column: Timer + Vibe — slides left and fades */}
+          <div
+            className="flex flex-col gap-5"
+            style={{
+              opacity: panelsVisible ? 1 : 0,
+              transform: panelsVisible ? "translateX(0)" : "translateX(-40px)",
+              transition: "opacity 400ms ease-out, transform 400ms ease-out",
+              pointerEvents: panelsVisible ? "auto" : "none",
+            }}
+          >
             {/* Session Timer card */}
             <div
               className="rounded-2xl p-6 shadow-[0_24px_40px_rgba(29,28,13,0.08)]"
@@ -259,10 +282,17 @@ export default function Index() {
             </div>
           </div>
 
-          {/* Right column: Mixer */}
+          {/* Right column: Mixer — slides right and fades */}
           <div
             className="rounded-2xl p-6 shadow-[0_24px_40px_rgba(29,28,13,0.08)]"
-            style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(12px)" }}
+            style={{
+              background: "rgba(255,255,255,0.88)",
+              backdropFilter: "blur(12px)",
+              opacity: panelsVisible ? 1 : 0,
+              transform: panelsVisible ? "translateX(0)" : "translateX(40px)",
+              transition: "opacity 400ms ease-out, transform 400ms ease-out",
+              pointerEvents: panelsVisible ? "auto" : "none",
+            }}
           >
             <RoomMixControls
               soundEnabled={audio.soundEnabled}
@@ -284,6 +314,13 @@ export default function Index() {
           </div>
         </div>
       </div>
+
+      <ImmersiveTransition
+        isImmersive={immersive.isImmersive}
+        showPanels={panelsVisible}
+        formatTime={timer.formatTime}
+        timeLeft={timer.timeLeft}
+      />
 
       {lastSession && (
         <CelebrationOverlay
