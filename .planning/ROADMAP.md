@@ -69,7 +69,7 @@ Plans:
 **Plans**: 1 plan
 
 Plans:
-- [ ] 04-01: Create `.github/workflows/playwright.yml` with checkout, Node setup, dependency install, build, `npx playwright install --with-deps`, and test run steps across a multi-browser matrix
+- [x] 04-01: Create `.github/workflows/playwright.yml` with checkout, Node setup, dependency install, build, `npx playwright install --with-deps`, and test run steps across a multi-browser matrix
 
 ### Phase 1 (completed — v1.0)
 **Goal**: Complete the session loop — timer completion triggers celebration and session logging, audio error handling with retry, relax page restores pausedTracks
@@ -90,5 +90,5 @@ Plans:
 | 1. Complete the Session Loop | v1.0 | 3/3 | Complete | 2026-04-29 |
 | 2. JS Migration | v1.1 | 2/2 | Complete | 2026-05-06 |
 | 3. Playwright E2E Test Suite | v1.1 | 4/4 | Complete | 2026-05-07 |
-| 4. CI Pipeline | v1.1 | 0/1 | Not started | - |
+| 4. CI Pipeline | v1.1 | 1/1 | Complete | 2026-05-07 |
 | 5. Immersive Focus Mode | v1.2 | 0/2 | Not started | - |
