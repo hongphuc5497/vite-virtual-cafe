@@ -53,10 +53,10 @@ Plans:
 **Plans**: 4 plans
 
 Plans:
-- [ ] 03-01: Install Playwright, create `playwright.config.js`, write base test infrastructure (fixtures, page-object helpers, shared selectors/constants)
-- [ ] 03-02: Write focus timer E2E test + navigation/scenes E2E test (TEST-01, TEST-04)
-- [ ] 03-03: Write audio mixer E2E test + relax page E2E test (TEST-02, TEST-03)
-- [ ] 03-04: Run full test suite, debug failures, achieve green suite against JS codebase
+- [x] 03-01: Install Playwright, create `playwright.config.js`, write base test infrastructure (fixtures, page-object helpers, shared selectors/constants)
+- [x] 03-02: Write focus timer E2E test + navigation/scenes E2E test (TEST-01, TEST-04)
+- [x] 03-03: Write audio mixer E2E test + relax page E2E test (TEST-02, TEST-03)
+- [x] 03-04: Run full test suite, debug failures, achieve green suite against JS codebase
 
 ### Phase 4: CI Pipeline
 **Goal**: Playwright tests run automatically on every push and pull request, with multi-browser coverage visible as CI status checks
@@ -89,6 +89,6 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 1. Complete the Session Loop | v1.0 | 3/3 | Complete | 2026-04-29 |
 | 2. JS Migration | v1.1 | 2/2 | Complete | 2026-05-06 |
-| 3. Playwright E2E Test Suite | v1.1 | 0/4 | Not started | - |
+| 3. Playwright E2E Test Suite | v1.1 | 4/4 | Complete | 2026-05-07 |
 | 4. CI Pipeline | v1.1 | 0/1 | Not started | - |
 | 5. Immersive Focus Mode | v1.2 | 0/2 | Not started | - |
