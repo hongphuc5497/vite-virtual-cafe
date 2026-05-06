@@ -3,6 +3,15 @@ import { useEffect } from "react";
 export function useKeyboardShortcuts(callbacks) {
   useEffect(() => {
     const handleKeyDown = (event) => {
+      const target = event.target;
+      if (
+        target.tagName === "INPUT" ||
+        target.tagName === "TEXTAREA" ||
+        target.tagName === "SELECT"
+      ) {
+        return;
+      }
+
       // Space to toggle play/pause
       if (event.code === "Space") {
         event.preventDefault();
