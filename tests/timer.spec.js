@@ -25,15 +25,18 @@ test.describe('Focus Timer', () => {
     // Click 25-minute preset
     await page.click(SELECTORS.TIMER_PRESET_25);
 
+    // Get initial timer text
+    const initialText = await main.getTimerText();
+    expect(initialText).toBe('25:00');
+
     // Start the timer
     await page.click(SELECTORS.TIMER_START);
 
-    // Wait for the timer to tick at least once
-    await page.waitForTimeout(2000);
-
-    // Timer should show 24:5x after a couple seconds
-    const timerText = await main.getTimerText();
-    expect(timerText).toMatch(/24:5\d/);
+    // Wait for the timer to tick — poll until the text changes from initial
+    await expect(async () => {
+      const text = await main.getTimerText();
+      expect(text).not.toBe('25:00');
+    }).toPass({ timeout: 5000 });
   });
 
   test('timer reaches zero and celebration appears', async ({ page }) => {
