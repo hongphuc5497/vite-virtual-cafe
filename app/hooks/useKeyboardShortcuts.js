@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export function useKeyboardShortcuts(callbacks) {
+export function useKeyboardShortcuts({ onTogglePlay, onVolumeIncrease, onVolumeDecrease }) {
   useEffect(() => {
     const handleKeyDown = (event) => {
       const target = event.target;
@@ -15,21 +15,21 @@ export function useKeyboardShortcuts(callbacks) {
       // Space to toggle play/pause
       if (event.code === "Space") {
         event.preventDefault();
-        callbacks.onTogglePlay?.();
+        onTogglePlay?.();
       }
       // Up arrow to increase volume
       if (event.code === "ArrowUp") {
         event.preventDefault();
-        callbacks.onVolumeIncrease?.();
+        onVolumeIncrease?.();
       }
       // Down arrow to decrease volume
       if (event.code === "ArrowDown") {
         event.preventDefault();
-        callbacks.onVolumeDecrease?.();
+        onVolumeDecrease?.();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [callbacks]);
+  }, [onTogglePlay, onVolumeIncrease, onVolumeDecrease]);
 }
