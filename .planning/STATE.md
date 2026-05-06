@@ -2,14 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.1
 milestone_name: JS Migration + Playwright Tests
-status: executing
-last_updated: "2026-05-06T00:00:00.000Z"
+status: completed
+stopped_at: Phase 5 context gathered — 7 decisions captured (animation style, timer restyling, reveal behavior)
+last_updated: "2026-05-06T12:00:00.000Z"
+last_activity: 2026-05-06 — Phase 5 context gathered
 progress:
-  total_phases: 4
+  total_phases: 5
   completed_phases: 2
-  total_plans: 10
-  completed_plans: 5
-  percent: 50
+  total_plans: 2
+  completed_plans: 2
+  percent: 100
 ---
 
 # Project State
@@ -23,7 +25,7 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 
 ## Current Position
 
-Phase: 3 of 4 (Playwright E2E Test Suite)
+Phase: 3 of 3 (Playwright E2E Test Suite)
 Plan: —
 Status: Phase 2 complete — ready for next phase
 Last activity: 2026-05-06 — Phase 2 complete (16/16 verified)
@@ -33,6 +35,7 @@ Progress: [██████████░░] 50%
 ## Performance Metrics
 
 **Velocity:**
+
 - Total plans completed: 3 (all Phase 1)
 - Total execution time: v1.0 milestone
 
@@ -53,7 +56,11 @@ Progress: [██████████░░] 50%
 
 - **Phase 2**: Migration must preserve all logic identically — zero behavior changes. Tests in Phase 3 validate against the JS output.
 - **Phase 3**: Playwright config must use `.js` not `.ts` since TypeScript is removed in Phase 2.
-- **Phase 4**: CI workflow runs after test suite is written and passing locally.
+- **Phase 5**: Animation: panels fade+slide to edges on session start, timer crossfades from card to centered floating pill. Timer: minimal dark translucent pill, center screen, larger typography (~text-6xl). Panels reveal on Escape or bottom 10% hover, auto-hide after 3s. Immersive mode is session-scoped — celebration overlay restores panels. Relax page unaffected.
+
+### Roadmap Evolution
+
+- Phase 5 added: Immersive Focus Mode — hide all UI panels during active session, show only background image and timer
 
 ### Pending Todos
 
@@ -75,4 +82,4 @@ Items carried forward from v1.0 close:
 
 Last session: 2026-05-05 (Phase 2 context gathering)
 Stopped at: Phase 2 context gathered — 3 decisions captured (manual conversion, dependency order, batch-by-plan, Vite alias, no JSDoc)
-Resume file: .planning/phases/02-js-migration/02-CONTEXT.md
+Resume file: .planning/phases/05-immersive-focus-mode-hide-all-ui-panels-during-active-sessio/05-CONTEXT.md
