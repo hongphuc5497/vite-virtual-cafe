@@ -3,25 +3,56 @@ export function ImmersiveTransition({
   showPanels,
   formatTime,
   timeLeft,
+  totalSeconds,
   children,
 }) {
+  const progress = totalSeconds > 0 ? timeLeft / totalSeconds : 1;
+  const RADIUS = 70;
+  const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
+  const strokeDashoffset = CIRCUMFERENCE * (1 - progress);
+
   return (
     <>
-      {/* Floating timer pill — centered, visible only during immersive mode */}
+      {/* Floating timer — centered, visible only during immersive mode */}
       {isImmersive && (
         <div
           className="fixed inset-0 z-40 flex items-center justify-center pointer-events-none"
           data-testid="immersive-timer-pill"
         >
           <div
-            className="rounded-full px-10 py-5"
-            style={{
-              background: "rgba(0,0,0,0.35)",
-              backdropFilter: "blur(16px)",
-            }}
+            className="relative flex items-center justify-center"
+            style={{ width: 200, height: 200 }}
           >
+            {/* Circular progress ring — mirrors SessionTimer style */}
+            <svg
+              width="200"
+              height="200"
+              viewBox="0 0 160 160"
+              className="absolute inset-0"
+              style={{ transform: "rotate(-90deg)" }}
+              aria-hidden="true"
+            >
+              {/* Track ring */}
+              <circle
+                cx="80" cy="80" r={RADIUS}
+                fill="none"
+                stroke="rgba(255,255,255,0.15)"
+                strokeWidth="6"
+              />
+              {/* Progress ring */}
+              <circle
+                cx="80" cy="80" r={RADIUS}
+                fill="none"
+                stroke="rgba(255,255,255,0.9)"
+                strokeWidth="6"
+                strokeLinecap="round"
+                strokeDasharray={CIRCUMFERENCE}
+                strokeDashoffset={strokeDashoffset}
+                style={{ transition: "stroke-dashoffset 1s linear" }}
+              />
+            </svg>
             <span
-              className="font-headline text-6xl font-light tracking-tight"
+              className="relative z-10 font-headline text-6xl font-light tracking-tight"
               style={{
                 color: "rgba(255,255,255,0.95)",
                 letterSpacing: "-0.02em",
