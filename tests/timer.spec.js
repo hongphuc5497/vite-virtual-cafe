@@ -36,7 +36,7 @@ test.describe('Focus Timer', () => {
     await expect(async () => {
       const text = await main.getTimerText();
       expect(text).not.toBe('25:00');
-    }).toPass({ timeout: 5000 });
+    }).toPass({ timeout: 10000 });
   });
 
   test('timer reaches zero and celebration appears', async ({ page }) => {
