@@ -3,6 +3,7 @@ import { useSessionTimer } from "~/hooks/useSessionTimer";
 import { useAudioManager } from "~/hooks/useAudioManager";
 import { useKeyboardShortcuts } from "~/hooks/useKeyboardShortcuts";
 import { detectVibeName, detectMood, writeSessionEntry } from "~/lib/session";
+import { playCompletionChime } from "~/lib/completionSound";
 import { CelebrationOverlay } from "~/components/CelebrationOverlay";
 import { SessionTimer } from "~/components/SessionTimer";
 import { RoomMixControls } from "~/components/RoomMixControls";
@@ -93,6 +94,7 @@ export default function Index() {
     writeSessionEntry(entry);
     setLastSession(entry);
     setShowCelebration(true);
+    playCompletionChime();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timer.timeLeft, timer.isRunning, showCelebration, appliedDurationMinutes, tracks]);
 
@@ -320,6 +322,7 @@ export default function Index() {
         showPanels={panelsVisible}
         formatTime={timer.formatTime}
         timeLeft={timer.timeLeft}
+        totalSeconds={appliedDurationMinutes * 60}
       />
 
       {lastSession && (
