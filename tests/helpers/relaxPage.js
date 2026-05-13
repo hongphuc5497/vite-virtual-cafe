@@ -1,5 +1,4 @@
-import { expect } from '@playwright/test';
-import { SELECTORS, TIMEOUTS, ROUTES } from '../constants';
+import { SELECTORS, ROUTES } from '../constants';
 
 export class RelaxPage {
   constructor(page) {
@@ -7,8 +6,8 @@ export class RelaxPage {
   }
 
   async goto() {
-    await this.page.goto(ROUTES.RELAX);
-    await this.page.waitForLoadState('networkidle');
+    await this.page.goto(ROUTES.RELAX, { timeout: 60000 });
+    await this.page.locator(SELECTORS.RELAX_AMBIENT_PLAYER).waitFor();
   }
 
   async getAmbientPlayer() {

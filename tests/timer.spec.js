@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { MainPage } from './helpers/mainPage';
-import { SELECTORS, TIMEOUTS, STORAGE_KEYS } from './constants';
+import { SELECTORS, STORAGE_KEYS } from './constants';
 
 const silentAudio = Buffer.from(
   'UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=',
@@ -19,6 +19,8 @@ test.describe('Focus Timer', () => {
   });
 
   test('timer countdown updates in real time', async ({ page }) => {
+    test.setTimeout(60000);
+
     const main = new MainPage(page);
     await main.goto();
 

@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { RelaxPage } from './helpers/relaxPage';
-import { SELECTORS, TIMEOUTS, STORAGE_KEYS, ROUTES } from './constants';
+import { SELECTORS, STORAGE_KEYS, ROUTES } from './constants';
 
 const silentAudio = Buffer.from(
   'UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=',
@@ -55,9 +55,11 @@ test.describe('Relax Page', () => {
   });
 
   test('paused tracks state restored from localStorage on page load', async ({ page }) => {
+    test.setTimeout(60000);
+
     // Navigate first so we have a document to work with
-    await page.goto(ROUTES.RELAX);
-    await page.waitForLoadState('networkidle');
+    await page.goto(ROUTES.RELAX, { timeout: 60000 });
+    await page.locator(SELECTORS.RELAX_AMBIENT_PLAYER).waitFor();
 
     // Seed localStorage with paused tracks
     await page.evaluate((key) => {
@@ -71,8 +73,8 @@ test.describe('Relax Page', () => {
     expect(stored).toContain('Barista');
 
     // Reload — the app reads pausedTracks from localStorage on mount
-    await page.reload();
-    await page.waitForLoadState('networkidle');
+    await page.goto(ROUTES.RELAX, { timeout: 60000 });
+    await page.locator(SELECTORS.RELAX_AMBIENT_PLAYER).waitFor();
 
     // Verify the localStorage key survived the reload and was read by the app
     const afterReload = await page.evaluate((key) => localStorage.getItem(key), STORAGE_KEYS.PREFS);

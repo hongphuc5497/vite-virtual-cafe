@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { MainPage } from './helpers/mainPage';
-import { RelaxPage } from './helpers/relaxPage';
-import { SELECTORS, TIMEOUTS, ROUTES } from './constants';
+import { SELECTORS, ROUTES } from './constants';
 
 const silentAudio = Buffer.from(
   'UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=',

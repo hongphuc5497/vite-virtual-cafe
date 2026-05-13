@@ -2,7 +2,7 @@
 module.exports = {
   root: true,
   parserOptions: {
-    ecmaVersion: "latest",
+    ecmaVersion: 2022,
     sourceType: "module",
     ecmaFeatures: {
       jsx: true,
@@ -22,6 +22,13 @@ module.exports = {
     // React
     {
       files: ["**/*.{js,jsx}"],
+      parserOptions: {
+        ecmaVersion: 2022,
+        sourceType: "module",
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
       plugins: ["react", "jsx-a11y", "import"],
       extends: [
         "plugin:react/recommended",
@@ -40,18 +47,46 @@ module.exports = {
           { name: "NavLink", linkAttribute: "to" },
         ],
         "import/resolver": {
+          node: {
+            extensions: [".js", ".jsx"],
+          },
           alias: {
             map: [["~", "./app"]],
             extensions: [".js", ".jsx"],
           },
         },
+        "import/core-modules": ["node:path", "node:stream", "node:url"],
         "import/internal-regex": "^~/",
+      },
+      rules: {
+        "react/prop-types": "off",
+      },
+    },
+
+    // Node-powered app, config, and test files.
+    {
+      files: [
+        "server.js",
+        "vite.config.js",
+        "tailwind.config.js",
+        "playwright.config.js",
+        "tests/**/*.js",
+      ],
+      parserOptions: {
+        ecmaVersion: 2022,
+        sourceType: "module",
+      },
+      env: {
+        node: true,
       },
     },
 
     // Node
     {
       files: [".eslintrc.cjs", "server.js"],
+      parserOptions: {
+        ecmaVersion: 2022,
+      },
       env: {
         node: true,
       },

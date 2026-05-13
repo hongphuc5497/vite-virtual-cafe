@@ -4,25 +4,25 @@ export function CelebrationOverlay({
   onDismiss,
 }) {
   return (
-    <>
-      {/* s: backdrop */}
-      <button
-        type="button"
+    <div
         data-testid="celebration-overlay"
-        aria-label="Dismiss celebration overlay"
-        className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-500 ease-out ${
+      className={`fixed inset-0 z-50 flex items-center justify-center transition-opacity duration-500 ease-out ${
           show ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
         }`}
+    >
+      <button
+        type="button"
+        aria-label="Dismiss celebration overlay"
+        className="absolute inset-0"
         style={{ background: "rgba(29,28,13,0.2)" }}
         onClick={onDismiss}
-      >
+      />
         <div
-          className="mx-4 max-w-sm cursor-default rounded-2xl px-6 py-8 shadow-[0_24px_40px_rgba(29,28,13,0.08)]"
+        className="relative mx-4 max-w-sm cursor-default rounded-2xl px-6 py-8 shadow-[0_24px_40px_rgba(29,28,13,0.08)]"
           style={{
             background: "rgba(255,255,255,0.88)",
             backdropFilter: "blur(12px)",
           }}
-          onClick={(e) => e.stopPropagation()}
           role="dialog"
           aria-modal="true"
           aria-labelledby="celebration-title"
@@ -69,8 +69,6 @@ export function CelebrationOverlay({
           Tap anywhere to dismiss
         </p>
       </div>
-      {/* e: backdrop */}
-    </button>
-    </>
+    </div>
   );
 }
