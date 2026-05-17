@@ -10,6 +10,11 @@ Run the dev server:
 npm run dev
 ```
 
+## CI Notifications
+
+GitHub Actions failure notifications are documented in
+[`docs/ACTIONS_NOTIFICATIONS.md`](docs/ACTIONS_NOTIFICATIONS.md).
+
 ## Deployment
 
 First, build your app for production:
