@@ -4,7 +4,7 @@ import express from "express";
 import morgan from "morgan";
 
 const publicBasePath = normalizePublicBasePath(
-  process.env.PUBLIC_BASE_PATH ?? "/virtual-cafe"
+  process.env.PUBLIC_BASE_PATH ?? ""
 );
 
 function normalizePublicBasePath(value) {

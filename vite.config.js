@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicBasePath = normalizePublicBasePath(
-  process.env.PUBLIC_BASE_PATH ?? "/virtual-cafe"
+  process.env.PUBLIC_BASE_PATH ?? ""
 );
 
 function normalizePublicBasePath(value) {
