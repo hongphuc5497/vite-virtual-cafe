@@ -57,6 +57,8 @@ if (viteDevServer) {
 
 app.use("/", express.static("build/client", { maxAge: "1h" }));
 
+app.use("/virtual-cafe", express.static("build/client", { maxAge: "1h" }));
+
 app.use(morgan("tiny"));
 
 app.all("*", remixHandler);
