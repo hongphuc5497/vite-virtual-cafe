@@ -82,13 +82,11 @@ app.use(withBasePath("/"), express.static("build/client", { maxAge: "1h" }));
 
 app.use(morgan("tiny"));
 
-// handle SSR requests
+// handle SSR requests — strip base path before Remix sees the URL
 if (publicBasePath) {
-  app.use(publicBasePath, (req, _res, next) => {
-    // Strip base path from URL so Remix receives root-relative URLs
-    if (req.url) {
-      const idx = req.url.indexOf(publicBasePath);
-      if (idx === 0) req.url = req.url.slice(publicBasePath.length) || "/";
+  app.use((req, _res, next) => {
+    if (req.url && req.url.startsWith(publicBasePath)) {
+      req.url = req.url.slice(publicBasePath.length) || "/";
     }
     next();
   });
