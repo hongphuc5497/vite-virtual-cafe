@@ -83,6 +83,16 @@ app.use(withBasePath("/"), express.static("build/client", { maxAge: "1h" }));
 app.use(morgan("tiny"));
 
 // handle SSR requests
+if (publicBasePath) {
+  app.use(publicBasePath, (req, _res, next) => {
+    // Strip base path from URL so Remix receives root-relative URLs
+    if (req.url) {
+      const idx = req.url.indexOf(publicBasePath);
+      if (idx === 0) req.url = req.url.slice(publicBasePath.length) || "/";
+    }
+    next();
+  });
+}
 app.all(publicBasePath ? `${publicBasePath}/*` : "*", remixHandler);
 
 const port = process.env.PORT || 3000;

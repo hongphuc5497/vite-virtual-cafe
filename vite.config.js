@@ -11,7 +11,7 @@ const publicBasePath = normalizePublicBasePath(
 function normalizePublicBasePath(value) {
   const trimmed = value.trim();
   if (!trimmed || trimmed === "/") return "/";
-  return `/${trimmed.replace(/^\/+|\/+$/g, "")}/`;
+  return `/${trimmed.replace(/^\/+|\/+$/g, "")}`;
 }
 
 export default defineConfig({
