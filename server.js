@@ -82,18 +82,16 @@ app.use(withBasePath("/"), express.static("build/client", { maxAge: "1h" }));
 
 app.use(morgan("tiny"));
 
-// Strip base path and wrap Remix handler
-if (publicBasePath) {
-  const origHandler = remixHandler;
-  remixHandler = (req, res, next) => {
-    const saved = req.url;
-    if (req.url && req.url.startsWith(publicBasePath)) {
-      req.url = req.url.slice(publicBasePath.length) || "/";
+// Strip base path before Remix handler
+const wrappedRemixHandler = publicBasePath
+  ? (req, res, next) => {
+      if (req.url && req.url.startsWith(publicBasePath)) {
+        req.url = req.url.slice(publicBasePath.length) || "/";
+      }
+      return remixHandler(req, res, next);
     }
-    return origHandler(req, res, next);
-  };
-}
-app.all("*", remixHandler);
+  : remixHandler;
+app.all("*", wrappedRemixHandler);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () =>
