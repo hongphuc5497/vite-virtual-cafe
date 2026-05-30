@@ -63,7 +63,7 @@ export default function Relax() {
     <main
       className="relative min-h-[calc(100vh-57px)] overflow-hidden"
       style={{
-        backgroundImage: `url('/cafe-background.jpg')`,
+        backgroundImage: `url('/virtual-cafe/cafe-background.jpg')`,
         backgroundPosition: "center",
         backgroundSize: "cover",
       }}
