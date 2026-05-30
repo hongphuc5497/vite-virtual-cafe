@@ -25,12 +25,8 @@ USER appuser
 
 ENV NODE_ENV=production \
     HOST=0.0.0.0 \
-    PORT=3000 \
-    PUBLIC_BASE_PATH=/virtual-cafe
+    PORT=3000
 
 EXPOSE 3000
-
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD node -e "require('http').get('http://localhost:3000/virtual-cafe/',r=>{process.exit(r.statusCode===200?0:1)})"
 
 CMD ["node", "server.js"]
