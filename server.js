@@ -85,9 +85,11 @@ app.use(morgan("tiny"));
 // handle SSR requests — strip base path before Remix sees the URL
 if (publicBasePath) {
   app.use((req, _res, next) => {
+    const orig = req.url;
     if (req.url && req.url.startsWith(publicBasePath)) {
       req.url = req.url.slice(publicBasePath.length) || "/";
     }
+    console.log("BP-STRIP:", orig, "->", req.url);
     next();
   });
 }
