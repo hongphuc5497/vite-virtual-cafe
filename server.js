@@ -63,7 +63,6 @@ app.use((_req, res, next) => {
 
 if (publicBasePath) {
   app.get("/", (_req, res) => res.redirect(302, `${publicBasePath}/`));
-  app.get(publicBasePath, (_req, res) => res.redirect(308, `${publicBasePath}/`));
 }
 
 // handle asset requests
