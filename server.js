@@ -82,16 +82,16 @@ app.use(withBasePath("/"), express.static("build/client", { maxAge: "1h" }));
 
 app.use(morgan("tiny"));
 
-// handle SSR requests — strip base path before Remix sees the URL
+// Strip base path and wrap Remix handler
 if (publicBasePath) {
-  app.use((req, _res, next) => {
-    const orig = req.url;
+  const origHandler = remixHandler;
+  remixHandler = (req, res, next) => {
+    const saved = req.url;
     if (req.url && req.url.startsWith(publicBasePath)) {
       req.url = req.url.slice(publicBasePath.length) || "/";
     }
-    console.log("BP-STRIP:", orig, "->", req.url);
-    next();
-  });
+    return origHandler(req, res, next);
+  };
 }
 app.all("*", remixHandler);
 
