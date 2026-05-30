@@ -4,8 +4,18 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const publicBasePath = normalizePublicBasePath(
+  process.env.PUBLIC_BASE_PATH ?? ""
+);
+
+function normalizePublicBasePath(value) {
+  const trimmed = value.trim();
+  if (!trimmed || trimmed === "/") return "/";
+  return `/${trimmed.replace(/^\/+|\/+$/g, "")}`;
+}
 
 export default defineConfig({
+  base: publicBasePath,
   resolve: {
     alias: {
       "~": path.resolve(__dirname, "app"),
@@ -13,6 +23,7 @@ export default defineConfig({
   },
   plugins: [
     remix({
+      basename: publicBasePath,
       future: {
         v3_fetcherPersist: true,
         v3_relativeSplatPath: true,
