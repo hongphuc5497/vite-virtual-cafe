@@ -15,7 +15,7 @@ function normalizePublicBasePath(value) {
 }
 
 export default defineConfig({
-  base: publicBasePath,
+  base: "/virtual-cafe/",
   resolve: {
     alias: {
       "~": path.resolve(__dirname, "app"),
@@ -23,7 +23,7 @@ export default defineConfig({
   },
   plugins: [
     remix({
-      basename: publicBasePath,
+      basename: "/virtual-cafe",
       future: {
         v3_fetcherPersist: true,
         v3_relativeSplatPath: true,
