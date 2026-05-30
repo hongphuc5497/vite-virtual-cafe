@@ -93,16 +93,7 @@ if (publicBasePath) {
     next();
   });
 }
-app.all(publicBasePath ? `${publicBasePath}/*` : "*", remixHandler);
-// Also handle base-path requests after URL is stripped by middleware above
-if (publicBasePath) {
-  app.all("*", (req, res, next) => {
-    if (req.url === "/" || req.url.startsWith("/_") || req.url.startsWith("/assets")) {
-      return remixHandler(req, res, next);
-    }
-    next();
-  });
-}
+app.all("*", remixHandler);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () =>
