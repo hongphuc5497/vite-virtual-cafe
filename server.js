@@ -39,7 +39,7 @@ app.use((_req, res, next) => {
   res.set("Content-Security-Policy",
     "default-src 'self'; media-src 'self' https://imissmycafe.com; " +
     "style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; " +
-    "font-src https://fonts.gstatic.com; script-src 'self'");
+    "font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'");
   res.set("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
   res.set("Permissions-Policy", "camera=(), microphone=(), geolocation=()");
   res.set("Cross-Origin-Opener-Policy", "same-origin");

@@ -1,7 +1,9 @@
 // URLs
+const BASE_PATH = (process.env.PUBLIC_BASE_PATH || '/virtual-cafe').replace(/\/+$/, '');
+
 export const ROUTES = {
-  HOME: '/',
-  RELAX: '/relax',
+  HOME: `${BASE_PATH}/`,
+  RELAX: `${BASE_PATH}/relax`,
 };
 
 // data-testid selectors
