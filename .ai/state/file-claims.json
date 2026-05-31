@@ -1,0 +1,28 @@
+{
+  "claims": [
+    {
+      "created_at": "2026-05-29T05:26:59.136397+00:00",
+      "owner": "Codex",
+      "paths": [
+        "server.js",
+        "vite.config.js",
+        "package.json",
+        "Dockerfile",
+        "fly.toml",
+        ".dockerignore"
+      ],
+      "reason": "active implementation",
+      "task_id": "20260529-052659-prepare-virtual-cafe-public-path-deployment"
+    },
+    {
+      "created_at": "2026-05-29T05:39:25.760013+00:00",
+      "owner": "Codex",
+      "paths": [
+        "tests/constants.js",
+        "playwright.config.js"
+      ],
+      "reason": "active implementation",
+      "task_id": "20260529-052659-prepare-virtual-cafe-public-path-deployment"
+    }
+  ]
+}

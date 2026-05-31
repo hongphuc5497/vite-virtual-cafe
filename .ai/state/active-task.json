@@ -1,0 +1,13 @@
+{
+  "files_in_scope": [],
+  "id": "20260529-052659-prepare-virtual-cafe-public-path-deployment",
+  "out_of_scope": [],
+  "owner": "Codex",
+  "repo": "/Users/hongphuc/repos/vite-virtual-cafe",
+  "started_at": "2026-05-29T05:26:59.080353+00:00",
+  "status": "active",
+  "task_file": ".ai/tasks/20260529-052659-prepare-virtual-cafe-public-path-deployment.md",
+  "title": "Prepare virtual cafe public path deployment",
+  "verification": "targeted tests, lint, build, or browser check as appropriate",
+  "workflow": ".ai/workflows/feature.md"
+}
