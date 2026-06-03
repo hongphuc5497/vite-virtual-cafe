@@ -2,7 +2,7 @@
 const BASE_PATH = (process.env.PUBLIC_BASE_PATH || '/virtual-cafe').replace(/\/+$/, '');
 
 export const ROUTES = {
-  HOME: `${BASE_PATH}/`,
+  HOME: `${BASE_PATH}`,
   RELAX: `${BASE_PATH}/relax`,
 };
 
