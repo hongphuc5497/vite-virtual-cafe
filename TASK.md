@@ -1,20 +1,18 @@
 # Active Task
 
-Status: active
-Owner: Codex
-Started: 2026-05-29T05:26:59.080353+00:00
-Task file: .ai/tasks/20260529-052659-prepare-virtual-cafe-public-path-deployment.md
-Repo: /Users/hongphuc/repos/vite-virtual-cafe
-Workflow: .ai/workflows/feature.md
-Verification: targeted tests, lint, build, or browser check as appropriate
+Status: none
+Owner: none
+Started: none
+Task file: none
 
 ## Current Objective
 
-Prepare virtual cafe public path deployment
+No active task.
 
 ## Rules
 
-- Exactly one owner edits the active concern.
-- Agents must claim files before editing.
-- Advisors can research or review, but should not edit unless ownership is transferred.
+- Start exactly one task before implementation.
+- Keep the owner responsible for edits, verification, and final summary.
+- Advisors can comment, review, or research, but they do not edit the active
+  concern unless ownership is transferred.
 - Finish or park the active task before starting another.

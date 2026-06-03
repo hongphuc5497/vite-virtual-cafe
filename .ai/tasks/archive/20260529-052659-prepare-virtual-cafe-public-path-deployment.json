@@ -1,13 +1,15 @@
 {
   "files_in_scope": [],
+  "finished_at": "2026-06-03T10:44:42.940871+00:00",
   "id": "20260529-052659-prepare-virtual-cafe-public-path-deployment",
   "out_of_scope": [],
   "owner": "Codex",
   "repo": "/Users/hongphuc/repos/vite-virtual-cafe",
   "started_at": "2026-05-29T05:26:59.080353+00:00",
-  "status": "active",
+  "status": "done",
   "task_file": ".ai/tasks/20260529-052659-prepare-virtual-cafe-public-path-deployment.md",
   "title": "Prepare virtual cafe public path deployment",
   "verification": "targeted tests, lint, build, or browser check as appropriate",
+  "verification_result": "All 5 commits on main (14787a2 through bcbcb07) completed subpath deployment: removed server base-path, Caddy stripping + Remix basename, static file mounts at /virtual-cafe path, cafe-background.jpg URL fix, CSP relaxation. Deployed and live.",
   "workflow": ".ai/workflows/feature.md"
 }
