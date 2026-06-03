@@ -16,7 +16,7 @@ export default defineConfig({
   },
   webServer: {
     command: 'npm run dev',
-    url: 'http://localhost:3000',
+    url: 'http://localhost:3000/virtual-cafe',
     reuseExistingServer: !process.env.CI,
     timeout: 30000,
   },
