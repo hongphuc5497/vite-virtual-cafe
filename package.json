@@ -14,9 +14,9 @@
   "dependencies": {
     "@base-ui/react": "^1.4.1",
     "@fontsource-variable/geist": "^5.2.8",
-    "@remix-run/express": "^2.17.4",
-    "@remix-run/node": "^2.17.4",
-    "@remix-run/react": "^2.17.4",
+    "@remix-run/express": "^2.17.5",
+    "@remix-run/node": "^2.17.5",
+    "@remix-run/react": "^2.17.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "compression": "^1.8.1",
@@ -32,7 +32,7 @@
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
-    "@remix-run/dev": "^2.17.4",
+    "@remix-run/dev": "^2.17.5",
     "autoprefixer": "^10.4.27",
     "eslint": "^8.38.0",
     "eslint-import-resolver-alias": "^1.1.2",
