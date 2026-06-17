@@ -17,3 +17,6 @@ build/
 # Playwright
 test-results/
 playwright-report/
+
+# Agent Ops runtime directory (managed by agent-ops).
+.ai/
