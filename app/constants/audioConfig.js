@@ -65,6 +65,14 @@ export const DEFAULT_DURATION_MINUTES = 25;
 export const STORAGE_KEY = "virtual-cafe-home-prefs";
 export const DEFAULT_SCENE = "misty-cabin";
 
+// Backdrop scenes — single source of truth, shared by Focus + Relax.
+export const SCENES = [
+  { id: "misty-cabin", label: "Misty Cabin" },
+  { id: "sunday-morning", label: "Sunday Morning" },
+  { id: "midnight-archive", label: "Midnight Archive" },
+  { id: "rainy-metro", label: "Rainy Metro" },
+];
+
 export const DEFAULT_TRACKS = [
   { label: "Barista", value: 64 },
   { label: "Preparing Drinks", value: 42 },

@@ -17,11 +17,11 @@ export class ErrorBoundary extends Component {
   render() {
     if (this.state.error) {
       return (
-        <div className="flex min-h-screen items-center justify-center" style={{ background: "#fefae0" }}>
-          <div className="mx-4 max-w-md rounded-2xl p-8 text-center" style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(12px)" }}>
-            <span className="material-symbols-outlined text-4xl" style={{ color: "#8f4a00" }}>error_outline</span>
-            <h2 className="mt-4 font-headline text-2xl font-light" style={{ color: "#1d1c0d" }}>Something went wrong</h2>
-            <p className="mt-2 text-sm" style={{ color: "#544438" }}>
+        <div className="flex min-h-screen items-center justify-center" style={{ background: "#f3ebdd" }}>
+          <div className="surface-card mx-4 max-w-md p-8 text-center">
+            <span className="material-symbols-outlined text-4xl" style={{ color: "#c2683f" }}>error_outline</span>
+            <h2 className="mt-4 font-headline text-2xl font-light" style={{ color: "#2b2119" }}>Something went wrong</h2>
+            <p className="mt-2 text-sm" style={{ color: "#7b6f5f" }}>
               Please refresh the page to try again.
             </p>
             <button

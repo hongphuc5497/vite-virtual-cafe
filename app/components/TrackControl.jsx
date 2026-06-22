@@ -35,12 +35,12 @@ export function TrackControl({
         <div className="relative">
           <span
             className="material-symbols-outlined flex-shrink-0 text-[20px]"
-            style={{ color: "#8f4a00" }}
+            style={{ color: "#c2683f" }}
           >
             {icon}
           </span>
           {hasError && (
-            <span className="absolute -right-1 -top-1 material-symbols-outlined text-[14px]" style={{ color: "#ba1a1a" }} title="Track failed to load. Tap to retry." data-testid={`track-error-${trackId}`}>error</span>
+            <span className="absolute -right-1 -top-1 material-symbols-outlined text-[14px]" style={{ color: "#c0392b" }} title="Track failed to load. Tap to retry." data-testid={`track-error-${trackId}`}>error</span>
           )}
         </div>
 

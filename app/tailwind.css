@@ -1,25 +1,34 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: oklch(1 0 0);
-    --on-background: #1d1c0d;
-    --surface: #fefae0;
-    --surface-dim: #dedbc2;
-    --surface-container: #f2efd5;
-    --surface-container-low: #f8f4db;
-    --surface-container-lowest: #ffffff;
-    --on-surface: #1d1c0d;
-    --on-surface-variant: #544438;
-    --primary: oklch(0.205 0 0);
+    --background: #f3ebdd;
+    --on-background: #2b2119;
+    --surface: #f7efe1;
+    --surface-dim: #e8dcc8;
+    --surface-container: #ece2d2;
+    --surface-container-low: #f1e7d6;
+    --surface-container-lowest: #fdfaf3;
+    --on-surface: #2b2119;
+    --on-surface-variant: #7b6f5f;
+    --primary: #c2683f;
     --on-primary: #ffffff;
-    --outline: #877366;
-    --outline-variant: #d9c2b3;
+    --outline: #9a8b78;
+    --outline-variant: rgba(120, 95, 70, 0.22);
+    /* Warm Daylight palette - daytime cafe, inviting and soft */
+    --terracotta: #c2683f;
+    --terracotta-strong: #d07a4f;
+    --terracotta-deep: #a8502c;
+    --accent-ink: #ffffff;
+    --ink: #2b2119;
+    --ink-soft: #7b6f5f;
+    --ink-faint: #9a8b78;
+    --paper-inset: #ece2d2;
+    --hairline: rgba(120, 95, 70, 0.16);
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
@@ -64,13 +73,13 @@
   }
 
   ::selection {
-    background: rgba(143, 74, 0, 0.15);
+    background: rgba(194, 104, 63, 0.2);
   }
 
   button:focus-visible,
   input:focus-visible,
   [role="button"]:focus-visible {
-    outline: 2px solid #877366;
+    outline: 2px solid rgba(194, 104, 63, 0.65);
     outline-offset: 2px;
   }
 
@@ -91,8 +100,8 @@
   input[type="range"]::-webkit-slider-runnable-track {
     background: linear-gradient(
       to right,
-      #8f4a00 var(--track-fill, 0%),
-      #e7e3ca var(--track-fill, 0%)
+      #c2683f var(--track-fill, 0%),
+      #e3d8c5 var(--track-fill, 0%)
     );
     height: 6px;
     border-radius: 3px;
@@ -102,12 +111,12 @@
     -webkit-appearance: none;
     height: 20px;
     width: 20px;
-    background: #8f4a00;
+    background: #c2683f;
     border-radius: 50%;
     margin-top: -7px;
     cursor: pointer;
     transition: transform 0.15s ease;
-    box-shadow: 0 2px 6px rgba(143, 74, 0, 0.25);
+    box-shadow: 0 2px 6px rgba(120, 74, 40, 0.3);
   }
 
   input[type="range"]::-webkit-slider-thumb:hover {
@@ -117,8 +126,8 @@
   input[type="range"]::-moz-range-track {
     background: linear-gradient(
       to right,
-      #8f4a00 var(--track-fill, 0%),
-      #e7e3ca var(--track-fill, 0%)
+      #c2683f var(--track-fill, 0%),
+      #e3d8c5 var(--track-fill, 0%)
     );
     height: 6px;
     border-radius: 3px;
@@ -127,11 +136,22 @@
   input[type="range"]::-moz-range-thumb {
     width: 20px;
     height: 20px;
-    background: #8f4a00;
+    background: #c2683f;
     border-radius: 50%;
     border: none;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(143, 74, 0, 0.25);
+    box-shadow: 0 2px 6px rgba(120, 74, 40, 0.3);
+  }
+
+  /* Amber focus halo on the slider handle */
+  input[type="range"]:focus-visible {
+    outline: none;
+  }
+  input[type="range"]:focus-visible::-webkit-slider-thumb {
+    box-shadow: 0 0 0 4px rgba(194, 104, 63, 0.5), 0 2px 6px rgba(120, 74, 40, 0.25);
+  }
+  input[type="range"]:focus-visible::-moz-range-thumb {
+    box-shadow: 0 0 0 4px rgba(194, 104, 63, 0.5), 0 2px 6px rgba(120, 74, 40, 0.25);
   }
 
   input[type="number"],
@@ -146,8 +166,8 @@
     vertical-align: middle;
   }
   .theme {
-    --font-heading: var(--font-sans);
-    --font-sans: 'Geist Variable', sans-serif;
+    --font-heading: 'Newsreader', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
   }
   .dark {
     --background: oklch(0.145 0 0);
@@ -206,7 +226,100 @@
   }
 }
 
+/* The room assembles — one-shot staggered entrance */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  animation: rise 0.85s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.reveal-1 { animation-delay: 0.04s; }
+.reveal-2 { animation-delay: 0.15s; }
+.reveal-3 { animation-delay: 0.26s; }
+.reveal-4 { animation-delay: 0.37s; }
+
+/* Slow candle drift for the hero glow */
+@keyframes ember-breathe {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.06); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { animation: none; }
+  .ember-glow { animation: none !important; }
+}
+
 @layer components {
+  /* ---- Forest-glass surfaces - the dark panels that hold the room ---- */
+  .surface-card {
+    position: relative;
+    border-radius: 1.35rem;
+    background: linear-gradient(
+      177deg,
+      rgba(252, 247, 238, 0.9),
+      rgba(245, 236, 222, 0.8)
+    );
+    -webkit-backdrop-filter: blur(16px) saturate(115%);
+    backdrop-filter: blur(16px) saturate(115%);
+    border: 1px solid rgba(120, 95, 70, 0.16);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.7),
+      0 26px 50px -24px rgba(74, 50, 30, 0.22),
+      0 6px 16px -10px rgba(74, 50, 30, 0.14);
+  }
+
+  /* Hero variant - the timer, lit like a lamp */
+  .surface-hero {
+    background: radial-gradient(
+      140% 135% at 50% -15%,
+      rgba(255, 244, 230, 0.95),
+      rgba(250, 242, 229, 0.84) 62%
+    );
+    border-color: rgba(194, 104, 63, 0.3);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.85),
+      0 0 0 1px rgba(194, 104, 63, 0.16),
+      0 34px 60px -26px rgba(120, 70, 40, 0.28),
+      0 0 70px -24px rgba(194, 104, 63, 0.25);
+  }
+
+  /* ---- Atmosphere: film grain + candlelit vignette over the photo ---- */
+  .cafe-atmosphere {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .cafe-atmosphere::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 140px 140px;
+    opacity: 0.06;
+    mix-blend-mode: multiply;
+  }
+  .cafe-atmosphere::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(125% 95% at 50% 4%, transparent 48%, rgba(90, 60, 35, 0.16) 100%),
+      radial-gradient(50% 40% at 14% 9%, rgba(194, 104, 63, 0.14), transparent 64%);
+  }
+
+  /* Soft candle bloom behind the hero numerals */
+  .ember-glow {
+    animation: ember-breathe 6s ease-in-out infinite;
+  }
+
   .sound-indicator {
     @apply inline-block h-2 w-2 rounded-full bg-tertiary animate-pulse;
   }
@@ -215,42 +328,53 @@
     @apply bg-outline animate-none;
   }
 
-  /* Primary button: solid primary fill */
+  /* Primary button: lit amber, dark ink for AA contrast */
   .btn-primary {
-    @apply inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-on-primary transition-all duration-200;
-    background: #8f4a00;
+    @apply inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200;
+    color: #fdf6ec;
+    background: linear-gradient(180deg, #c46a3f, #a8502c);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.22),
+      0 8px 20px -8px rgba(140, 70, 40, 0.4);
   }
 
   .btn-primary:hover:not(:disabled) {
-    background: #6f3800;
+    background: linear-gradient(180deg, #b85e36, #97461f);
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.22),
+      0 12px 26px -8px rgba(140, 70, 40, 0.5);
   }
 
   .btn-primary:active {
-    @apply scale-95;
+    transform: translateY(0) scale(0.97);
   }
 
-  /* Secondary button: secondary-container bg */
+  /* Secondary button: terracotta wash on warm paper */
   .btn-secondary {
     @apply inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200;
-    background: #fdbd77;
-    color: #784a0d;
+    color: #a8502c;
+    background: rgba(194, 104, 63, 0.12);
+    border: 1px solid rgba(194, 104, 63, 0.34);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5);
   }
 
   .btn-secondary:hover:not(:disabled) {
-    background: #faba75;
+    background: rgba(194, 104, 63, 0.2);
+    transform: translateY(-1px);
   }
 
   .btn-secondary:active {
-    @apply scale-95;
+    transform: translateY(0) scale(0.97);
   }
 
   /* Ghost button */
   .btn-ghost {
     @apply inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200;
-    color: #544438;
+    color: #6f6253;
   }
 
   .btn-ghost:hover:not(:disabled) {
-    background: #f2efd5;
+    background: rgba(43, 33, 25, 0.06);
   }
 }
