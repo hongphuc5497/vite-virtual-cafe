@@ -24,22 +24,22 @@ export function VibeSelector({ tracks, onApplyVibe }) {
               data-testid={`vibe-${vibe.label.toLowerCase().replace(/\s+/g, "-")}`}
               className="rounded-xl p-3 text-left transition-all duration-200 hover:scale-[1.02] active:scale-95"
               style={{
-                background: isActive ? "#ffdcc4" : "#f2efd5",
-                color: isActive ? "#8f4a00" : "#544438",
-                outline: isActive ? "2px solid #ffb781" : "none",
+                background: isActive ? "rgba(234,180,100,0.16)" : "#1b2c22",
+                color: isActive ? "#eab464" : "#a7b6a9",
+                outline: isActive ? "2px solid rgba(234,180,100,0.75)" : "none",
                 outlineOffset: "1px",
               }}
             >
               <span
                 className="material-symbols-outlined text-[20px]"
-                style={{ color: isActive ? "#8f4a00" : "#877366" }}
+                style={{ color: isActive ? "#eab464" : "#7c8d80" }}
               >
                 {vibe.icon}
               </span>
               <p className="mt-1.5 text-sm font-semibold">{vibe.label}</p>
               <p
                 className="mt-0.5 text-xs"
-                style={{ color: isActive ? "#6f3800" : "#877366" }}
+                style={{ color: isActive ? "#e9c089" : "#7c8d80" }}
               >
                 {vibe.description}
               </p>

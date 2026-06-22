@@ -20,7 +20,7 @@ export function RoomMixControls({
           </p>
           <h2
             className="mt-1 font-headline text-2xl font-light"
-            style={{ color: "#1d1c0d" }}
+            style={{ color: "#edf0e4" }}
           >
             Mixer
           </h2>
@@ -36,7 +36,7 @@ export function RoomMixControls({
           {!soundEnabled && (
             <span
               className="inline-block h-2 w-2 rounded-full animate-pulse flex-shrink-0"
-              style={{ background: "#8f4a00" }}
+              style={{ background: "#eab464" }}
               aria-hidden="true"
             />
           )}
@@ -54,7 +54,7 @@ export function RoomMixControls({
       )}
 
       {soundEnabled && allTracksFailed && (
-        <p className="mt-2 rounded-lg px-3 py-2 text-xs font-medium" style={{ background: "#ffdad6", color: "#93000a" }}>
+        <p className="mt-2 rounded-lg px-3 py-2 text-xs font-medium" style={{ background: "rgba(120,40,34,0.5)", color: "#ffb4ab" }}>
           All audio sources are currently unreachable. Please check your connection and try again.
         </p>
       )}

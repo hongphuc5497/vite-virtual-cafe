@@ -1,6 +1,6 @@
 const DURATION_PRESETS = [25, 45, 60, 90];
 
-const RADIUS = 52;
+const RADIUS = 60;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 export function SessionTimer({
@@ -31,8 +31,8 @@ export function SessionTimer({
         <span
           className="rounded-full px-3 py-1 text-xs font-medium"
           style={{
-            background: isRunning ? "#ffdcc4" : "#f2efd5",
-            color: isRunning ? "#8f4a00" : "#544438",
+            background: isRunning ? "rgba(234,180,100,0.16)" : "#1b2c22",
+            color: isRunning ? "#eab464" : "#a7b6a9",
           }}
         >
           {statusLabel}
@@ -40,29 +40,51 @@ export function SessionTimer({
       </div>
 
       {/* Circular progress ring */}
-      <div className="mt-4 flex items-center justify-center">
-        <div className="relative flex items-center justify-center" style={{ width: 140, height: 140 }}>
+      <div className="mt-5 flex items-center justify-center">
+        <div
+          className="relative flex items-center justify-center"
+          style={{ width: 168, height: 168 }}
+        >
+          {/* Candle bloom behind the numerals */}
+          <div
+            className="ember-glow pointer-events-none absolute"
+            style={{
+              width: 124,
+              height: 124,
+              borderRadius: "9999px",
+              background:
+                "radial-gradient(circle, rgba(255,196,128,0.5), rgba(255,196,128,0) 70%)",
+              filter: "blur(4px)",
+            }}
+            aria-hidden="true"
+          />
           <svg
-            width="140"
-            height="140"
-            viewBox="0 0 120 120"
+            width="168"
+            height="168"
+            viewBox="0 0 140 140"
             className="absolute inset-0"
             style={{ transform: "rotate(-90deg)" }}
             aria-hidden="true"
           >
+            <defs>
+              <linearGradient id="ring-grad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#f0bf76" />
+                <stop offset="100%" stopColor="#eab464" />
+              </linearGradient>
+            </defs>
             {/* Track ring */}
             <circle
-              cx="60" cy="60" r={RADIUS}
+              cx="70" cy="70" r={RADIUS}
               fill="none"
-              stroke="#e7e3ca"
-              strokeWidth="5"
+              stroke="#26382c"
+              strokeWidth="6"
             />
             {/* Progress ring */}
             <circle
-              cx="60" cy="60" r={RADIUS}
+              cx="70" cy="70" r={RADIUS}
               fill="none"
-              stroke="#8f4a00"
-              strokeWidth="5"
+              stroke="url(#ring-grad)"
+              strokeWidth="7"
               strokeLinecap="round"
               strokeDasharray={CIRCUMFERENCE}
               strokeDashoffset={strokeDashoffset}
@@ -70,8 +92,12 @@ export function SessionTimer({
             />
           </svg>
           <div
-            className="relative z-10 text-center font-headline text-4xl font-light tracking-tight"
-            style={{ color: "#1d1c0d", letterSpacing: "-0.02em" }}
+            className="relative z-10 text-center font-headline text-5xl font-light tracking-tight tabular-nums"
+            style={{
+              color: "#edf0e4",
+              letterSpacing: "-0.02em",
+              textShadow: "0 1px 12px rgba(255,196,128,0.4)",
+            }}
             data-testid="timer-display"
           >
             {formatTime(timeLeft)}
@@ -79,7 +105,7 @@ export function SessionTimer({
         </div>
       </div>
 
-      <p className="mt-1 text-center font-headline text-sm italic text-on-surface-variant">
+      <p className="mt-2 text-center font-headline text-sm italic text-on-surface-variant">
         {isRunning ? "Stay in the room." : `${draftDurationMinutes} min session`}
       </p>
 
@@ -99,9 +125,9 @@ export function SessionTimer({
                 data-testid={`preset-${preset}`}
                 className="flex-1 rounded-lg py-1.5 text-sm font-semibold transition-all duration-200"
                 style={{
-                  background: isActive ? "#ffdcc4" : "#f2efd5",
-                  color: isActive ? "#8f4a00" : "#544438",
-                  outline: isActive ? "2px solid #ffb781" : "none",
+                  background: isActive ? "rgba(234,180,100,0.16)" : "#1b2c22",
+                  color: isActive ? "#eab464" : "#a7b6a9",
+                  outline: isActive ? "2px solid rgba(234,180,100,0.75)" : "none",
                   outlineOffset: "1px",
                 }}
               >
@@ -123,7 +149,7 @@ export function SessionTimer({
           }
           aria-label="Custom session length in minutes"
           className="mt-2 w-full rounded-lg px-4 py-2.5 text-base text-on-surface outline-none"
-          style={{ background: "#f2efd5", color: "#1d1c0d" }}
+          style={{ background: "#1b2c22", color: "#edf0e4" }}
         />
       </div>
 

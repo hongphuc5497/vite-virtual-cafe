@@ -1,25 +1,34 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: oklch(1 0 0);
-    --on-background: #1d1c0d;
-    --surface: #fefae0;
-    --surface-dim: #dedbc2;
-    --surface-container: #f2efd5;
-    --surface-container-low: #f8f4db;
-    --surface-container-lowest: #ffffff;
-    --on-surface: #1d1c0d;
-    --on-surface-variant: #544438;
-    --primary: oklch(0.205 0 0);
-    --on-primary: #ffffff;
-    --outline: #877366;
-    --outline-variant: #d9c2b3;
+    --background: #0c1611;
+    --on-background: #edf0e4;
+    --surface: #10211a;
+    --surface-dim: #0a120d;
+    --surface-container: #1b2c22;
+    --surface-container-low: #13241b;
+    --surface-container-lowest: #0c1611;
+    --on-surface: #edf0e4;
+    --on-surface-variant: #a7b6a9;
+    --primary: #eab464;
+    --on-primary: #16271d;
+    --outline: #7c8d80;
+    --outline-variant: rgba(190, 210, 195, 0.18);
+    /* Forest Nocturne palette - lamplit study after dark */
+    --amber: #eab464;
+    --amber-strong: #f0bf76;
+    --amber-deep: #d8a24e;
+    --accent-ink: #16271d;
+    --ink: #edf0e4;
+    --ink-soft: #a7b6a9;
+    --ink-faint: #7c8d80;
+    --forest-inset: #1b2c22;
+    --hairline: rgba(190, 210, 195, 0.12);
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
@@ -64,13 +73,13 @@
   }
 
   ::selection {
-    background: rgba(143, 74, 0, 0.15);
+    background: rgba(234, 180, 100, 0.24);
   }
 
   button:focus-visible,
   input:focus-visible,
   [role="button"]:focus-visible {
-    outline: 2px solid #877366;
+    outline: 2px solid rgba(234, 180, 100, 0.7);
     outline-offset: 2px;
   }
 
@@ -91,8 +100,8 @@
   input[type="range"]::-webkit-slider-runnable-track {
     background: linear-gradient(
       to right,
-      #8f4a00 var(--track-fill, 0%),
-      #e7e3ca var(--track-fill, 0%)
+      #eab464 var(--track-fill, 0%),
+      #26382c var(--track-fill, 0%)
     );
     height: 6px;
     border-radius: 3px;
@@ -102,12 +111,12 @@
     -webkit-appearance: none;
     height: 20px;
     width: 20px;
-    background: #8f4a00;
+    background: #eab464;
     border-radius: 50%;
     margin-top: -7px;
     cursor: pointer;
     transition: transform 0.15s ease;
-    box-shadow: 0 2px 6px rgba(143, 74, 0, 0.25);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
   }
 
   input[type="range"]::-webkit-slider-thumb:hover {
@@ -117,8 +126,8 @@
   input[type="range"]::-moz-range-track {
     background: linear-gradient(
       to right,
-      #8f4a00 var(--track-fill, 0%),
-      #e7e3ca var(--track-fill, 0%)
+      #eab464 var(--track-fill, 0%),
+      #26382c var(--track-fill, 0%)
     );
     height: 6px;
     border-radius: 3px;
@@ -127,11 +136,22 @@
   input[type="range"]::-moz-range-thumb {
     width: 20px;
     height: 20px;
-    background: #8f4a00;
+    background: #eab464;
     border-radius: 50%;
     border: none;
     cursor: pointer;
-    box-shadow: 0 2px 6px rgba(143, 74, 0, 0.25);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.45);
+  }
+
+  /* Amber focus halo on the slider handle */
+  input[type="range"]:focus-visible {
+    outline: none;
+  }
+  input[type="range"]:focus-visible::-webkit-slider-thumb {
+    box-shadow: 0 0 0 4px rgba(234, 180, 100, 0.6), 0 2px 6px rgba(0, 0, 0, 0.5);
+  }
+  input[type="range"]:focus-visible::-moz-range-thumb {
+    box-shadow: 0 0 0 4px rgba(234, 180, 100, 0.6), 0 2px 6px rgba(0, 0, 0, 0.5);
   }
 
   input[type="number"],
@@ -146,8 +166,8 @@
     vertical-align: middle;
   }
   .theme {
-    --font-heading: var(--font-sans);
-    --font-sans: 'Geist Variable', sans-serif;
+    --font-heading: 'Newsreader', Georgia, serif;
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
   }
   .dark {
     --background: oklch(0.145 0 0);
@@ -206,7 +226,100 @@
   }
 }
 
+/* The room assembles — one-shot staggered entrance */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  animation: rise 0.85s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+.reveal-1 { animation-delay: 0.04s; }
+.reveal-2 { animation-delay: 0.15s; }
+.reveal-3 { animation-delay: 0.26s; }
+.reveal-4 { animation-delay: 0.37s; }
+
+/* Slow candle drift for the hero glow */
+@keyframes ember-breathe {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50% { opacity: 0.9; transform: scale(1.06); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal { animation: none; }
+  .ember-glow { animation: none !important; }
+}
+
 @layer components {
+  /* ---- Forest-glass surfaces - the dark panels that hold the room ---- */
+  .surface-card {
+    position: relative;
+    border-radius: 1.35rem;
+    background: linear-gradient(
+      177deg,
+      rgba(24, 41, 31, 0.74),
+      rgba(15, 28, 22, 0.66)
+    );
+    -webkit-backdrop-filter: blur(18px) saturate(112%);
+    backdrop-filter: blur(18px) saturate(112%);
+    border: 1px solid rgba(190, 210, 195, 0.12);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.06),
+      0 28px 55px -26px rgba(0, 0, 0, 0.7),
+      0 8px 20px -12px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Hero variant - the timer, lit like a lamp */
+  .surface-hero {
+    background: radial-gradient(
+      140% 135% at 50% -15%,
+      rgba(44, 56, 39, 0.9),
+      rgba(17, 30, 23, 0.72) 62%
+    );
+    border-color: rgba(234, 180, 100, 0.26);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.08),
+      0 0 0 1px rgba(234, 180, 100, 0.12),
+      0 34px 64px -26px rgba(0, 0, 0, 0.75),
+      0 0 70px -22px rgba(234, 180, 100, 0.28);
+  }
+
+  /* ---- Atmosphere: film grain + candlelit vignette over the photo ---- */
+  .cafe-atmosphere {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  .cafe-atmosphere::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 140px 140px;
+    opacity: 0.12;
+    mix-blend-mode: soft-light;
+  }
+  .cafe-atmosphere::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(125% 95% at 50% 4%, transparent 40%, rgba(4, 10, 7, 0.62) 100%),
+      radial-gradient(50% 40% at 14% 9%, rgba(234, 180, 100, 0.16), transparent 64%);
+  }
+
+  /* Soft candle bloom behind the hero numerals */
+  .ember-glow {
+    animation: ember-breathe 6s ease-in-out infinite;
+  }
+
   .sound-indicator {
     @apply inline-block h-2 w-2 rounded-full bg-tertiary animate-pulse;
   }
@@ -215,42 +328,53 @@
     @apply bg-outline animate-none;
   }
 
-  /* Primary button: solid primary fill */
+  /* Primary button: lit amber, dark ink for AA contrast */
   .btn-primary {
-    @apply inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold text-on-primary transition-all duration-200;
-    background: #8f4a00;
+    @apply inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200;
+    color: #16271d;
+    background: linear-gradient(180deg, #f0bf76, #e0a64f);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.35),
+      0 8px 20px -8px rgba(234, 180, 100, 0.45);
   }
 
   .btn-primary:hover:not(:disabled) {
-    background: #6f3800;
+    background: linear-gradient(180deg, #f3c781, #e9b25c);
+    transform: translateY(-1px);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.35),
+      0 12px 26px -8px rgba(234, 180, 100, 0.55);
   }
 
   .btn-primary:active {
-    @apply scale-95;
+    transform: translateY(0) scale(0.97);
   }
 
-  /* Secondary button: secondary-container bg */
+  /* Secondary button: amber wash on glass */
   .btn-secondary {
     @apply inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-semibold transition-all duration-200;
-    background: #fdbd77;
-    color: #784a0d;
+    color: #f0bf76;
+    background: rgba(234, 180, 100, 0.14);
+    border: 1px solid rgba(234, 180, 100, 0.32);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
 
   .btn-secondary:hover:not(:disabled) {
-    background: #faba75;
+    background: rgba(234, 180, 100, 0.22);
+    transform: translateY(-1px);
   }
 
   .btn-secondary:active {
-    @apply scale-95;
+    transform: translateY(0) scale(0.97);
   }
 
   /* Ghost button */
   .btn-ghost {
     @apply inline-flex items-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium transition-all duration-200;
-    color: #544438;
+    color: #a7b6a9;
   }
 
   .btn-ghost:hover:not(:disabled) {
-    background: #f2efd5;
+    background: rgba(255, 255, 255, 0.06);
   }
 }

@@ -9,6 +9,7 @@ import { SessionTimer } from "~/components/SessionTimer";
 import { RoomMixControls } from "~/components/RoomMixControls";
 import { BackdropOverlay } from "~/components/BackdropOverlay";
 import { VibeSelector } from "~/components/VibeSelector";
+import { SceneSelector } from "~/components/SceneSelector";
 import { ImmersiveTransition } from "~/components/ImmersiveTransition";
 import { useImmersiveMode } from "~/hooks/useImmersiveMode";
 import {
@@ -17,13 +18,6 @@ import {
   DEFAULT_TRACKS,
   STORAGE_KEY,
 } from "~/constants/audioConfig";
-
-const SCENES = [
-  { id: "misty-cabin", label: "Misty Cabin" },
-  { id: "sunday-morning", label: "Sunday Morning" },
-  { id: "midnight-archive", label: "Midnight Archive" },
-  { id: "rainy-metro", label: "Rainy Metro" },
-];
 
 export default function Index() {
   const [tracks, setTracks] = useState(DEFAULT_TRACKS);
@@ -36,6 +30,12 @@ export default function Index() {
   const [selectedScene, setSelectedScene] = useState(DEFAULT_SCENE);
   const [showCelebration, setShowCelebration] = useState(false);
   const [lastSession, setLastSession] = useState(null);
+  // First-paint entrance: the room assembles around you
+  const [entered, setEntered] = useState(false);
+  useEffect(() => {
+    const id = requestAnimationFrame(() => setEntered(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   useEffect(() => {
     const saved = window.localStorage.getItem(STORAGE_KEY);
@@ -173,6 +173,18 @@ export default function Index() {
     );
   };
 
+  // Shared entrance/immersive motion. `offset` is the resting transform when
+  // hidden (pre-entrance or immersive); `delay` staggers the first reveal only.
+  const shown = panelsVisible && entered;
+  const reveal = (offset, delay) => ({
+    opacity: shown ? 1 : 0,
+    transform: shown ? "none" : offset,
+    transition:
+      "opacity 600ms ease-out, transform 600ms cubic-bezier(0.22,0.61,0.36,1)",
+    transitionDelay: shown ? `${delay}ms` : "0ms",
+    pointerEvents: panelsVisible ? "auto" : "none",
+  });
+
   return (
     <main
       className="relative min-h-[calc(100vh-57px)] overflow-hidden"
@@ -183,27 +195,24 @@ export default function Index() {
       }}
     >
       <BackdropOverlay backdropGlow={backdropGlow} scene={selectedScene} />
+      <div className="cafe-atmosphere" aria-hidden="true" />
 
-      <div className="relative z-10 mx-auto max-w-6xl px-4 py-8 md:px-6">
-        {/* Hero text — slides up and fades during immersive mode */}
-        <div
-          className="mb-8"
-          style={{
-            opacity: panelsVisible ? 1 : 0,
-            transform: panelsVisible ? "translateY(0)" : "translateY(-20px)",
-            transition: "opacity 400ms ease-out, transform 400ms ease-out",
-            pointerEvents: panelsVisible ? "auto" : "none",
-          }}
-        >
+      <div className="relative z-10 mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-12">
+        {/* Hero text - assembles on load, slides up + fades during immersive mode */}
+        <div className="mb-9" style={reveal("translateY(-20px)", 0)}>
           <h1
-            className="font-headline text-5xl font-light italic"
-            style={{ color: "rgba(255,250,224,0.95)", letterSpacing: "-0.02em" }}
+            className="font-headline text-5xl font-light italic leading-[1.1] pb-1 md:text-6xl"
+            style={{
+              color: "rgba(237,240,228,0.96)",
+              letterSpacing: "-0.02em",
+              textShadow: "0 2px 18px rgba(20,12,6,0.45)",
+            }}
           >
             Stay in the room.
           </h1>
           <p
-            className="mt-2 font-body text-base"
-            style={{ color: "rgba(255,250,224,0.6)" }}
+            className="mt-3 max-w-md font-body text-base"
+            style={{ color: "rgba(167,182,169,0.82)" }}
           >
             Set a session length, press start, and let the room breathe around
             you.
@@ -211,21 +220,10 @@ export default function Index() {
         </div>
 
         <div className="grid gap-5 lg:grid-cols-[1fr_1fr]">
-          {/* Left column: Timer + Vibe — slides left and fades */}
-          <div
-            className="flex flex-col gap-5"
-            style={{
-              opacity: panelsVisible ? 1 : 0,
-              transform: panelsVisible ? "translateX(0)" : "translateX(-40px)",
-              transition: "opacity 400ms ease-out, transform 400ms ease-out",
-              pointerEvents: panelsVisible ? "auto" : "none",
-            }}
-          >
-            {/* Session Timer card */}
-            <div
-              className="rounded-2xl p-6 shadow-[0_24px_40px_rgba(29,28,13,0.08)]"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(12px)" }}
-            >
+          {/* Left column: Timer + Vibe — slides in from the left */}
+          <div className="flex flex-col gap-5" style={reveal("translateX(-40px)", 90)}>
+            {/* Session Timer card — the lit hero */}
+            <div className="surface-card surface-hero p-6">
               <SessionTimer
                 timeLeft={timer.timeLeft}
                 totalSeconds={appliedDurationMinutes * 60}
@@ -243,58 +241,23 @@ export default function Index() {
             </div>
 
             {/* Vibe Selector card */}
-            <div
-              className="rounded-2xl p-6 shadow-[0_24px_40px_rgba(29,28,13,0.08)]"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(12px)" }}
-            >
+            <div className="surface-card p-6">
               <VibeSelector tracks={tracks} onApplyVibe={handleApplyVibe} />
             </div>
 
             {/* Scene Selector card */}
-            <div
-              className="rounded-2xl p-6 shadow-[0_24px_40px_rgba(29,28,13,0.08)]"
-              style={{ background: "rgba(255,255,255,0.88)", backdropFilter: "blur(12px)" }}
-              data-testid="scene-selector"
-            >
-              <p className="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">
-                Scene
-              </p>
-              <div className="mt-3 grid grid-cols-2 gap-2">
-                {SCENES.map((scene) => {
-                  const isActive = selectedScene === scene.id;
-                  return (
-                    <button
-                      key={scene.id}
-                      type="button"
-                      onClick={() => setSelectedScene(scene.id)}
-                      data-testid={`scene-${scene.id}`}
-                      className="rounded-xl px-3 py-2.5 text-left text-sm font-semibold transition-all duration-200"
-                      style={{
-                        background: isActive ? "#ffdcc4" : "#f2efd5",
-                        color: isActive ? "#8f4a00" : "#544438",
-                        outline: isActive ? "2px solid #ffb781" : "none",
-                        outlineOffset: "1px",
-                      }}
-                    >
-                      {scene.label}
-                    </button>
-                  );
-                })}
-              </div>
+            <div className="surface-card p-6">
+              <SceneSelector
+                selectedScene={selectedScene}
+                onSelect={setSelectedScene}
+              />
             </div>
           </div>
 
-          {/* Right column: Mixer — slides right and fades */}
+          {/* Right column: Mixer — slides in from the right */}
           <div
-            className="rounded-2xl p-6 shadow-[0_24px_40px_rgba(29,28,13,0.08)]"
-            style={{
-              background: "rgba(255,255,255,0.88)",
-              backdropFilter: "blur(12px)",
-              opacity: panelsVisible ? 1 : 0,
-              transform: panelsVisible ? "translateX(0)" : "translateX(40px)",
-              transition: "opacity 400ms ease-out, transform 400ms ease-out",
-              pointerEvents: panelsVisible ? "auto" : "none",
-            }}
+            className="surface-card p-6"
+            style={reveal("translateX(40px)", 180)}
           >
             <RoomMixControls
               soundEnabled={audio.soundEnabled}
