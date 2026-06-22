@@ -112,8 +112,9 @@ test.describe('Audio Mixer', () => {
     await expect(vibeBtn).toBeVisible();
     await vibeBtn.click();
 
-    // Verify the button appears active — browser converts hex #ffdcc4 to rgb()
+    // Verify the button appears active — active state uses the terracotta
+    // accent (#c2683f), which the browser serializes to rgb(194, 104, 63).
     const style = await vibeBtn.getAttribute('style');
-    expect(style).toContain('rgb(255, 220, 196)');
+    expect(style).toContain('rgb(194, 104, 63)');
   });
 });
