@@ -37,12 +37,12 @@ function AppNav() {
     <header
       className="sticky top-0 z-50 px-4 py-3 md:px-6"
       style={{
-        background: "rgba(13,23,17,0.72)",
+        background: "rgba(248,240,228,0.85)",
         WebkitBackdropFilter: "blur(12px) saturate(115%)",
         backdropFilter: "blur(12px) saturate(115%)",
-        borderBottom: "1px solid rgba(190,210,195,0.12)",
+        borderBottom: "1px solid rgba(120,95,70,0.16)",
         boxShadow:
-          "inset 0 1px 0 rgba(255,255,255,0.07), 0 8px 20px -16px rgba(58,36,21,0.5)",
+          "inset 0 1px 0 rgba(255,255,255,0.65), 0 8px 20px -16px rgba(58,36,21,0.5)",
       }}
     >
       <div className="mx-auto flex max-w-6xl items-center justify-between">
@@ -50,15 +50,15 @@ function AppNav() {
           <span
             className="flex h-9 w-9 items-center justify-center rounded-xl"
             style={{
-              background: "linear-gradient(150deg, #f0bf76, #d8a24e)",
+              background: "linear-gradient(150deg, #d07a4f, #a8542f)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.35), 0 6px 16px -8px rgba(234,180,100,0.5)",
+                "inset 0 1px 0 rgba(255,255,255,0.35), 0 6px 16px -8px rgba(194,104,63,0.45)",
             }}
             aria-hidden="true"
           >
             <span
               className="material-symbols-outlined text-[20px]"
-              style={{ color: "#16271d" }}
+              style={{ color: "#fdf2e6" }}
             >
               local_cafe
             </span>
@@ -66,13 +66,13 @@ function AppNav() {
           <div className="leading-none">
             <span
               className="block font-headline text-xl font-light italic tracking-tight"
-              style={{ color: "#edf0e4" }}
+              style={{ color: "#2b2119" }}
             >
               The Analog Sanctuary
             </span>
             <span
               className="mt-1 block text-[10px] font-semibold uppercase tracking-[0.22em]"
-              style={{ color: "#7c8d80" }}
+              style={{ color: "#9a8b78" }}
             >
               a quiet place to focus
             </span>
@@ -89,13 +89,13 @@ function AppNav() {
               className={({ isActive }) =>
                 `flex items-center gap-1.5 rounded-full px-3.5 py-2 text-sm font-semibold transition-all duration-200 ${
                   isActive
-                    ? "shadow-[inset_0_0_0_1px_rgba(234,180,100,0.30)]"
+                    ? "shadow-[inset_0_0_0_1px_rgba(194,104,63,0.3)]"
                     : "text-on-surface-variant hover:bg-surface-container"
                 }`
               }
               style={({ isActive }) =>
                 isActive
-                  ? { background: "rgba(234,180,100,0.16)", color: "#eab464" }
+                  ? { background: "rgba(194,104,63,0.14)", color: "#c2683f" }
                   : undefined
               }
             >
@@ -131,7 +131,7 @@ export function Layout({ children }) {
 
 export default function App() {
   return (
-    <div className="min-h-screen" style={{ background: "#0c1611" }}>
+    <div className="min-h-screen" style={{ background: "#f3ebdd" }}>
       <AppNav />
       <ErrorBoundary>
         <Outlet />

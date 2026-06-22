@@ -50,15 +50,15 @@ export function CelebrationOverlay({
         <span
           className="relative flex h-12 w-12 items-center justify-center rounded-full"
           style={{
-            background: "linear-gradient(150deg, #f3c781, #e0a64f)",
+            background: "linear-gradient(150deg, #d07a4f, #a8542f)",
             boxShadow:
-              "inset 0 1px 0 rgba(255,255,255,0.4), 0 8px 20px -8px rgba(234,180,100,0.5)",
+              "inset 0 1px 0 rgba(255,255,255,0.4), 0 8px 20px -8px rgba(194,104,63,0.45)",
           }}
           aria-hidden="true"
         >
           <span
             className="material-symbols-outlined text-[26px]"
-            style={{ color: "#16271d" }}
+            style={{ color: "#fdf2e6" }}
           >
             celebration
           </span>
@@ -68,25 +68,25 @@ export function CelebrationOverlay({
           id="celebration-title"
           data-testid="celebration-heading"
           className="relative mt-5 font-headline text-3xl font-light italic"
-          style={{ color: "#eab464" }}
+          style={{ color: "#c2683f" }}
         >
           Great work!
         </h2>
-        <p className="relative mt-1 text-sm" style={{ color: "#7c8d80" }}>
+        <p className="relative mt-1 text-sm" style={{ color: "#9a8b78" }}>
           You stayed in the room. Here&rsquo;s your session.
         </p>
 
         <div
           className="relative mt-6 overflow-hidden rounded-xl"
-          style={{ border: "1px solid rgba(190,210,195,0.14)" }}
+          style={{ border: "1px solid rgba(120,95,70,0.16)" }}
         >
           {rows.map((row, i) => (
             <div
               key={row.label}
               className="flex items-center justify-between gap-4 px-4 py-3"
               style={{
-                background: "rgba(255,255,255,0.04)",
-                borderTop: i === 0 ? "none" : "1px solid rgba(190,210,195,0.1)",
+                background: "rgba(255,251,244,0.55)",
+                borderTop: i === 0 ? "none" : "1px solid rgba(120,95,70,0.12)",
               }}
             >
               <span className="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">

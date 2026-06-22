@@ -77,16 +77,16 @@ export default function Relax() {
           <h1
             className="font-headline text-5xl font-light italic leading-[1.1] pb-1 md:text-6xl"
             style={{
-              color: "rgba(237,240,228,0.96)",
+              color: "rgba(43,33,25,0.96)",
               letterSpacing: "-0.02em",
-              textShadow: "0 2px 18px rgba(20,12,6,0.45)",
+              textShadow: "0 2px 18px rgba(255,247,235,0.55)",
             }}
           >
             Ambient Sanctuary.
           </h1>
           <p
             className="mt-3 max-w-md font-body text-base"
-            style={{ color: "rgba(167,182,169,0.82)" }}
+            style={{ color: "rgba(90,75,60,0.9)" }}
           >
             No timer. No pressure. Just the room.
           </p>

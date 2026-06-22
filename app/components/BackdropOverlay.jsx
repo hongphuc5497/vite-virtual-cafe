@@ -1,12 +1,10 @@
-// Per-scene tint layered on top of the base dark overlay.
-// Values chosen to evoke each scene's mood while keeping the café photo readable.
-// Per-scene tint layered over the dimmed cafe photo.
-// Forest-nocturne values: the room is lit by lamplight after dark.
+// Per-scene tint layered over the cafe photo.
+// Warm Daylight values: a soft warm veil washes the photo to a paper haze.
 const SCENE_TINTS = {
-  "misty-cabin":      "rgba(110, 150, 130, 0.12)",
-  "sunday-morning":   "rgba(230, 195, 140, 0.12)",
-  "midnight-archive": "rgba(18,  28,  52,  0.34)",
-  "rainy-metro":      "rgba(38,  68,  88,  0.26)",
+  "misty-cabin":      "rgba(150, 180, 165, 0.12)",
+  "sunday-morning":   "rgba(255, 222, 165, 0.18)",
+  "midnight-archive": "rgba(80,  90, 125,  0.16)",
+  "rainy-metro":      "rgba(95, 125, 150,  0.16)",
 };
 
 export function BackdropOverlay({ backdropGlow, scene = "misty-cabin" }) {
@@ -16,8 +14,8 @@ export function BackdropOverlay({ backdropGlow, scene = "misty-cabin" }) {
       className="absolute inset-0"
       style={{
         background: [
-          `radial-gradient(circle at 16% 14%, rgba(255, 205, 130, ${backdropGlow}), transparent 26%)`,
-          `linear-gradient(180deg, rgba(8, 16, 12, 0.64), rgba(7, 14, 11, 0.8))`,
+          `radial-gradient(circle at 16% 14%, rgba(255, 226, 180, ${backdropGlow}), transparent 30%)`,
+          `linear-gradient(180deg, rgba(247, 238, 222, 0.5), rgba(243, 232, 214, 0.66))`,
           `linear-gradient(135deg, ${tint}, ${tint})`,
         ].join(", "),
       }}

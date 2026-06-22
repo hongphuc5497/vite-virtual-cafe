@@ -31,8 +31,8 @@ export function SessionTimer({
         <span
           className="rounded-full px-3 py-1 text-xs font-medium"
           style={{
-            background: isRunning ? "rgba(234,180,100,0.16)" : "#1b2c22",
-            color: isRunning ? "#eab464" : "#a7b6a9",
+            background: isRunning ? "rgba(194,104,63,0.14)" : "#ece2d2",
+            color: isRunning ? "#c2683f" : "#7b6f5f",
           }}
         >
           {statusLabel}
@@ -53,7 +53,7 @@ export function SessionTimer({
               height: 124,
               borderRadius: "9999px",
               background:
-                "radial-gradient(circle, rgba(255,196,128,0.5), rgba(255,196,128,0) 70%)",
+                "radial-gradient(circle, rgba(194,104,63,0.35), rgba(194,104,63,0) 70%)",
               filter: "blur(4px)",
             }}
             aria-hidden="true"
@@ -68,15 +68,15 @@ export function SessionTimer({
           >
             <defs>
               <linearGradient id="ring-grad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#f0bf76" />
-                <stop offset="100%" stopColor="#eab464" />
+                <stop offset="0%" stopColor="#d07a4f" />
+                <stop offset="100%" stopColor="#c2683f" />
               </linearGradient>
             </defs>
             {/* Track ring */}
             <circle
               cx="70" cy="70" r={RADIUS}
               fill="none"
-              stroke="#26382c"
+              stroke="#e3d8c5"
               strokeWidth="6"
             />
             {/* Progress ring */}
@@ -94,9 +94,9 @@ export function SessionTimer({
           <div
             className="relative z-10 text-center font-headline text-5xl font-light tracking-tight tabular-nums"
             style={{
-              color: "#edf0e4",
+              color: "#2b2119",
               letterSpacing: "-0.02em",
-              textShadow: "0 1px 12px rgba(255,196,128,0.4)",
+              textShadow: "0 1px 12px rgba(194,104,63,0.28)",
             }}
             data-testid="timer-display"
           >
@@ -125,9 +125,9 @@ export function SessionTimer({
                 data-testid={`preset-${preset}`}
                 className="flex-1 rounded-lg py-1.5 text-sm font-semibold transition-all duration-200"
                 style={{
-                  background: isActive ? "rgba(234,180,100,0.16)" : "#1b2c22",
-                  color: isActive ? "#eab464" : "#a7b6a9",
-                  outline: isActive ? "2px solid rgba(234,180,100,0.75)" : "none",
+                  background: isActive ? "rgba(194,104,63,0.14)" : "#ece2d2",
+                  color: isActive ? "#c2683f" : "#7b6f5f",
+                  outline: isActive ? "2px solid rgba(194,104,63,0.6)" : "none",
                   outlineOffset: "1px",
                 }}
               >
@@ -149,7 +149,7 @@ export function SessionTimer({
           }
           aria-label="Custom session length in minutes"
           className="mt-2 w-full rounded-lg px-4 py-2.5 text-base text-on-surface outline-none"
-          style={{ background: "#1b2c22", color: "#edf0e4" }}
+          style={{ background: "#ece2d2", color: "#2b2119" }}
         />
       </div>
 
