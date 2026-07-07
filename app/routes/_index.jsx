@@ -7,7 +7,7 @@ import { playCompletionChime } from "~/lib/completionSound";
 import { CelebrationOverlay } from "~/components/CelebrationOverlay";
 import { SessionTimer } from "~/components/SessionTimer";
 import { RoomMixControls } from "~/components/RoomMixControls";
-import { BackdropOverlay } from "~/components/BackdropOverlay";
+
 import { VibeSelector } from "~/components/VibeSelector";
 import { SceneSelector } from "~/components/SceneSelector";
 import { ImmersiveTransition } from "~/components/ImmersiveTransition";
@@ -30,13 +30,6 @@ export default function Index() {
   const [selectedScene, setSelectedScene] = useState(DEFAULT_SCENE);
   const [showCelebration, setShowCelebration] = useState(false);
   const [lastSession, setLastSession] = useState(null);
-  // First-paint entrance: the room assembles around you
-  const [entered, setEntered] = useState(false);
-  useEffect(() => {
-    const id = requestAnimationFrame(() => setEntered(true));
-    return () => cancelAnimationFrame(id);
-  }, []);
-
   useEffect(() => {
     const saved = window.localStorage.getItem(STORAGE_KEY);
     if (!saved) return;
@@ -134,9 +127,6 @@ export default function Index() {
   // Panels are visible when: not in immersive mode, OR user revealed them, OR celebration is showing
   const panelsVisible = immersive.showPanels || showCelebration;
 
-  const sunlightLevel = tracks.find((t) => t.label === "Sunny Day")?.value ?? 0;
-  const backdropGlow = 0.14 + sunlightLevel / 260;
-
   const handleToggleTimer = async () => {
     // Reset celebration state when starting a new session from a completed timer
     if (!timer.isRunning && timer.timeLeft === 0) {
@@ -173,46 +163,27 @@ export default function Index() {
     );
   };
 
-  // Shared entrance/immersive motion. `offset` is the resting transform when
-  // hidden (pre-entrance or immersive); `delay` staggers the first reveal only.
-  const shown = panelsVisible && entered;
-  const reveal = (offset, delay) => ({
-    opacity: shown ? 1 : 0,
-    transform: shown ? "none" : offset,
-    transition:
-      "opacity 600ms ease-out, transform 600ms cubic-bezier(0.22,0.61,0.36,1)",
-    transitionDelay: shown ? `${delay}ms` : "0ms",
-    pointerEvents: panelsVisible ? "auto" : "none",
-  });
-
   return (
     <main
       className="relative min-h-[calc(100vh-57px)] overflow-hidden"
-      style={{
-        backgroundImage: `url('/virtual-cafe/cafe-background.jpg')`,
-        backgroundPosition: "center",
-        backgroundSize: "cover",
-      }}
+      style={{ background: "var(--color-background-body)" }}
     >
-      <BackdropOverlay backdropGlow={backdropGlow} scene={selectedScene} />
-      <div className="cafe-atmosphere" aria-hidden="true" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-12">
         {/* Hero text - assembles on load, slides up + fades during immersive mode */}
-        <div className="mb-9" style={reveal("translateY(-20px)", 0)}>
+        <div className="reveal reveal-1 mb-9">
           <h1
-            className="font-headline text-5xl font-light italic leading-[1.1] pb-1 md:text-6xl"
+            className="font-headline text-5xl font-semibold italic leading-[1.1] pb-1 md:text-6xl"
             style={{
-              color: "rgba(43,33,25,0.96)",
+              color: "var(--color-text-primary)",
               letterSpacing: "-0.02em",
-              textShadow: "0 2px 18px rgba(255,247,235,0.55)",
             }}
           >
             Stay in the room.
           </h1>
           <p
             className="mt-3 max-w-md font-body text-base"
-            style={{ color: "rgba(90,75,60,0.9)" }}
+            style={{ color: "var(--color-text-secondary)" }}
           >
             Set a session length, press start, and let the room breathe around
             you.
@@ -221,7 +192,7 @@ export default function Index() {
 
         <div className="grid gap-5 lg:grid-cols-[1fr_1fr]">
           {/* Left column: Timer + Vibe — slides in from the left */}
-          <div className="flex flex-col gap-5" style={reveal("translateX(-40px)", 90)}>
+          <div className="reveal reveal-2 flex flex-col gap-5">
             {/* Session Timer card — the lit hero */}
             <div className="surface-card surface-hero p-6">
               <SessionTimer
@@ -255,10 +226,7 @@ export default function Index() {
           </div>
 
           {/* Right column: Mixer — slides in from the right */}
-          <div
-            className="surface-card p-6"
-            style={reveal("translateX(40px)", 180)}
-          >
+          <div className="surface-card reveal reveal-3 p-6">
             <RoomMixControls
               soundEnabled={audio.soundEnabled}
               tracks={tracks}
