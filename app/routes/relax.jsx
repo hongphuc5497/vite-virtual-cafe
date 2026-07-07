@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useAudioManager } from "~/hooks/useAudioManager";
 import { RoomMixControls } from "~/components/RoomMixControls";
-import { BackdropOverlay } from "~/components/BackdropOverlay";
+
 import { VibeSelector } from "~/components/VibeSelector";
 import { SceneSelector } from "~/components/SceneSelector";
 import { DEFAULT_SCENE, DEFAULT_TRACKS, STORAGE_KEY } from "~/constants/audioConfig";
@@ -47,9 +47,6 @@ export default function Relax() {
     );
   }, [tracks, audio.pausedTracks, selectedScene]);
 
-  const sunlightLevel = tracks.find((t) => t.label === "Sunny Day")?.value ?? 0;
-  const backdropGlow = 0.14 + sunlightLevel / 260;
-
   const handleApplyVibe = (preset) => {
     setTracks((current) =>
       current.map((track) =>
@@ -63,30 +60,23 @@ export default function Relax() {
   return (
     <main
       className="relative min-h-[calc(100vh-57px)] overflow-hidden"
-      style={{
-        backgroundImage: `url('/virtual-cafe/cafe-background.jpg')`,
-        backgroundPosition: "center",
-        backgroundSize: "cover",
-      }}
+      style={{ background: "var(--color-background-body)" }}
     >
-      <BackdropOverlay backdropGlow={backdropGlow} scene={selectedScene} />
-      <div className="cafe-atmosphere" aria-hidden="true" />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-12">
         <div className="reveal reveal-1 mb-9">
           <h1
-            className="font-headline text-5xl font-light italic leading-[1.1] pb-1 md:text-6xl"
+            className="font-headline text-5xl font-semibold italic leading-[1.1] pb-1 md:text-6xl"
             style={{
-              color: "rgba(43,33,25,0.96)",
+              color: "var(--color-text-primary)",
               letterSpacing: "-0.02em",
-              textShadow: "0 2px 18px rgba(255,247,235,0.55)",
             }}
           >
             Ambient Sanctuary.
           </h1>
           <p
             className="mt-3 max-w-md font-body text-base"
-            style={{ color: "rgba(90,75,60,0.9)" }}
+            style={{ color: "var(--color-text-secondary)" }}
           >
             No timer. No pressure. Just the room.
           </p>
