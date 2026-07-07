@@ -37,28 +37,18 @@ export function CelebrationOverlay({
         aria-modal="true"
         aria-labelledby="celebration-title"
       >
-        {/* warm bloom from the top */}
-        <div
-          className="ember-glow pointer-events-none absolute -top-12 left-1/2 h-44 w-44 -translate-x-1/2"
-          style={{
-            background:
-              "radial-gradient(circle, rgba(255,196,128,0.45), transparent 70%)",
-          }}
-          aria-hidden="true"
-        />
-
-        <span
-          className="relative flex h-12 w-12 items-center justify-center rounded-full"
-          style={{
-            background: "linear-gradient(150deg, #d07a4f, #a8542f)",
-            boxShadow:
-              "inset 0 1px 0 rgba(255,255,255,0.4), 0 8px 20px -8px rgba(194,104,63,0.45)",
-          }}
-          aria-hidden="true"
-        >
+          <span
+            className="relative flex h-12 w-12 items-center justify-center rounded-full"
+            style={{
+              background: "var(--color-accent)",
+              boxShadow:
+                "inset 0 1px 0 rgba(255,255,255,0.4), 0 8px 20px -8px rgba(194,104,63,0.45)",
+            }}
+            aria-hidden="true"
+          >
           <span
             className="material-symbols-outlined text-[26px]"
-            style={{ color: "#fdf2e6" }}
+            style={{ color: "var(--color-background-muted)" }}
           >
             celebration
           </span>
@@ -67,26 +57,26 @@ export function CelebrationOverlay({
         <h2
           id="celebration-title"
           data-testid="celebration-heading"
-          className="relative mt-5 font-headline text-3xl font-light italic"
-          style={{ color: "#c2683f" }}
+          className="relative mt-5 font-headline text-3xl font-semibold italic"
+          style={{ color: "var(--color-accent)" }}
         >
           Great work!
         </h2>
-        <p className="relative mt-1 text-sm" style={{ color: "#9a8b78" }}>
+        <p className="relative mt-1 text-sm" style={{ color: "var(--color-text-secondary)" }}>
           You stayed in the room. Here&rsquo;s your session.
         </p>
 
         <div
           className="relative mt-6 overflow-hidden rounded-xl"
-          style={{ border: "1px solid rgba(120,95,70,0.16)" }}
+          style={{ border: "1px solid var(--color-border)" }}
         >
           {rows.map((row, i) => (
             <div
               key={row.label}
               className="flex items-center justify-between gap-4 px-4 py-3"
               style={{
-                background: "rgba(255,251,244,0.55)",
-                borderTop: i === 0 ? "none" : "1px solid rgba(120,95,70,0.12)",
+                background: "var(--color-background-muted)",
+                borderTop: i === 0 ? "none" : "1px solid var(--color-border)",
               }}
             >
               <span className="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">

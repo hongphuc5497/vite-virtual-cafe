@@ -31,8 +31,8 @@ export function SessionTimer({
         <span
           className="rounded-full px-3 py-1 text-xs font-medium"
           style={{
-            background: isRunning ? "rgba(194,104,63,0.14)" : "#ece2d2",
-            color: isRunning ? "#c2683f" : "#7b6f5f",
+            background: isRunning ? "var(--color-accent)" : "var(--color-background-muted)",
+            color: isRunning ? "var(--color-accent)" : "var(--color-text-secondary)",
           }}
         >
           {statusLabel}
@@ -45,19 +45,6 @@ export function SessionTimer({
           className="relative flex items-center justify-center"
           style={{ width: 168, height: 168 }}
         >
-          {/* Candle bloom behind the numerals */}
-          <div
-            className="ember-glow pointer-events-none absolute"
-            style={{
-              width: 124,
-              height: 124,
-              borderRadius: "9999px",
-              background:
-                "radial-gradient(circle, rgba(194,104,63,0.35), rgba(194,104,63,0) 70%)",
-              filter: "blur(4px)",
-            }}
-            aria-hidden="true"
-          />
           <svg
             width="168"
             height="168"
@@ -68,15 +55,15 @@ export function SessionTimer({
           >
             <defs>
               <linearGradient id="ring-grad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#d07a4f" />
-                <stop offset="100%" stopColor="#c2683f" />
+                <stop offset="0%" stopColor="var(--color-accent)" />
+                <stop offset="100%" stopColor="var(--color-accent)" />
               </linearGradient>
             </defs>
             {/* Track ring */}
             <circle
               cx="70" cy="70" r={RADIUS}
               fill="none"
-              stroke="#e3d8c5"
+              stroke="var(--color-border-emphasized)"
               strokeWidth="6"
             />
             {/* Progress ring */}
@@ -92,11 +79,10 @@ export function SessionTimer({
             />
           </svg>
           <div
-            className="relative z-10 text-center font-headline text-5xl font-light tracking-tight tabular-nums"
+            className="relative z-10 text-center font-headline text-5xl font-semibold tracking-tight tabular-nums"
             style={{
-              color: "#2b2119",
+              color: "var(--color-text-primary)",
               letterSpacing: "-0.02em",
-              textShadow: "0 1px 12px rgba(194,104,63,0.28)",
             }}
             data-testid="timer-display"
           >
@@ -125,10 +111,9 @@ export function SessionTimer({
                 data-testid={`preset-${preset}`}
                 className="flex-1 rounded-lg py-1.5 text-sm font-semibold transition-all duration-200"
                 style={{
-                  background: isActive ? "rgba(194,104,63,0.14)" : "#ece2d2",
-                  color: isActive ? "#c2683f" : "#7b6f5f",
-                  outline: isActive ? "2px solid rgba(194,104,63,0.6)" : "none",
-                  outlineOffset: "1px",
+                  background: isActive ? "var(--color-accent)" : "var(--color-background-muted)",
+                  color: isActive ? "var(--color-accent)" : "var(--color-text-secondary)",
+                  boxShadow: isActive ? "var(--shadow-inset-selected)" : "none",
                 }}
               >
                 {preset}m
@@ -149,7 +134,7 @@ export function SessionTimer({
           }
           aria-label="Custom session length in minutes"
           className="mt-2 w-full rounded-lg px-4 py-2.5 text-base text-on-surface outline-none"
-          style={{ background: "#ece2d2", color: "#2b2119" }}
+          style={{ background: "var(--color-background-muted)", color: "var(--color-text-primary)" }}
         />
       </div>
 

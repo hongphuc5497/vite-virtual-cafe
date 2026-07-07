@@ -17,10 +17,9 @@ export function SceneSelector({ selectedScene, onSelect }) {
               data-testid={`scene-${scene.id}`}
               className="rounded-xl px-3 py-2.5 text-left text-sm font-semibold transition-all duration-200"
               style={{
-                background: isActive ? "rgba(194,104,63,0.14)" : "#ece2d2",
-                color: isActive ? "#c2683f" : "#7b6f5f",
-                outline: isActive ? "2px solid rgba(194,104,63,0.6)" : "none",
-                outlineOffset: "1px",
+                background: isActive ? "var(--color-accent)" : "var(--color-background-muted)",
+                color: isActive ? "var(--color-accent)" : "var(--color-text-secondary)",
+                boxShadow: isActive ? "var(--shadow-inset-selected)" : "none",
               }}
             >
               {scene.label}

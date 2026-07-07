@@ -52,7 +52,7 @@ export function ImmersiveTransition({
               />
             </svg>
             <span
-              className="relative z-10 font-headline text-6xl font-light tracking-tight"
+              className="relative z-10 font-headline text-6xl font-semibold tracking-tight"
               style={{
                 color: "rgba(255,255,255,0.95)",
                 letterSpacing: "-0.02em",
