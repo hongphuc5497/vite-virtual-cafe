@@ -3,6 +3,7 @@ import { useAudioManager } from "~/hooks/useAudioManager";
 import { RoomMixControls } from "~/components/RoomMixControls";
 
 import { VibeSelector } from "~/components/VibeSelector";
+import { BackdropOverlay } from "~/components/BackdropOverlay";
 import { SceneSelector } from "~/components/SceneSelector";
 import { DEFAULT_SCENE, DEFAULT_TRACKS, STORAGE_KEY } from "~/constants/audioConfig";
 
@@ -62,6 +63,7 @@ export default function Relax() {
       className="relative min-h-[calc(100vh-57px)] overflow-hidden"
       style={{ background: "var(--color-background-body)" }}
     >
+      <BackdropOverlay />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-12">
         <div className="reveal reveal-1 mb-9">

@@ -18,7 +18,7 @@ export function SceneSelector({ selectedScene, onSelect }) {
               className="rounded-xl px-3 py-2.5 text-left text-sm font-semibold transition-all duration-200"
               style={{
                 background: isActive ? "var(--color-accent)" : "var(--color-background-muted)",
-                color: isActive ? "var(--color-accent)" : "var(--color-text-secondary)",
+                color: isActive ? "var(--color-on-accent)" : "var(--color-text-secondary)",
                 boxShadow: isActive ? "var(--shadow-inset-selected)" : "none",
               }}
             >

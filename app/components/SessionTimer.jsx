@@ -1,3 +1,5 @@
+import { ProgressRing } from "./ProgressRing";
+
 const DURATION_PRESETS = [25, 45, 60, 90];
 
 const RADIUS = 60;
@@ -32,52 +34,24 @@ export function SessionTimer({
           className="rounded-full px-3 py-1 text-xs font-medium"
           style={{
             background: isRunning ? "var(--color-accent)" : "var(--color-background-muted)",
-            color: isRunning ? "var(--color-accent)" : "var(--color-text-secondary)",
+            color: isRunning ? "var(--color-on-accent)" : "var(--color-text-secondary)",
           }}
         >
           {statusLabel}
         </span>
       </div>
 
-      {/* Circular progress ring */}
       <div className="mt-5 flex items-center justify-center">
-        <div
-          className="relative flex items-center justify-center"
-          style={{ width: 168, height: 168 }}
+        <ProgressRing
+          radius={RADIUS}
+          circumference={CIRCUMFERENCE}
+          strokeDashoffset={strokeDashoffset}
+          size={168}
+          trackColor="var(--color-border-emphasized)"
+          progressColor="var(--color-accent)"
+          progressStrokeWidth={7}
+          transitionStyle={isRunning ? "stroke-dashoffset 1s linear" : undefined}
         >
-          <svg
-            width="168"
-            height="168"
-            viewBox="0 0 140 140"
-            className="absolute inset-0"
-            style={{ transform: "rotate(-90deg)" }}
-            aria-hidden="true"
-          >
-            <defs>
-              <linearGradient id="ring-grad" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="var(--color-accent)" />
-                <stop offset="100%" stopColor="var(--color-accent)" />
-              </linearGradient>
-            </defs>
-            {/* Track ring */}
-            <circle
-              cx="70" cy="70" r={RADIUS}
-              fill="none"
-              stroke="var(--color-border-emphasized)"
-              strokeWidth="6"
-            />
-            {/* Progress ring */}
-            <circle
-              cx="70" cy="70" r={RADIUS}
-              fill="none"
-              stroke="url(#ring-grad)"
-              strokeWidth="7"
-              strokeLinecap="round"
-              strokeDasharray={CIRCUMFERENCE}
-              strokeDashoffset={strokeDashoffset}
-              style={{ transition: isRunning ? "stroke-dashoffset 1s linear" : "none" }}
-            />
-          </svg>
           <div
             className="relative z-10 text-center font-headline text-5xl font-semibold tracking-tight tabular-nums"
             style={{
@@ -88,7 +62,7 @@ export function SessionTimer({
           >
             {formatTime(timeLeft)}
           </div>
-        </div>
+        </ProgressRing>
       </div>
 
       <p className="mt-2 text-center font-headline text-sm italic text-on-surface-variant">
@@ -99,7 +73,6 @@ export function SessionTimer({
         <span className="text-xs font-semibold uppercase tracking-widest text-on-surface-variant">
           Session Length
         </span>
-        {/* Quick-select presets */}
         <div className="mt-2 flex gap-2">
           {DURATION_PRESETS.map((preset) => {
             const isActive = draftDurationMinutes === preset;
@@ -112,7 +85,7 @@ export function SessionTimer({
                 className="flex-1 rounded-lg py-1.5 text-sm font-semibold transition-all duration-200"
                 style={{
                   background: isActive ? "var(--color-accent)" : "var(--color-background-muted)",
-                  color: isActive ? "var(--color-accent)" : "var(--color-text-secondary)",
+                  color: isActive ? "var(--color-on-accent)" : "var(--color-text-secondary)",
                   boxShadow: isActive ? "var(--shadow-inset-selected)" : "none",
                 }}
               >
@@ -121,7 +94,6 @@ export function SessionTimer({
             );
           })}
         </div>
-        {/* Custom input */}
         <input
           type="number"
           min="1"

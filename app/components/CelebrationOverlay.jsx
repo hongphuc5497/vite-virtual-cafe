@@ -42,13 +42,13 @@ export function CelebrationOverlay({
             style={{
               background: "var(--color-accent)",
               boxShadow:
-                "inset 0 1px 0 rgba(255,255,255,0.4), 0 8px 20px -8px rgba(194,104,63,0.45)",
+                "inset 0 1px 0 rgba(255,255,255,0.4), var(--shadow-high)",
             }}
             aria-hidden="true"
           >
           <span
             className="material-symbols-outlined text-[26px]"
-            style={{ color: "var(--color-background-muted)" }}
+            style={{ color: "var(--color-on-accent)" }}
           >
             celebration
           </span>

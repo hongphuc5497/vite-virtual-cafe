@@ -25,20 +25,20 @@ export function VibeSelector({ tracks, onApplyVibe }) {
               className="rounded-xl p-3 text-left transition-all duration-200 hover:scale-[1.02] active:scale-95"
               style={{
                 background: isActive ? "var(--color-accent)" : "var(--color-background-muted)",
-                color: isActive ? "var(--color-accent)" : "var(--color-text-secondary)",
+                color: isActive ? "var(--color-on-accent)" : "var(--color-text-secondary)",
                 boxShadow: isActive ? "var(--shadow-inset-selected)" : "none",
               }}
             >
               <span
                 className="material-symbols-outlined text-[20px]"
-                style={{ color: isActive ? "var(--color-accent)" : "var(--color-text-secondary)" }}
+                style={{ color: isActive ? "var(--color-on-accent)" : "var(--color-text-secondary)" }}
               >
                 {vibe.icon}
               </span>
               <p className="mt-1.5 text-sm font-semibold">{vibe.label}</p>
               <p
                 className="mt-0.5 text-xs"
-                style={{ color: isActive ? "var(--color-accent)" : "var(--color-text-secondary)" }}
+                style={{ color: isActive ? "var(--color-on-accent)" : "var(--color-text-secondary)" }}
               >
                 {vibe.description}
               </p>

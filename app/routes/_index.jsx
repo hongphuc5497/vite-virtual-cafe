@@ -10,6 +10,7 @@ import { RoomMixControls } from "~/components/RoomMixControls";
 
 import { VibeSelector } from "~/components/VibeSelector";
 import { SceneSelector } from "~/components/SceneSelector";
+import { BackdropOverlay } from "~/components/BackdropOverlay";
 import { ImmersiveTransition } from "~/components/ImmersiveTransition";
 import { useImmersiveMode } from "~/hooks/useImmersiveMode";
 import {
@@ -168,6 +169,7 @@ export default function Index() {
       className="relative min-h-[calc(100vh-57px)] overflow-hidden"
       style={{ background: "var(--color-background-body)" }}
     >
+      <BackdropOverlay />
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 py-10 md:px-6 md:py-12">
         {/* Hero text - assembles on load, slides up + fades during immersive mode */}

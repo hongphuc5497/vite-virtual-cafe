@@ -1,4 +1,8 @@
-// Deprecated — backdrop styling is now handled via CSS. Component retained for prop compatibility.
 export function BackdropOverlay() {
-  return <div />;
+  return (
+    <>
+      <div className="cafe-atmosphere" aria-hidden="true" />
+      <div className="ember-glow" aria-hidden="true" />
+    </>
+  );
 }
